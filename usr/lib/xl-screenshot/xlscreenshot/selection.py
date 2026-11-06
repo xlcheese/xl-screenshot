@@ -166,18 +166,28 @@ class SelectionOverlay(Gtk.Window):
                 return h_type
         return None
 
+    def _paint_screen(self, cr, rect=None):
+        """Paint the still picture of the desktop (or just rect of it). On a
+        HiDPI desktop it has more pixels than we have units: draw it at 1/scale."""
+        scale = self.get_scale_factor()
+        cr.save()
+        if rect:
+            cr.rectangle(*rect)
+            cr.clip()
+        cr.scale(1 / scale, 1 / scale)
+        Gdk.cairo_set_source_pixbuf(cr, self.bg_pixbuf, -self.origin_x * scale, -self.origin_y * scale)
+        cr.paint()
+        cr.restore()
+
     def on_draw(self, widget, cr):
         # Dimmed screenshot everywhere...
-        Gdk.cairo_set_source_pixbuf(cr, self.bg_pixbuf, -self.origin_x, -self.origin_y)
-        cr.paint()
+        self._paint_screen(cr)
         cr.set_source_rgba(0, 0, 0, 0.35)
         cr.paint()
 
         if self.rect_w > 0 and self.rect_h > 0:
             # ...except inside the selection, which shows it undimmed
-            Gdk.cairo_set_source_pixbuf(cr, self.bg_pixbuf, -self.origin_x, -self.origin_y)
-            cr.rectangle(self.rect_x, self.rect_y, self.rect_w, self.rect_h)
-            cr.fill()
+            self._paint_screen(cr, (self.rect_x, self.rect_y, self.rect_w, self.rect_h))
 
             cr.set_source_rgba(*self.theme_color)
             cr.set_line_width(1.5)
@@ -386,9 +396,10 @@ class SelectionOverlay(Gtk.Window):
     def on_capture_confirmed(self, button):
         if self.rect_w > 5 and self.rect_h > 5:
             self.hide()
-            # The selection is in overlay coordinates; capture in desktop ones
-            rect = (self.rect_x + self.origin_x, self.rect_y + self.origin_y,
-                    self.rect_w, self.rect_h)
+            # The selection is in overlay units; capture in desktop pixels
+            scale = self.get_scale_factor()
+            rect = tuple(round(v * scale) for v in (self.rect_x + self.origin_x, self.rect_y + self.origin_y,
+                                                    self.rect_w, self.rect_h))
 
             def do_capture():
                 pixbuf = capture_region(*rect, self.parent_tool.include_pointer)

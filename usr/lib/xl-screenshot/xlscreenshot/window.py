@@ -447,7 +447,8 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
 
     def perform_full_screen_capture(self):
         root = Gdk.get_default_root_window()
-        pixbuf = capture_region(0, 0, root.get_width(), root.get_height(),
+        scale = root.get_scale_factor()
+        pixbuf = capture_region(0, 0, root.get_width() * scale, root.get_height() * scale,
                                 self.include_pointer)
         if pixbuf:
             self.update_screenshot_buffer(pixbuf)

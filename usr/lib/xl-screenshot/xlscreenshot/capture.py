@@ -6,6 +6,15 @@ from gi.repository import Gdk
 import cairo
 
 
+def screen_scale():
+    """Device pixels per GTK unit: 2 on a HiDPI desktop set to 200%, else 1.
+
+    GTK positions (the pointer, our windows) are in units; screen grabs and
+    X window sizes (xwininfo) are in device pixels.
+    """
+    return Gdk.get_default_root_window().get_scale_factor()
+
+
 def grab_screen():
     """Return a pixbuf of the whole desktop (all monitors), or None."""
     root = Gdk.get_default_root_window()
@@ -13,16 +22,17 @@ def grab_screen():
 
 
 def get_pointer_position():
-    """Pointer position in desktop (root window) coordinates, or None."""
+    """Pointer position on the desktop in device pixels, or None."""
     try:
         seat = Gdk.Display.get_default().get_default_seat()
         _screen, x, y = seat.get_pointer().get_position()
-        return x, y
+        scale = screen_scale()
+        return x * scale, y * scale
     except Exception:
         return None
 
 
-def draw_cursor_on_pixbuf(pixbuf, origin_x, origin_y, pointer_pos):
+def draw_cursor_on_pixbuf(pixbuf, origin_x, origin_y, pointer_pos, scale=1):
     """Draw an arrow pointer onto pixbuf.
 
     origin_x/origin_y are the desktop coordinates of the pixbuf's top-left
@@ -36,7 +46,7 @@ def draw_cursor_on_pixbuf(pixbuf, origin_x, origin_y, pointer_pos):
     cy = pointer_pos[1] - origin_y
 
     # Pointer is completely outside this image: nothing to draw
-    if cx < -12 or cy < -20 or cx >= w or cy >= h:
+    if cx < -12 * scale or cy < -20 * scale or cx >= w or cy >= h:
         return pixbuf
 
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
@@ -44,11 +54,13 @@ def draw_cursor_on_pixbuf(pixbuf, origin_x, origin_y, pointer_pos):
     Gdk.cairo_set_source_pixbuf(cr, pixbuf, 0, 0)
     cr.paint()
 
-    # Standard left-pointing arrow, tip at (cx, cy)
+    # Standard left-pointing arrow, tip at (cx, cy), as big as the desktop's scale
     points = [(0, 0), (0, 17), (4, 13), (7, 20), (9, 19), (6, 12), (12, 12)]
-    cr.move_to(cx + points[0][0] + 0.5, cy + points[0][1] + 0.5)
+    cr.translate(cx, cy)
+    cr.scale(scale, scale)
+    cr.move_to(points[0][0] + 0.5, points[0][1] + 0.5)
     for px, py in points[1:]:
-        cr.line_to(cx + px + 0.5, cy + py + 0.5)
+        cr.line_to(px + 0.5, py + 0.5)
     cr.close_path()
 
     cr.set_source_rgba(0, 0, 0, 1)
@@ -64,7 +76,7 @@ def draw_cursor_on_pixbuf(pixbuf, origin_x, origin_y, pointer_pos):
 
 
 def capture_region(x, y, w, h, include_pointer):
-    """Grab the desktop and crop to (x, y, w, h).
+    """Grab the desktop and crop to (x, y, w, h), in device pixels.
 
     The rectangle is clipped to the desktop, so windows that hang off an
     edge are captured correctly. Returns a new pixbuf, or None on failure.
@@ -85,7 +97,7 @@ def capture_region(x, y, w, h, include_pointer):
 
     region = full.new_subpixbuf(x1, y1, x2 - x1, y2 - y1).copy()
     if include_pointer:
-        region = draw_cursor_on_pixbuf(region, x1, y1, pointer_pos)
+        region = draw_cursor_on_pixbuf(region, x1, y1, pointer_pos, screen_scale())
     return region
 
 
