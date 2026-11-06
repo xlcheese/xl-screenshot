@@ -1,3 +1,9 @@
+xl-screenshot (0.1.1) unstable; urgency=medium
+
+  * Both About windows link to the project page on GitHub.
+
+ -- Wesley Hayslip <xl_cheese@hotmail.com>  Fri, 06 Nov 2026 16:16:11 +0000
+
 xl-screenshot (0.1.0) unstable; urgency=medium
 
   * First release: xl-Screenshot and xl-Annotate, installed together.

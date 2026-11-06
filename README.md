@@ -28,7 +28,7 @@ so it picks up the new item. `./install-local.sh --uninstall` removes it all.
 ## Installing
 
 ```bash
-sudo apt install ./xl-screenshot_0.1.0_all.deb
+sudo apt install ./xl-screenshot_0.1.1_all.deb
 ```
 
 This installs both apps (menu: Accessories and Graphics), their icons, the man
