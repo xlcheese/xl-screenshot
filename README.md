@@ -1,5 +1,10 @@
 # xl-Screenshot and xl-Annotate
 
+<p align="center">
+  <img src="docs/screenshots/xl-annotate-dark.png" width="840"
+       alt="xl-Annotate in the Mint-Y-Dark theme, marking a hiking trail on a mountain lake picture with a dotted line, numbered steps, a note, an arrow and a loupe">
+</p>
+
 Two small apps for Linux Mint and the Cinnamon desktop, installed together:
 
 - **xl-Screenshot**: Screen, Window, and Selection captures.
@@ -11,6 +16,32 @@ Two small apps for Linux Mint and the Cinnamon desktop, installed together:
   see-through or none), a size, a line style and an optional shadow, and stays
   editable (move, reshape, restyle, delete) until you save. It runs on its own,
   or from xl-Screenshot's Annotate button.
+
+**[Download the latest .deb](https://github.com/xlcheese/xl-screenshot/releases/latest)**
+
+## Screenshots
+
+Shown in Linux Mint's Mint-Y and Mint-Y-Dark themes; both apps follow
+whichever theme you use.
+
+<table>
+  <tr><th>Mint-Y</th><th>Mint-Y-Dark</th></tr>
+  <tr><td colspan="2" align="center"><b>xl-Screenshot</b>: choose Screen, Window or Selection, then save, copy or annotate the capture</td></tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/xl-screenshot-light.png" width="380" alt="xl-Screenshot with a capture in its thumbnail, Mint-Y theme"></td>
+    <td align="center"><img src="docs/screenshots/xl-screenshot-dark.png" width="380" alt="xl-Screenshot with a capture in its thumbnail, Mint-Y-Dark theme"></td>
+  </tr>
+  <tr><td colspan="2" align="center"><b>Selection</b>: drag over the desktop, adjust with the handles, then Capture Selection</td></tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/xl-screenshot-selection-light.png" alt="Drawing a Selection over the desktop, Mint-Y theme"></td>
+    <td align="center"><img src="docs/screenshots/xl-screenshot-selection-dark.png" alt="Drawing a Selection over the desktop, Mint-Y-Dark theme"></td>
+  </tr>
+  <tr><td colspan="2" align="center"><b>xl-Annotate</b>: arrows, steps, notes, a loupe and more, all editable until you save</td></tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/xl-annotate-light.png" alt="xl-Annotate marking up a picture, Mint-Y theme"></td>
+    <td align="center"><img src="docs/screenshots/xl-annotate-dark.png" alt="xl-Annotate marking up a picture, Mint-Y-Dark theme"></td>
+  </tr>
+</table>
 
 ## Trying the menu entries and Nemo's "Annotate Image…"
 
