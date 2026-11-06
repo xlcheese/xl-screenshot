@@ -1,0 +1,26 @@
+<!-- xl-Annotate icon. Copyright (C) 2026 Wesley Hayslip. GPL-3.0-or-later. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dcdcdc"/><stop offset="1" stop-color="#b9b9b9"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="7" width="116" height="116" rx="23" fill="#000" opacity="0.18"/>
+  <rect x="6" y="6" width="116" height="116" rx="23" fill="url(#bg)" stroke="#777777" stroke-width="4"/>
+  <rect x="10" y="10" width="108" height="108" rx="20" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="4"/>
+  <path d="M42 98 L89.1 43.7" stroke="#5e9b2f" stroke-width="12" stroke-linecap="round"/>
+  <path d="M101.0 30.0 L95.7 59.9 L72.2 39.4z" fill="#7cc242" stroke="#5e9b2f" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M42 98 L89.1 43.7" stroke="#7cc242" stroke-width="10" stroke-linecap="round"/>
+  <path d="M17 84 C12 75 26 69 24 60 C22 51 13 48 17 41 C20 35 27 35 32 40" fill="none" stroke="#3a3a3a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(32 40) rotate(45)">
+    <path d="M0 0 L19 -8.5 L77 -8.5 A8.5 8.5 0 0 1 77 8.5 L19 8.5 Z" fill="#000" opacity="0.16" transform="translate(2.2 1.2)"/>
+    <path d="M0 0 L19 -8.5 L77 -8.5 A8.5 8.5 0 0 1 77 8.5 L19 8.5 Z" fill="#ffffff"/>
+    <path d="M0 0 L19 -8.5 L19 8.5 Z" fill="#f3ead8"/>
+    <path d="M0 0 L6.5 -2.91 L6.5 2.91 Z" fill="#3a3a3a"/>
+    <path d="M19 0 L69 0" stroke="#e1e1e1" stroke-width="2.2"/>
+    <rect x="69" y="-8.5" width="6" height="17" fill="#d9d9d9"/>
+    <path d="M19 -8.5 L19 8.5" stroke="#5a5a5a" stroke-width="1.6"/>
+    <path d="M0 0 L19 -8.5 L77 -8.5 A8.5 8.5 0 0 1 77 8.5 L19 8.5 Z" fill="none" stroke="#5a5a5a" stroke-width="2.4" stroke-linejoin="round"/>
+  </g>
+
+</svg>

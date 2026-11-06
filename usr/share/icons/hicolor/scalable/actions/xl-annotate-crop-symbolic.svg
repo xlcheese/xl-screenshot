@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!-- Two crop corners -->
+  <path fill="#000000" d="M4 0.5h1.75v9.75H15.5V12H4z"/>
+  <path fill="#000000" d="M0.5 4H12v11.5h-1.75V5.75H0.5z"/>
+</svg>

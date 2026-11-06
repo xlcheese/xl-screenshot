@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!-- Circle with the number 1 cut out -->
+  <path fill="#000000" fill-rule="evenodd"
+        d="M8 1a7 7 0 1 0 0 14A7 7 0 1 0 8 1z
+           M8.75 4.25H7.5L5.75 5.5v1.5L7.1 6.1V11.75h1.65z"/>
+</svg>

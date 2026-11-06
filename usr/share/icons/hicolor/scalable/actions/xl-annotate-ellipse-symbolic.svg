@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!-- Ellipse outline -->
+  <path fill="#000000" fill-rule="evenodd"
+        d="M8 2.5c-3.9 0-7 2.5-7 5.5s3.1 5.5 7 5.5 7-2.5 7-5.5-3.1-5.5-7-5.5z
+           M8 4.25c-2.9 0-5.25 1.7-5.25 3.75S5.1 11.75 8 11.75s5.25-1.7 5.25-3.75S10.9 4.25 8 4.25z"/>
+</svg>

@@ -1,0 +1,33 @@
+.TH XL-ANNOTATE 1 "November 2026" "xl-Annotate 0.1.0" "User Commands"
+.SH NAME
+xl-annotate \- mark up images and screenshots
+.SH SYNOPSIS
+.B xl-annotate
+[\fIIMAGE\fR...] [\-\-version]
+.SH DESCRIPTION
+.B xl-Annotate
+adds arrows, lines, freehand drawing, rectangles, ellipses, highlights, text, numbered steps,
+pixelation, a magnifying loupe, and cropping to an image. Rough freehand lines, arrows, circles,
+and boxes are tidied into clean shapes. Marks stay editable until the image is saved; Save draws
+them into the file, and Save As writes a copy.
+.PP
+Each IMAGE opens in its own window, all in one running copy. With no IMAGE, an empty window
+opens; an image can then be opened, or pasted with Ctrl+V.
+.SH OPTIONS
+.TP
+.BR \-v ", " \-\-version
+Show the version and quit.
+.SH KEYS
+Ctrl+O open, Ctrl+S save, Shift+Ctrl+S save as, Ctrl+C copy, Ctrl+V paste an image,
+Ctrl+Z undo, Shift+Ctrl+Z redo, Delete removes the selected mark, Esc lets go of it.
+Hold Shift while drawing for 45\(de lines and squares, or while moving to go straight across.
+Ctrl+plus, Ctrl+minus, or Ctrl+scroll zoom; Ctrl+0 fits the window; Ctrl+1 shows actual size.
+.SH FILES
+.TP
+.I ~/.config/xl-annotate/config.json
+The last tool, colors, sizes, font, and folders used.
+.SH AUTHOR
+Wesley Hayslip.
+.SH SEE ALSO
+.BR xl-screenshot (1),
+https://github.com/xlcheese/xl-screenshot

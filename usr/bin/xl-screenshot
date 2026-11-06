@@ -1,0 +1,16 @@
+#!/usr/bin/python3
+"""Start xl-Screenshot.
+
+Usage: xl-screenshot [--selection] [--version]
+"""
+import os
+import sys
+
+# The code lives in ../lib/xl-screenshot, both in the source folder and
+# once installed (/usr/bin -> /usr/lib/xl-screenshot)
+_here = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, os.path.normpath(os.path.join(_here, os.pardir, "lib", "xl-screenshot")))
+
+from xlscreenshot.application import main
+
+sys.exit(main())

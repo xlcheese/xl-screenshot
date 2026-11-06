@@ -1,0 +1,16 @@
+#!/usr/bin/python3
+"""Start xl-Annotate.
+
+Usage: xl-annotate [IMAGE...] [--version]
+"""
+import os
+import sys
+
+# The code lives in ../lib/xl-screenshot, both in the source folder and
+# once installed (/usr/bin -> /usr/lib/xl-screenshot)
+_here = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, os.path.normpath(os.path.join(_here, os.pardir, "lib", "xl-screenshot")))
+
+from xlannotate.application import main
+
+sys.exit(main())

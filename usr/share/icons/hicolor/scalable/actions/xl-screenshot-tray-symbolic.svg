@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!-- The Selection icon for the tray: square, filling the whole 16px grid -->
+  <!-- Corner handles -->
+  <path fill="#000000" d="M0 0h3.5v3.5H0z M12.5 0H16v3.5h-3.5z M0 12.5h3.5V16H0z M12.5 12.5H16V16h-3.5z"/>
+  <!-- Dashed edges -->
+  <path fill="#000000" d="M4.75 1h2.5v1.5h-2.5z M8.75 1h2.5v1.5h-2.5z
+                          M4.75 13.5h2.5V15h-2.5z M8.75 13.5h2.5V15h-2.5z
+                          M1 4.75h1.5v2.5H1z M1 8.75h1.5v2.5H1z
+                          M13.5 4.75H15v2.5h-1.5z M13.5 8.75H15v2.5h-1.5z"/>
+  <!-- Pointer -->
+  <path fill="#000000" d="M4.75 4l7.25 3.9-2.9.8-2.05 3.5H5.9z"/>
+</svg>

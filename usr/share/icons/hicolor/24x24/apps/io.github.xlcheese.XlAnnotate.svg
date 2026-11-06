@@ -1,0 +1,12 @@
+<!-- xl-Annotate icon. Copyright (C) 2026 Wesley Hayslip. GPL-3.0-or-later. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dcdcdc"/><stop offset="1" stop-color="#b9b9b9"/></linearGradient></defs>
+  <rect x="0.5" y="0.5" width="23" height="23" rx="4.5" fill="url(#bg)" stroke="#777777"/>
+  <path d="M6 19 L16 9" stroke="#5e9b2f" stroke-width="3.6" stroke-linecap="round"/>
+  <path d="M20.5 4 L19.4 11 L13.5 5.1Z" fill="#7cc242" stroke="#5e9b2f" stroke-width="0.9" stroke-linejoin="round"/>
+  <path d="M6 19 L16 9" stroke="#7cc242" stroke-width="2.2" stroke-linecap="round"/>
+  <g transform="translate(5.5 6) rotate(45)">
+    <path d="M0 0 L4 -2.4 L14.5 -2.4 A2.4 2.4 0 0 1 14.5 2.4 L4 2.4Z" fill="#ffffff" stroke="#5a5a5a" stroke-width="0.9" stroke-linejoin="round"/>
+    <path d="M0 0 L1.8 -1.1 L1.8 1.1Z" fill="#3a3a3a"/>
+  </g>
+</svg>

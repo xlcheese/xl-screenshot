@@ -1,0 +1,18 @@
+xl-screenshot (0.1.0) unstable; urgency=medium
+
+  * First release: xl-Screenshot and xl-Annotate, installed together.
+  * xl-Screenshot captures the whole screen, a window (with its titlebar),
+    or a selection drawn over a still picture of the desktop, with an
+    optional delay that Esc cancels. Copy, save as PNG, JPEG or WebP, or
+    open the capture in xl-Annotate.
+  * Optional tray icon: a click starts a Selection capture, and
+    xl-Screenshot starts at login with just the icon.
+  * xl-Annotate marks up any image with arrows, lines, freehand drawing
+    (rough shapes tidied into clean ones), rectangles, ellipses, a
+    highlighter, text, numbered steps, pixelation, a loupe, and crop. Marks
+    stay editable until the image is saved.
+  * "Annotate Image…" in Nemo's right-click menu for images.
+  * Translations: German, Spanish, French and Brazilian Portuguese (drafts
+    awaiting review by native speakers).
+
+ -- Wesley Hayslip <xl_cheese@hotmail.com>  Fri, 06 Nov 2026 12:00:00 +0000

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!-- Magnifying glass with a plus -->
+  <path fill="#000000" fill-rule="evenodd"
+        d="M6.5 0.75a5.75 5.75 0 1 0 0 11.5a5.75 5.75 0 1 0 0-11.5z
+           M6.5 2.5a4 4 0 1 1 0 8a4 4 0 1 1 0-8z"/>
+  <path fill="#000000" d="M5.75 4h1.5v1.75H9v1.5H7.25V9h-1.5V7.25H4v-1.5h1.75z"/>
+  <path fill="#000000" d="M10.2 11.4l1.2-1.2 4.1 4.1-1.2 1.2z"/>
+</svg>

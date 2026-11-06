@@ -1,0 +1,35 @@
+Source: xl-screenshot
+Section: graphics
+Priority: optional
+Maintainer: Wesley Hayslip <xl_cheese@hotmail.com>
+Build-Depends: debhelper-compat (= 13), dh-python, gettext, python3
+Standards-Version: 4.6.2
+Homepage: https://github.com/xlcheese/xl-screenshot
+Vcs-Git: https://github.com/xlcheese/xl-screenshot.git
+Vcs-Browser: https://github.com/xlcheese/xl-screenshot
+Rules-Requires-Root: no
+
+Package: xl-screenshot
+Architecture: all
+Depends: ${misc:Depends},
+         ${python3:Depends},
+         python3-gi,
+         python3-gi-cairo,
+         python3-xlib,
+         gir1.2-gtk-3.0,
+         gir1.2-pango-1.0,
+         gir1.2-xapp-1.0,
+         xdotool,
+         x11-utils
+Recommends: webp-pixbuf-loader
+Description: screenshot and image markup tools for Linux Mint
+ xl-Screenshot takes a screenshot of the whole screen, a single window, or
+ a selection you draw, with an optional delay. The capture can be copied,
+ saved as PNG, JPEG or WebP, or marked up in xl-Annotate. An optional tray
+ icon starts a selection with one click.
+ .
+ xl-Annotate adds arrows, lines, freehand drawing, rectangles, ellipses,
+ highlights, text, numbered steps, pixelation, a magnifying loupe and
+ cropping to any image. Rough freehand shapes are tidied into clean ones,
+ and marks stay editable until the image is saved. It also appears as
+ "Annotate Image…" in Nemo's right-click menu.

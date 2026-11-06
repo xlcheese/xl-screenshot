@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.xlcheese.XlAnnotate</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>xl-Annotate</name>
+  <summary>Mark up images and screenshots with arrows, boxes, and text</summary>
+  <description>
+    <p>
+      xl-Annotate is simple, light markup for images and screenshots, for Linux Mint and the
+      Cinnamon desktop.
+    </p>
+    <ul>
+      <li>Arrows, lines, freehand drawing, rectangles, and ellipses</li>
+      <li>Rough freehand lines, arrows, circles, and boxes tidied into clean shapes</li>
+      <li>A highlighter, text, and numbered steps</li>
+      <li>Pixelate to hide passwords and names, a magnifying loupe, and crop</li>
+      <li>Line and fill colors (solid, sheer, or none), line styles, and shadows</li>
+    </ul>
+    <p>
+      Marks stay editable until the image is saved. Open it from the menu, from xl-Screenshot, or with
+      "Annotate Image…" when you right-click an image in Nemo.
+    </p>
+  </description>
+  <launchable type="desktop-id">io.github.xlcheese.XlAnnotate.desktop</launchable>
+  <developer id="io.github.xlcheese">
+    <name>Wesley Hayslip</name>
+  </developer>
+  <url type="homepage">https://github.com/xlcheese/xl-screenshot</url>
+  <url type="bugtracker">https://github.com/xlcheese/xl-screenshot/issues</url>
+  <provides>
+    <binary>xl-annotate</binary>
+  </provides>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-11-06">
+      <description>
+        <p>First release.</p>
+      </description>
+    </release>
+  </releases>
+</component>

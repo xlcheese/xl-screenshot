@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512">
+  <!-- Monitor: rounded frame, curved bottom bezel, screen cut out -->
+  <path fill="#000000" fill-rule="evenodd"
+        d="M30 55H482A30 30 0 0 1 512 85V358C512 375 500 386 482 389Q256 417 30 389C12 386 0 375 0 358V85A30 30 0 0 1 30 55Z
+           M26 76A6 6 0 0 0 20 82V356A6 6 0 0 0 26 362H486A6 6 0 0 0 492 356V82A6 6 0 0 0 486 76Z"/>
+  <!-- Stand: neck and oval base -->
+  <rect fill="#000000" x="215" y="395" width="82" height="36"/>
+  <path fill="#000000" d="M132.5 440.5a123 16 0 1 0 246 0a123 16 0 1 0-246 0z"/>
+</svg>

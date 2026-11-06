@@ -1,0 +1,684 @@
+# French translation of xl-Screenshot and xl-Annotate.
+# Copyright (C) 2026 Wesley Hayslip
+# This file is distributed under the same license as the xl-Screenshot package.
+# DRAFT: machine-assisted, please have a native speaker review it.
+msgid ""
+msgstr ""
+"Project-Id-Version: xl-Screenshot 0.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/xlcheese/xl-screenshot/issues\n"
+"POT-Creation-Date: 2026-11-06 14:48+0000\n"
+"PO-Revision-Date: 2026-11-06 14:48+0000\n"
+"Last-Translator: Draft by Claude (needs native review)\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: usr/lib/xl-screenshot/xlannotate/application.py:19
+#: usr/lib/xl-screenshot/xlscreenshot/application.py:43
+msgid "Show the version and quit"
+msgstr "Afficher la version et quitter"
+
+#: usr/lib/xl-screenshot/xlannotate/canvas.py:45
+msgid "Tidied into a straight line"
+msgstr "Transformé en ligne droite"
+
+#: usr/lib/xl-screenshot/xlannotate/canvas.py:45
+msgid "Tidied into an arrow"
+msgstr "Transformé en flèche"
+
+#: usr/lib/xl-screenshot/xlannotate/canvas.py:46
+msgid "Tidied into an ellipse"
+msgstr "Transformé en ellipse"
+
+#: usr/lib/xl-screenshot/xlannotate/canvas.py:46
+msgid "Tidied into a rectangle"
+msgstr "Transformé en rectangle"
+
+#: usr/lib/xl-screenshot/xlannotate/canvas.py:784
+msgid "Keep My Drawing"
+msgstr "Garder mon dessin"
+
+#: usr/lib/xl-screenshot/xlannotate/canvas.py:832
+msgid "Enter to finish · Shift+Enter for a new line · Esc to cancel"
+msgstr ""
+"Entrée pour terminer · Maj+Entrée pour une nouvelle ligne · Échap pour "
+"annuler"
+
+#: usr/lib/xl-screenshot/xlannotate/config.py:16
+#: usr/lib/xl-screenshot/xlscreenshot/config.py:19
+msgid "Developed with the help of Claude, an AI assistant by Anthropic"
+msgstr "Développé avec l’aide de Claude, un assistant IA d’Anthropic"
+
+#: usr/lib/xl-screenshot/xlannotate/shapes.py:32
+msgid "Red"
+msgstr "Rouge"
+
+#: usr/lib/xl-screenshot/xlannotate/shapes.py:33
+msgid "Orange"
+msgstr "Orange"
+
+#: usr/lib/xl-screenshot/xlannotate/shapes.py:34
+msgid "Yellow"
+msgstr "Jaune"
+
+#: usr/lib/xl-screenshot/xlannotate/shapes.py:35
+msgid "Green"
+msgstr "Vert"
+
+#: usr/lib/xl-screenshot/xlannotate/shapes.py:36
+msgid "Blue"
+msgstr "Bleu"
+
+#: usr/lib/xl-screenshot/xlannotate/shapes.py:37
+msgid "Purple"
+msgstr "Violet"
+
+#: usr/lib/xl-screenshot/xlannotate/shapes.py:38
+msgid "Pink"
+msgstr "Rose"
+
+#: usr/lib/xl-screenshot/xlannotate/shapes.py:39
+msgid "Black"
+msgstr "Noir"
+
+#: usr/lib/xl-screenshot/xlannotate/shapes.py:40
+msgid "White"
+msgstr "Blanc"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:33
+msgid ""
+"Select: click a mark to move it (Shift: straight across or down), reshape it "
+"with its handles, change its colours and style, or press Delete. Double-click"
+" text to edit it."
+msgstr ""
+"Sélection : cliquez sur une marque pour la déplacer (Maj : uniquement à "
+"l’horizontale ou à la verticale), modifiez sa forme avec ses poignées, "
+"changez ses couleurs et son style, ou appuyez sur Suppr. Double-cliquez sur "
+"un texte pour le modifier."
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:36
+msgid "Arrow (hold Shift for 45° angles)"
+msgstr "Flèche (maintenez Maj pour des angles de 45°)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:38
+msgid "Line (hold Shift for 45° angles)"
+msgstr "Ligne (maintenez Maj pour des angles de 45°)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:40
+msgid ""
+"Freehand: draw with the mouse. Rough lines, arrows, circles and boxes are "
+"tidied into clean shapes (you can keep your drawing, or turn this off in the "
+"menu)."
+msgstr ""
+"Main levée : dessinez à la souris. Les lignes, flèches, cercles et cadres "
+"approximatifs sont transformés en formes nettes (vous pouvez garder votre "
+"dessin, ou désactiver cette option dans le menu)."
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:43
+msgid "Rectangle (hold Shift for a square)"
+msgstr "Rectangle (maintenez Maj pour un carré)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:45
+msgid "Ellipse (hold Shift for a circle)"
+msgstr "Ellipse (maintenez Maj pour un cercle)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:47
+msgid "Highlighter: drag a box over text to mark it"
+msgstr "Surligneur : tracez un cadre sur du texte pour le marquer"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:49
+msgid "Text: click where it goes. A fill colour puts a box behind it."
+msgstr ""
+"Texte : cliquez à l’endroit voulu. Une couleur de remplissage place un cadre "
+"derrière."
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:51
+msgid "Numbered steps: each click adds the next number"
+msgstr "Étapes numérotées : chaque clic ajoute le numéro suivant"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:53
+msgid "Pixelate: drag a box over anything private (passwords, emails, names)"
+msgstr ""
+"Pixelliser : tracez un cadre sur tout ce qui est privé (mots de passe, "
+"e-mails, noms)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:55
+msgid ""
+"Loupe: click to magnify a spot. Drag the green handle round the ring to zoom "
+"more or less, and the white one to change its size."
+msgstr ""
+"Loupe : cliquez pour agrandir un endroit. Faites glisser la poignée verte "
+"autour de l’anneau pour zoomer plus ou moins, et la blanche pour changer sa "
+"taille."
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:58
+msgid "Crop: drag the area to keep"
+msgstr "Rogner : tracez la zone à conserver"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:63
+msgid "Line thickness"
+msgstr "Épaisseur du trait"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:64
+msgid "Text size"
+msgstr "Taille du texte"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:65
+msgid "Size of the numbered circles"
+msgstr "Taille des cercles numérotés"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:66
+msgid "Block size (use bigger blocks to hide text)"
+msgstr "Taille des blocs (de plus gros blocs cachent mieux le texte)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:67
+msgid "Size of the lens"
+msgstr "Taille de la lentille"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:70
+msgid "Solid line"
+msgstr "Trait plein"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:70
+msgid "Dashed line"
+msgstr "Trait tireté"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:70
+msgid "Dotted line"
+msgstr "Trait pointillé"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:168
+msgid ""
+"Line colour (front) and fill colour (back).\n"
+"Click one, then pick a colour below."
+msgstr ""
+"Couleur du trait (devant) et couleur de remplissage (derrière).\n"
+"Cliquez sur l’une, puis choisissez une couleur en dessous."
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:211
+#: usr/lib/xl-screenshot/xlannotate/window.py:772
+msgid "Untitled"
+msgstr "Sans titre"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:230
+msgid "Done"
+msgstr "Terminé"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:232
+msgid "Use the annotated image in xl-Screenshot"
+msgstr "Utiliser l’image annotée dans xl-Screenshot"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:236
+msgid "Tidy Up Freehand Drawings"
+msgstr "Rectifier les dessins à main levée"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:237
+msgid "Turn rough freehand lines, arrows, circles and boxes into clean shapes"
+msgstr ""
+"Transformer les lignes, flèches, cercles et cadres approximatifs en formes "
+"nettes"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:244
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:133
+msgid "About"
+msgstr "À propos"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:276
+msgid "Open an Image (Ctrl+O)"
+msgstr "Ouvrir une image (Ctrl+O)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:278
+msgid "Save (Ctrl+S)"
+msgstr "Enregistrer (Ctrl+S)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:280
+msgid "Save As… (Shift+Ctrl+S)"
+msgstr "Enregistrer sous… (Maj+Ctrl+S)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:282
+msgid "Copy to Clipboard (Ctrl+C)"
+msgstr "Copier dans le presse-papiers (Ctrl+C)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:286
+msgid "Undo (Ctrl+Z)"
+msgstr "Annuler (Ctrl+Z)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:288
+msgid "Redo (Shift+Ctrl+Z)"
+msgstr "Rétablir (Maj+Ctrl+Z)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:306
+msgid "Drop shadow"
+msgstr "Ombre portée"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:345
+msgid "Swap the line and fill colours"
+msgstr "Échanger les couleurs du trait et du remplissage"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:361
+msgid "No colour"
+msgstr "Aucune couleur"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:372
+msgid "Solid colour"
+msgstr "Couleur opaque"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:374
+#, no-python-format, python-brace-format
+msgid "Semi-transparent ({percent}% opacity)"
+msgstr "Semi-transparent ({percent} % d’opacité)"
+
+#. Translators: "Sheer" is a see-through colour (the short label beside
+#. "Solid")
+#: usr/lib/xl-screenshot/xlannotate/window.py:377
+msgid "Solid"
+msgstr "Opaque"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:377
+msgid "Sheer"
+msgstr "Translucide"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:383
+msgid "Font"
+msgstr "Police"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:408
+msgid "Open an image to annotate"
+msgstr "Ouvrez une image à annoter"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:409
+msgid "Use the Open button (Ctrl+O), or paste an image with Ctrl+V."
+msgstr "Utilisez le bouton Ouvrir (Ctrl+O), ou collez une image avec Ctrl+V."
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:418
+msgid "Show at actual size (Ctrl+1)"
+msgstr "Afficher à la taille réelle (Ctrl+1)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:420
+msgid "Zoom out (Ctrl+−, or Ctrl+scroll)"
+msgstr "Zoom arrière (Ctrl+− ou Ctrl+molette)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:422
+msgid "Zoom in (Ctrl++, or Ctrl+scroll)"
+msgstr "Zoom avant (Ctrl++ ou Ctrl+molette)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:424
+msgid "Fit the window (Ctrl+0)"
+msgstr "Adapter à la fenêtre (Ctrl+0)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:438
+msgid ""
+"Drag the area to keep. Adjust it with the handles, or drag it to move it."
+msgstr ""
+"Tracez la zone à conserver. Ajustez-la avec les poignées, ou faites-la "
+"glisser pour la déplacer."
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:442
+msgid "Crop"
+msgstr "Rogner"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:444
+msgid "Keep only the chosen area (Enter)"
+msgstr "Ne garder que la zone choisie (Entrée)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:446
+#: usr/lib/xl-screenshot/xlscreenshot/selection.py:100
+msgid "Cancel"
+msgstr "Annuler"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:447
+msgid "Leave Crop without changing the image (Esc)"
+msgstr "Quitter Rogner sans modifier l’image (Échap)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:616
+msgid "Size"
+msgstr "Taille"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:618
+msgid "Size (not used by this tool)"
+msgstr "Taille (non utilisée par cet outil)"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:701
+#, python-brace-format
+msgid "Font: {font}"
+msgstr "Police : {font}"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:705
+msgid "Text Font"
+msgstr "Police du texte"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:784
+msgid "Could not open image"
+msgstr "Impossible d’ouvrir l’image"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:811
+msgid "Open Image"
+msgstr "Ouvrir une image"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:813
+#: usr/lib/xl-screenshot/xlannotate/window.py:870
+#: usr/lib/xl-screenshot/xlannotate/window.py:942
+#: usr/lib/xl-screenshot/xlannotate/window.py:947
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:635
+#: usr/lib/xl-screenshot/xlshared/ui.py:82
+msgid "_Cancel"
+msgstr "_Annuler"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:813
+msgid "_Open"
+msgstr "_Ouvrir"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:816
+#: usr/lib/xl-screenshot/xlannotate/window.py:890
+msgid "Images"
+msgstr "Images"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:835
+msgid "Pasted Image"
+msgstr "Image collée"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:844
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:678
+msgid "Could not save image"
+msgstr "Impossible d’enregistrer l’image"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:868
+msgid "Save Annotated Image As"
+msgstr "Enregistrer l’image annotée sous"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:870
+#: usr/lib/xl-screenshot/xlannotate/window.py:948
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:635
+msgid "_Save"
+msgstr "_Enregistrer"
+
+#. Translators: the suggested file name for a copy; {name} is the original's
+#. name
+#: usr/lib/xl-screenshot/xlannotate/window.py:880
+#, python-brace-format
+msgid "{name}-annotated"
+msgstr "{name}-annotée"
+
+#. Translators: the start of a new annotated image's file name (date and time
+#. follow)
+#: usr/lib/xl-screenshot/xlannotate/window.py:884
+msgid "Annotated"
+msgstr "Annotée"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:940
+msgid "Keep your annotations?"
+msgstr "Garder vos annotations ?"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:941
+msgid "Keep updates the screenshot. Discard throws these changes away."
+msgstr "Garder met à jour la capture. Abandonner supprime ces modifications."
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:942
+msgid "_Discard"
+msgstr "A_bandonner"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:943
+msgid "_Keep"
+msgstr "_Garder"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:945
+#, python-brace-format
+msgid "Save changes to “{name}”?"
+msgstr "Enregistrer les modifications de « {name} » ?"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:946
+msgid "If you don't save, your annotations will be lost."
+msgstr "Si vous n’enregistrez pas, vos annotations seront perdues."
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:947
+msgid "_Don't Save"
+msgstr "_Ne pas enregistrer"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:1027
+msgid ""
+"Simple, light markup for images and screenshots: arrows, boxes and text that "
+"stay editable until you save."
+msgstr ""
+"Annotation simple et légère des images et captures d’écran : flèches, cadres "
+"et texte restent modifiables jusqu’à l’enregistrement."
+
+#: usr/lib/xl-screenshot/xlscreenshot/application.py:37
+msgid "Start a Selection capture right away"
+msgstr "Lancer immédiatement une capture de sélection"
+
+#: usr/lib/xl-screenshot/xlscreenshot/application.py:40
+msgid "Start with just the tray icon (used when logging in)"
+msgstr ""
+"Démarrer avec seulement l’icône de la zone de notification (utilisé à la "
+"connexion)"
+
+#: usr/lib/xl-screenshot/xlscreenshot/selection.py:104
+msgid "Capture Selection"
+msgstr "Capturer la sélection"
+
+#: usr/lib/xl-screenshot/xlscreenshot/tray.py:81
+msgid "Click for a Selection capture"
+msgstr "Cliquez pour une capture de sélection"
+
+#. Translators: {name} is the program name, xl-Screenshot
+#: usr/lib/xl-screenshot/xlscreenshot/tray.py:97
+#, python-brace-format
+msgid "Show {name}"
+msgstr "Afficher {name}"
+
+#: usr/lib/xl-screenshot/xlscreenshot/tray.py:99
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:167
+msgid "Screen"
+msgstr "Écran"
+
+#: usr/lib/xl-screenshot/xlscreenshot/tray.py:100
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:171
+msgid "Window"
+msgstr "Fenêtre"
+
+#: usr/lib/xl-screenshot/xlscreenshot/tray.py:101
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:175
+msgid "Selection"
+msgstr "Sélection"
+
+#: usr/lib/xl-screenshot/xlscreenshot/tray.py:103
+msgid "Quit"
+msgstr "Quitter"
+
+#: usr/lib/xl-screenshot/xlscreenshot/tray.py:143
+msgid "Keep xl-Screenshot in the system tray"
+msgstr "Garder xl-Screenshot dans la zone de notification"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:76
+msgid "Save As…"
+msgstr "Enregistrer sous…"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:83
+msgid "Copy to Clipboard"
+msgstr "Copier dans le presse-papiers"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:89
+msgid "Include Pointer"
+msgstr "Inclure le pointeur"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:94
+msgid "Show in System Tray"
+msgstr "Afficher dans la zone de notification"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:97
+msgid ""
+"Keep xl-Screenshot in the tray: click the icon for a Selection capture. "
+"Closing the window hides it, and it starts when you log in."
+msgstr ""
+"Garder xl-Screenshot dans la zone de notification : cliquez sur l’icône pour "
+"une capture de sélection. Fermer la fenêtre la masque, et il démarre à la "
+"connexion."
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:101
+msgid "Needs Mint's tray support: sudo apt install gir1.2-xapp-1.0"
+msgstr ""
+"Nécessite la prise en charge de la zone de notification de Mint : sudo apt "
+"install gir1.2-xapp-1.0"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:107
+msgid "PNG (Lossless)"
+msgstr "PNG (sans perte)"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:108
+msgid "JPEG (Compressed)"
+msgstr "JPEG (compressé)"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:109
+msgid "WebP (Compressed)"
+msgstr "WebP (compressé)"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:113
+msgid "WebP support not installed. Install 'webp-pixbuf-loader'."
+msgstr ""
+"La prise en charge de WebP n’est pas installée. Installez « webp-pixbuf-"
+"loader »."
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:184
+msgid "Annotate"
+msgstr "Annoter"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:188
+msgid "Add arrows, boxes and text (or double-click the thumbnail)"
+msgstr ""
+"Ajouter des flèches, des cadres et du texte (ou double-cliquez sur la "
+"miniature)"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:195
+msgid "Delay in Seconds:"
+msgstr "Délai en secondes :"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:475
+msgid "Window capture needs xdotool"
+msgstr "La capture de fenêtre nécessite xdotool"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:476
+msgid "Install it with: sudo apt install xdotool"
+msgstr "Installez-le avec : sudo apt install xdotool"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:516
+msgid "Window capture needs xwininfo"
+msgstr "La capture de fenêtre nécessite xwininfo"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:517
+msgid "Install it with: sudo apt install x11-utils"
+msgstr "Installez-le avec : sudo apt install x11-utils"
+
+#. Translators: shown as the xl-Annotate window title while it edits a capture
+#. Translators: the start of a saved screenshot's file name (the date and time
+#. follow)
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:600
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:645
+msgid "Screenshot"
+msgstr "Capture d’écran"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:632
+msgid "Save Screenshot As"
+msgstr "Enregistrer la capture d’écran sous"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:650
+msgid "JPEG Images"
+msgstr "Images JPEG"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:653
+msgid "WebP Images"
+msgstr "Images WebP"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:656
+msgid "PNG Images"
+msgstr "Images PNG"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:661
+msgid "All Images"
+msgstr "Toutes les images"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:701
+msgid ""
+"A screenshot tool for Linux Mint and the Cinnamon desktop, with Screen, "
+"Window, and Selection capture modes."
+msgstr ""
+"Un outil de capture d’écran pour Linux Mint et le bureau Cinnamon, avec les "
+"modes de capture Écran, Fenêtre et Sélection."
+
+#: usr/lib/xl-screenshot/xlshared/ui.py:43
+msgid "WebP support missing. Install 'webp-pixbuf-loader'."
+msgstr ""
+"La prise en charge de WebP est absente. Installez « webp-pixbuf-loader »."
+
+#: usr/lib/xl-screenshot/xlshared/ui.py:75
+#, python-brace-format
+msgid "A file named “{name}” already exists. Do you want to replace it?"
+msgstr "Un fichier nommé « {name} » existe déjà. Voulez-vous le remplacer ?"
+
+#: usr/lib/xl-screenshot/xlshared/ui.py:79
+#, python-brace-format
+msgid ""
+"The file already exists in “{folder}”. Replacing it will overwrite its "
+"contents."
+msgstr ""
+"Le fichier existe déjà dans « {folder} ». Le remplacer écrasera son contenu."
+
+#: usr/lib/xl-screenshot/xlshared/ui.py:83
+msgid "_Replace"
+msgstr "_Remplacer"
+
+#. Translators: the program's name; please leave it as it is
+#: data/io.github.xlcheese.XlScreenshot.desktop.in:5
+msgid "xl-Screenshot"
+msgstr "xl-Screenshot"
+
+#: data/io.github.xlcheese.XlScreenshot.desktop.in:6
+msgid "Screenshot Tool"
+msgstr "Outil de capture d’écran"
+
+#: data/io.github.xlcheese.XlScreenshot.desktop.in:7
+msgid "Take a screenshot of the screen, a window or a selection"
+msgstr "Faire une capture de l’écran, d’une fenêtre ou d’une sélection"
+
+#. Translators: search words for the menu, separated by semicolons (keep the
+#. last one)
+#: data/io.github.xlcheese.XlScreenshot.desktop.in:13
+msgid "screenshot;capture;screen;snapshot;print screen;grab;"
+msgstr "capture;capture d’écran;écran;screenshot;impression écran;cliché;"
+
+#: data/io.github.xlcheese.XlScreenshot.desktop.in:19
+msgid "Capture a Selection"
+msgstr "Capturer une sélection"
+
+#. Translators: the program's name; please leave it as it is
+#: data/io.github.xlcheese.XlAnnotate.desktop.in:5
+msgid "xl-Annotate"
+msgstr "xl-Annotate"
+
+#: data/io.github.xlcheese.XlAnnotate.desktop.in:6
+msgid "Image Annotator"
+msgstr "Annotateur d’images"
+
+#: data/io.github.xlcheese.XlAnnotate.desktop.in:7
+msgid "Add arrows, boxes, text, highlights and pixelation to images"
+msgstr ""
+"Ajouter des flèches, des cadres, du texte, du surlignage et de la "
+"pixellisation aux images"
+
+#. Translators: search words for the menu, separated by semicolons (keep the
+#. last one)
+#: data/io.github.xlcheese.XlAnnotate.desktop.in:14
+msgid ""
+"annotate;markup;arrow;draw;highlight;pixelate;blur;crop;screenshot;edit;"
+msgstr ""
+"annoter;marquer;flèche;dessiner;surligner;pixelliser;flouter;rogner;capture;modifier;"
+
+#: data/xl-annotate.nemo_action.in:3
+msgid "Annotate Image…"
+msgstr "Annoter l’image…"
+
+#: data/xl-annotate.nemo_action.in:4
+msgid "Add arrows, boxes, text and more with xl-Annotate"
+msgstr "Ajouter des flèches, des cadres, du texte et plus avec xl-Annotate"

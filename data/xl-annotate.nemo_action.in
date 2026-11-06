@@ -1,0 +1,8 @@
+[Nemo Action]
+Name=Annotate Image…
+Comment=Add arrows, boxes, text and more with xl-Annotate
+Exec=xl-annotate %F
+Icon-Name=xl-screenshot-annotate-symbolic
+Selection=notnone
+Mimetypes=image/png;image/jpeg;image/webp;image/bmp;image/tiff;image/gif;
+Quote=double

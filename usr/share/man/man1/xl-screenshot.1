@@ -1,0 +1,40 @@
+.TH XL-SCREENSHOT 1 "November 2026" "xl-Screenshot 0.1.0" "User Commands"
+.SH NAME
+xl-screenshot \- take a screenshot of the screen, a window, or a selection
+.SH SYNOPSIS
+.B xl-screenshot
+[\-\-selection] [\-\-tray] [\-\-version]
+.SH DESCRIPTION
+.B xl-Screenshot
+captures the whole screen, a single window (with its titlebar), or an area drawn over a still
+picture of the desktop. A delay can be set before the capture; Esc cancels it. The capture can be
+copied, saved as PNG, JPEG, or WebP, or marked up in
+.BR xl-annotate (1).
+.PP
+Only one copy runs at a time: starting it again brings up the window that is already open.
+.PP
+With "Show in System Tray" turned on in its menu, clicking the tray icon starts a Selection
+capture, closing the window only hides it, and xl-Screenshot starts at login.
+.SH OPTIONS
+.TP
+.BR \-s ", " \-\-selection
+Start a Selection capture right away. If xl-Screenshot is already running, the running copy
+starts it. Useful for a keyboard shortcut.
+.TP
+.BR \-t ", " \-\-tray
+Start with just the tray icon (what the login entry uses).
+.TP
+.BR \-v ", " \-\-version
+Show the version and quit.
+.SH FILES
+.TP
+.I ~/.config/xl-screenshot/config.json
+The save format, delay, last save folder, and other settings.
+.TP
+.I ~/.config/autostart/io.github.xlcheese.XlScreenshot.desktop
+Starts xl-Screenshot at login; present only while the tray icon is turned on.
+.SH AUTHOR
+Wesley Hayslip.
+.SH SEE ALSO
+.BR xl-annotate (1),
+https://github.com/xlcheese/xl-screenshot

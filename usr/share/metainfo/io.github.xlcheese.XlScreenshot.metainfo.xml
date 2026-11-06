@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.xlcheese.XlScreenshot</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later AND GPL-3.0-only</project_license>
+  <name>xl-Screenshot</name>
+  <summary>Take a screenshot of the screen, a window, or a selection</summary>
+  <description>
+    <p>
+      xl-Screenshot is a screenshot tool for Linux Mint and the Cinnamon desktop, with a simple
+      window that follows the system theme.
+    </p>
+    <ul>
+      <li>Screen: everything, on every monitor</li>
+      <li>Window: click a window to capture it with its titlebar</li>
+      <li>Selection: draw an area over a still picture of the desktop, and adjust it with handles</li>
+    </ul>
+    <p>
+      A delay gives you time to open a menu first (Esc cancels it). Captures can be copied, saved as
+      PNG, JPEG, or WebP, or marked up in xl-Annotate. An optional tray icon starts a selection with
+      one click.
+    </p>
+  </description>
+  <launchable type="desktop-id">io.github.xlcheese.XlScreenshot.desktop</launchable>
+  <developer id="io.github.xlcheese">
+    <name>Wesley Hayslip</name>
+  </developer>
+  <url type="homepage">https://github.com/xlcheese/xl-screenshot</url>
+  <url type="bugtracker">https://github.com/xlcheese/xl-screenshot/issues</url>
+  <provides>
+    <binary>xl-screenshot</binary>
+  </provides>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-11-06">
+      <description>
+        <p>First release.</p>
+      </description>
+    </release>
+  </releases>
+</component>

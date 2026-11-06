@@ -1,0 +1,19 @@
+[Desktop Entry]
+Type=Application
+# Translators: the program's name; please leave it as it is
+Name=xl-Screenshot
+GenericName=Screenshot Tool
+Comment=Take a screenshot of the screen, a window or a selection
+Exec=xl-screenshot
+Icon=io.github.xlcheese.XlScreenshot
+Terminal=false
+Categories=Utility;GTK;
+# Translators: search words for the menu, separated by semicolons (keep the last one)
+Keywords=screenshot;capture;screen;snapshot;print screen;grab;
+StartupNotify=true
+StartupWMClass=xl-screenshot
+Actions=selection;
+
+[Desktop Action selection]
+Name=Capture a Selection
+Exec=xl-screenshot --selection

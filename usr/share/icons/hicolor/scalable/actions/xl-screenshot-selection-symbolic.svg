@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Corner handles (same overall width as the screen and window icons) -->
+  <rect fill="#000000" x="1" y="3" width="4.5" height="4.5"/>
+  <rect fill="#000000" x="26.5" y="3" width="4.5" height="4.5"/>
+  <rect fill="#000000" x="1" y="24.5" width="4.5" height="4.5"/>
+  <rect fill="#000000" x="26.5" y="24.5" width="4.5" height="4.5"/>
+  <!-- Dashed edges -->
+  <path fill="#000000"
+        d="M7.75 4.5h4v1.5h-4z M14 4.5h4v1.5h-4z M20.25 4.5h4v1.5h-4z
+           M7.75 26h4v1.5h-4z M14 26h4v1.5h-4z M20.25 26h4v1.5h-4z
+           M2.5 9.5h1.5v3H2.5z M2.5 14.5h1.5v3H2.5z M2.5 19.5h1.5v3H2.5z
+           M28 9.5h1.5v3H28z M28 14.5h1.5v3H28z M28 19.5h1.5v3H28z"/>
+  <!-- Pointer -->
+  <path fill="#000000" d="M10.5 9.5l11.5 6.2-4.6 1.2-3.3 5.6h-1.6z"/>
+</svg>

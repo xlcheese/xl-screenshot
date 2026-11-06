@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+# Translators: the program's name; please leave it as it is
+Name=xl-Annotate
+GenericName=Image Annotator
+Comment=Add arrows, boxes, text, highlights and pixelation to images
+Exec=xl-annotate %F
+Icon=io.github.xlcheese.XlAnnotate
+Terminal=false
+Categories=Graphics;2DGraphics;RasterGraphics;GTK;
+MimeType=image/png;image/jpeg;image/webp;image/bmp;image/tiff;image/gif;
+# Translators: search words for the menu, separated by semicolons (keep the last one)
+Keywords=annotate;markup;arrow;draw;highlight;pixelate;blur;crop;screenshot;edit;
+StartupNotify=true
+StartupWMClass=xl-annotate
