@@ -26,7 +26,12 @@ whichever theme you use.
 
 <table>
   <tr><th>Mint-Y</th><th>Mint-Y-Dark</th></tr>
-  <tr><td colspan="2" align="center"><b>xl-Screenshot</b>: choose Screen, Window or Selection, then save, copy or annotate the capture</td></tr>
+  <tr><td colspan="2" align="center"><b>xl-Screenshot</b>: choose Screen, Window or Selection, with an optional delay</td></tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/xl-screenshot-empty-light.png" width="380" alt="xl-Screenshot ready to capture, Mint-Y theme"></td>
+    <td align="center"><img src="docs/screenshots/xl-screenshot-empty-dark.png" width="380" alt="xl-Screenshot ready to capture, Mint-Y-Dark theme"></td>
+  </tr>
+  <tr><td colspan="2" align="center"><b>After a capture</b>: save it, copy it, or annotate it (or double-click the thumbnail)</td></tr>
   <tr>
     <td align="center"><img src="docs/screenshots/xl-screenshot-light.png" width="380" alt="xl-Screenshot with a capture in its thumbnail, Mint-Y theme"></td>
     <td align="center"><img src="docs/screenshots/xl-screenshot-dark.png" width="380" alt="xl-Screenshot with a capture in its thumbnail, Mint-Y-Dark theme"></td>
