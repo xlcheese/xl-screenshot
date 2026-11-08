@@ -1,5 +1,7 @@
 # xl-Screenshot and xl-Annotate
 
+[![Tests](https://github.com/xlcheese/xl-screenshot/actions/workflows/tests.yml/badge.svg)](https://github.com/xlcheese/xl-screenshot/actions/workflows/tests.yml)
+
 <p align="center">
   <img src="docs/screenshots/xl-annotate-dark.png" width="840"
        alt="xl-Annotate in the Mint-Y-Dark theme, marking a hiking trail on a mountain lake picture with a dotted line, numbered steps, a note, an arrow and a loupe">
@@ -144,6 +146,8 @@ The folders mirror where the files go once installed:
 | `data/` | templates for the menu entries and Nemo's "Annotate Image…" (`make` writes them into `usr/share/`, translated) |
 | `po/` | translations (one `.po` file per language) |
 | `install-local.sh` | try the menu entries and Nemo item before there's a .deb |
+| `tests/` | the automatic tests (`make check`) |
+| `docs/screenshots/` | the pictures on this page |
 
 Inside `xlscreenshot/`:
 
@@ -164,6 +168,12 @@ Inside `xlannotate/`: `window.py` (header bar, tool bar, open/save),
 Settings are kept in `~/.config/xl-screenshot/config.json` and
 `~/.config/xl-annotate/config.json`. Settings from
 before the rename (`~/.config/xlscreenshot/`) are copied over on first start.
+
+## Tests
+
+About 425 automatic checks cover both apps. They run on every change on
+GitHub, and you can run them yourself with `make check`: see
+[tests/README.md](tests/README.md).
 
 ## Translations
 

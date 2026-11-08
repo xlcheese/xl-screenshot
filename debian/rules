@@ -7,3 +7,7 @@
 # compiled copies again on uninstall
 override_dh_python3:
 	dh_python3 /usr/lib/xl-screenshot
+
+# "make check" opens windows on a virtual screen (see tests/README.md), which a
+# package build doesn't have: run it yourself, or let GitHub run it on each push
+override_dh_auto_test:

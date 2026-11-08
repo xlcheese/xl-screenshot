@@ -4,6 +4,7 @@
 #   make pot       update po/xl-screenshot.pot from the source (after changing any text)
 #   make install   copy everything into $(DESTDIR)$(PREFIX); debian/rules runs this
 #   make deb       build the .deb (in the folder above this one)
+#   make check     run the tests (needs xvfb, openbox, xdotool: see tests/README.md)
 #   make clean     remove what make built
 
 DOMAIN  = xl-screenshot
@@ -79,6 +80,9 @@ install: all
 			$(DESTDIR)$(SHARE)/locale/$$lang/LC_MESSAGES/$(DOMAIN).mo; \
 	done
 
+check: all
+	tests/run-tests
+
 deb:
 	dpkg-buildpackage --build=binary --no-sign
 
@@ -86,4 +90,4 @@ clean:
 	rm -rf $(LOCALE) usr/share/applications $(NEMO)
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +
 
-.PHONY: all pot install deb clean
+.PHONY: all pot install check deb clean

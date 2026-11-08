@@ -1,0 +1,67 @@
+#!/bin/bash
+# Run the xl-Screenshot / xl-Annotate tests, each on its own virtual screen.
+#
+#   tests/run-tests              everything (takes a few minutes)
+#   tests/run-tests tidy style   only the suites whose names contain "tidy" or "style"
+#   PYTHON=python3.12 tests/run-tests    use another Python
+#
+# Needs: xvfb (xvfb-run), openbox, dbus, xdotool, x11-utils, python3-xlib,
+#        gettext (for the translation tests), and the app's own dependencies.
+ONLY=$(IFS="|"; echo "$*")
+cd "$(dirname "$0")" || exit 1
+export PYTHON="${PYTHON:-python3}"
+SCREEN="-screen 0 1280x800x24"
+
+missing=""
+for cmd in xvfb-run openbox dbus-run-session xdotool xwininfo "$PYTHON"; do
+    command -v "$cmd" >/dev/null || missing="$missing $cmd"
+done
+if [ -n "$missing" ]; then
+    echo "Missing:$missing" >&2
+    echo "On Mint: sudo apt install xvfb openbox dbus xdotool x11-utils python3-xlib gettext" >&2
+    exit 2
+fi
+
+# The translation tests need the compiled translations
+have_mo=1
+if command -v msgfmt >/dev/null; then
+    make -C .. --no-print-directory -s >/dev/null || have_mo=0
+else
+    have_mo=0
+fi
+
+jobs=()
+for f in test_*.py; do
+    case $f in
+        test_i18n.py) [ $have_mo = 1 ] && for lang in de es fr pt_BR; do jobs+=("$f $lang"); done ;;
+        test_hidpi.py) jobs+=("$f 1" "$f 2") ;;
+        *) jobs+=("$f") ;;
+    esac
+done
+for f in test_*.sh; do jobs+=("$f"); done
+
+passed=0; failed=0; checks=0; failed_names=()
+for job in "${jobs[@]}"; do
+    set -- $job
+    name="${1%.*}${2:+ $2}"
+    if [ -n "$ONLY" ] && ! grep -q -E "$ONLY" <<<"$name"; then continue; fi
+    case $1 in
+        *.py) cmd=("$PYTHON" "$@") ;;
+        *.sh) cmd=(bash "$@") ;;
+    esac
+    out=$(timeout 300 xvfb-run -a -s "$SCREEN" dbus-run-session -- "${cmd[@]}" 2>&1); rc=$?
+    n=$(grep -c '^PASS ' <<<"$out")
+    checks=$((checks + n))
+    if [ $rc -eq 0 ] && ! grep -q '^FAIL ' <<<"$out" && grep -q -E '^FAILURES: (none|0)$' <<<"$out"; then
+        printf '  ok    %-22s %3d checks\n' "$name" "$n"
+        passed=$((passed + 1))
+    else
+        printf '  FAIL  %-22s (exit %d)\n' "$name" "$rc"
+        grep -E '^FAIL |Traceback|Error' <<<"$out" | head -8 | sed 's/^/          /'
+        failed=$((failed + 1)); failed_names+=("$name")
+    fi
+done
+[ $have_mo = 1 ] || echo "  (translation tests skipped: install gettext to run them)"
+echo
+echo "$passed suites passed, $failed failed, $checks checks in all."
+[ $failed -eq 0 ]
