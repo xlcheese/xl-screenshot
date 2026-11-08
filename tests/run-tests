@@ -57,7 +57,8 @@ for job in "${jobs[@]}"; do
         passed=$((passed + 1))
     else
         printf '  FAIL  %-22s (exit %d)\n' "$name" "$rc"
-        grep -E '^FAIL |Traceback|Error' <<<"$out" | head -8 | sed 's/^/          /'
+        # the failing checks, any details the suite printed with them, and errors
+        grep -E '^FAIL |^   |Traceback|Error|^  File ' <<<"$out" | grep -v 'dbus-daemon\|dbind' | head -20 | sed 's/^/          /'
         failed=$((failed + 1)); failed_names+=("$name")
     fi
 done
