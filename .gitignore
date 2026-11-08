@@ -11,3 +11,5 @@ debian/*.substvars
 debian/*.log
 debian/*.debhelper
 debian/debhelper-build-stamp
+# pictures from a test run
+tests/*.png
