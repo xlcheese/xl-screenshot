@@ -63,6 +63,41 @@ right-click menu for images. Everything goes in your home folder
 (`~/.local/share`) and points at this folder; no sudo. Close Nemo (`nemo -q`)
 so it picks up the new item. `./install-local.sh --uninstall` removes it all.
 
+## Works on
+
+xl-Screenshot needs an **X11** desktop session. It's made for Linux Mint's
+Cinnamon desktop, and looks at home on other GTK desktops too.
+
+**Tested**
+
+- **Linux Mint 22 Cinnamon**: everyday use.
+- **Ubuntu 24.04** (the base of Mint 22): the .deb installs, and the
+  [automatic tests](tests/README.md) run on it after every change.
+
+**Should work: not tried yet, reports welcome**
+
+| Desktop | For example | Notes |
+|---|---|---|
+| Cinnamon | Linux Mint 21, LMDE, Fedora Cinnamon, Debian | Everything, including Nemo's "Annotate Image…" |
+| Xfce | Linux Mint Xfce, Xubuntu, MX Linux, Debian, Fedora Xfce | No right-click item (Thunar is the file manager) |
+| MATE | Linux Mint MATE, Ubuntu MATE, Debian, Fedora MATE | No right-click item (Caja is the file manager) |
+| Budgie | Ubuntu Budgie | No right-click item |
+
+The tray icon uses Mint's XApp library (`gir1.2-xapp-1.0`), which Debian and
+Ubuntu also package. On Debian and Ubuntu based systems the .deb should
+install as it is.
+
+**Doesn't work: Wayland sessions**
+
+Screen, Window and Selection captures need X11, so xl-Screenshot can't capture
+on Wayland, the default for GNOME (Ubuntu, Fedora Workstation), KDE Plasma 6
+and COSMIC. xl-Annotate doesn't depend on X11 and may work there on its own,
+but that hasn't been tried.
+
+Tried it somewhere else? Please say how it went in an
+[issue](https://github.com/xlcheese/xl-screenshot/issues), working or not, so
+this list can grow.
+
 ## Installing
 
 ```bash
