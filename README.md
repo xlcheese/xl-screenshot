@@ -213,9 +213,15 @@ GitHub, and you can run them yourself with `make check`: see
 ## Translations
 
 xl-Screenshot and xl-Annotate follow your desktop's language. They come with
-German, Spanish, French and Brazilian Portuguese. **These are drafts** written
-with the help of an AI and still need checking by native speakers:
+German, Spanish, French, Brazilian Portuguese and Russian. **These are drafts**
+written with the help of an AI and still need checking by native speakers:
 corrections are very welcome.
+
+**Your language missing, or a translation that reads oddly?** Please
+[open an issue](https://github.com/xlcheese/xl-screenshot/issues) or send a
+pull request. You don't need to know any programming: a translation is one
+text file of short phrases (see *Adding a language* below), and a native
+speaker's corrections are what turn a draft into a good translation.
 
 `make` compiles `po/*.po` into `usr/share/locale/`, and writes the menu
 entries and the Nemo item with their translations. To try a language without

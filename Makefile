@@ -36,11 +36,11 @@ $(LOCALE)/%/LC_MESSAGES/$(DOMAIN).mo: po/%.po
 	mkdir -p $(dir $@)
 	msgfmt --check --output-file=$@ $<
 
-usr/share/applications/%.desktop: data/%.desktop.in $(wildcard po/*.po)
+usr/share/applications/%.desktop: data/%.desktop.in $(wildcard po/*.po) po/LINGUAS
 	mkdir -p $(dir $@)
 	msgfmt --desktop $(DESKTOP_KEYWORDS) --template=$< -d po --output-file=$@
 
-$(NEMO): data/xl-annotate.nemo_action.in $(wildcard po/*.po)
+$(NEMO): data/xl-annotate.nemo_action.in $(wildcard po/*.po) po/LINGUAS
 	mkdir -p $(dir $@)
 	msgfmt --desktop $(DESKTOP_KEYWORDS) --template=$< -d po --output-file=$@
 

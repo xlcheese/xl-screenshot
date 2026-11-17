@@ -26,7 +26,8 @@ def check(n, c): print(("PASS " if c else "FAIL ") + n); c or fails.append(n)
 expect = {"de": ("Bildschirm", "Auswahl", "Verzögerung in Sekunden:", "Rückgängig (Strg+Z)"),
           "fr": ("Écran", "Sélection", "Délai en secondes :", "Annuler (Ctrl+Z)"),
           "es": ("Pantalla", "Selección", "Retardo en segundos:", "Deshacer (Ctrl+Z)"),
-          "pt_BR": ("Tela", "Seleção", "Atraso em segundos:", "Desfazer (Ctrl+Z)")}[lang]
+          "pt_BR": ("Tela", "Seleção", "Atraso em segundos:", "Desfazer (Ctrl+Z)"),
+          "ru": ("Экран", "Область", "Задержка в секундах:", "Отменить (Ctrl+Z)")}[lang]
 check(f"{lang}: catalogue found in {LOCALE_DIR}", _("Screen") == expect[0])
 w = ScreenshotWindow(); w.show_all(); settle()
 got = texts(w, [])

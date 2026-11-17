@@ -33,7 +33,7 @@ fi
 jobs=()
 for f in test_*.py; do
     case $f in
-        test_i18n.py) [ $have_mo = 1 ] && for lang in de es fr pt_BR; do jobs+=("$f $lang"); done ;;
+        test_i18n.py) [ $have_mo = 1 ] && for lang in $(grep -v "^\s*#" ../po/LINGUAS); do jobs+=("$f $lang"); done ;;
         test_hidpi.py) jobs+=("$f 1" "$f 2") ;;
         *) jobs+=("$f") ;;
     esac
