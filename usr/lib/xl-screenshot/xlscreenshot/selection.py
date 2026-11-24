@@ -71,7 +71,7 @@ class SelectionOverlay(Gtk.Window):
         else:
             self.theme_color = (0.2, 0.6, 1.0, 1.0)
 
-        # Colours for the panel behind Cancel / Capture Selection
+        # Colors for the panel behind Cancel / Capture Selection
         found, color = style_context.lookup_color("theme_bg_color")
         self.panel_color = (color.red, color.green, color.blue) if found else (0.96, 0.96, 0.95)
         found, color = style_context.lookup_color("borders")
@@ -216,7 +216,7 @@ class SelectionOverlay(Gtk.Window):
         cr.close_path()
 
     def _draw_panel(self, cr, x, y, w, h):
-        """A rounded card in the theme's window colour, with a soft drop
+        """A rounded card in the theme's window color, with a soft drop
         shadow, behind Cancel / Capture Selection, so they stand out on the
         darkened screen. (Drawn here, under the buttons, which GTK draws
         on top afterwards.)"""

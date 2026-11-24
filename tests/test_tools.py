@@ -32,7 +32,7 @@ def click(cv, ix, iy):
 def key(win, keyval, state=0):
     return win.on_key_press(win, Ev(keyval=keyval, state=state))
 def sample_image(w=600, h=400):
-    """White page with black text, and a noisy colourful strip to pixelate."""
+    """White page with black text, and a noisy colorful strip to pixelate."""
     surf = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h); cr = cairo.Context(surf)
     cr.set_source_rgb(1, 1, 1); cr.paint()
     cr.set_source_rgb(0, 0, 0); cr.select_font_face("Sans", 0, 1); cr.set_font_size(26)
@@ -127,7 +127,7 @@ flat = cv.render_flat()
 check("step circle is red with a white number", pix(flat, 470 - 10, 60)[0] > 180 and max(pix(flat, 470 + dx, 60 + dy) for dx in range(-4, 5) for dy in range(-6, 7)) >= (240, 240, 240))
 above = [pix(flat, 470 + dx, 60 - 30) for dx in range(-30, 31)]
 check("nothing stray drawn around a step (no line joining it to the last mark)", all(p == (255, 255, 255) for p in above))
-check("number is black on light colours", S.is_light(rgba("Yellow")) and not S.is_light(rgba("Red")))
+check("number is black on light colors", S.is_light(rgba("Yellow")) and not S.is_light(rgba("Red")))
 
 # ---- Resize handles ----
 tool(win, "rectangle"); color(win, "Green")

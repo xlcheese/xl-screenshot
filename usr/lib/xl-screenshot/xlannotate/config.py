@@ -20,8 +20,8 @@ CONFIG_PATH = os.path.join(CONFIG_DIR, "config.json")
 
 DEFAULT_CONFIG = {
     "tool": "arrow",
-    "stroke": [0.88, 0.11, 0.14, 1.0],   # line colour (r, g, b, alpha), or None
-    "fill": None,                        # fill colour, or None
+    "stroke": [0.88, 0.11, 0.14, 1.0],   # line color (r, g, b, alpha), or None
+    "fill": None,                        # fill color, or None
     "dash": "solid",
     "shadow": False,
     "font": "Sans Bold",

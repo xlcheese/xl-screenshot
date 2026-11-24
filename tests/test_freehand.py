@@ -68,7 +68,7 @@ wave = [(40 + i * 3, 80 + 25 * math.sin(i / 6)) for i in range(80)]
 stroke(cv, wave)
 f = cv.shapes[-1] if cv.shapes else None
 check("freehand: a wavy line stays a drawing", isinstance(f, S.FreehandShape))
-check("…in the chosen colour and size", f.stroke[:3] == tuple(dict(S.COLORS)["Purple"]) and f.size == 5)
+check("…in the chosen color and size", f.stroke[:3] == tuple(dict(S.COLORS)["Purple"]) and f.size == 5)
 near = lambda a, b: abs(a[0] - b[0]) < 1e-6 and abs(a[1] - b[1]) < 1e-6
 check("…smoothed (more points than drawn, ends kept)", len(f.points) > len(wave) and near(f.points[0], wave[0]) and near(f.points[-1], wave[-1]))
 print(f"   points: drawn {len(wave)}, after smoothing {len(f.points)}")
@@ -107,7 +107,7 @@ circle = wobbly([(500 + 60 * math.cos(a), 300 + 45 * math.sin(a)) for a in [0.4 
 stroke(cv, circle); settle(0.2)
 e = cv.shapes[-1]
 check("a rough circle becomes a clean ellipse", isinstance(e, S.EllipseShape) and len(cv.shapes) == n + 1)
-check("…same colour and size, no fill", e.stroke[:3] == tuple(dict(S.COLORS)["Purple"]) and e.size == 5 and e.fill is None)
+check("…same color and size, no fill", e.stroke[:3] == tuple(dict(S.COLORS)["Purple"]) and e.size == 5 and e.fill is None)
 check("…close to where it was drawn", abs(e.x + e.w / 2 - 500) < 8 and abs(e.y + e.h / 2 - 300) < 8)
 pop = cv._tidy_popover
 labels = [c.get_label() for c in pop.get_child().get_children()] if pop else []

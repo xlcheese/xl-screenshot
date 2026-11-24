@@ -26,7 +26,7 @@ def shot(app, name):
     w = app.get_window(); pb = __import__("gi.repository.Gdk", fromlist=["Gdk"]).pixbuf_get_from_window(w, 0, 0, w.get_width(), w.get_height())
     pb.savev(os.path.join(SP, name), "png", [], [])
 
-# a colourful 760x500 test image
+# a colorful 760x500 test image
 img = GdkPixbuf.Pixbuf.new_from_file_at_scale("/usr/share/icons/hicolor/256x256/apps/" + sorted(os.listdir("/usr/share/icons/hicolor/256x256/apps"))[0], 760, 500, False) if os.path.isdir("/usr/share/icons/hicolor/256x256/apps") and os.listdir("/usr/share/icons/hicolor/256x256/apps") else None
 if img is None:
     img = GdkPixbuf.Pixbuf.new(GdkPixbuf.Colorspace.RGB, False, 8, 760, 500); img.fill(0x3366ccff)

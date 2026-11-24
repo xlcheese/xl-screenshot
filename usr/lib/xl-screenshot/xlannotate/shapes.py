@@ -5,8 +5,8 @@ All coordinates are in image pixels, so marks stay put whatever size the
 image is shown at, and are drawn at full quality when the image is saved.
 
 Every mark has the same style settings:
-  stroke  line colour, (r, g, b, a) or None
-  fill    fill colour, (r, g, b, a) or None
+  stroke  line color, (r, g, b, a) or None
+  fill    fill color, (r, g, b, a) or None
   size    1-20; what it means depends on the mark (line thickness, text
           size, circle size, pixel block size, lens size)
   dash    "solid", "dashed" or "dotted"
@@ -27,7 +27,7 @@ SEE_THROUGH_ALPHA = 0.4
 DASHES = ("solid", "dashed", "dotted")
 DEFAULT_FONT = "Sans Bold"
 
-# Colour choices: (name, (r, g, b)). Solid or see-through is chosen separately.
+# Color choices: (name, (r, g, b)). Solid or see-through is chosen separately.
 COLORS = (
     (N_("Red"), (0.88, 0.11, 0.14)),
     (N_("Orange"), (1.00, 0.47, 0.00)),
@@ -40,7 +40,7 @@ COLORS = (
     (N_("White"), (1.0, 1.0, 1.0)),
 )
 
-FALLBACK_STROKE = (0.0, 0.0, 0.0, 1.0)   # for marks that need a colour when the line is None
+FALLBACK_STROKE = (0.0, 0.0, 0.0, 1.0)   # for marks that need a color when the line is None
 
 
 # What the size slider means for each kind of mark
@@ -125,7 +125,7 @@ class Shape:
         return copy.deepcopy(self)
 
     def ink(self):
-        """The line colour, for marks that must have one."""
+        """The line color, for marks that must have one."""
         return self.stroke or FALLBACK_STROKE
 
     def draw(self, cr, base=None, number=None):
@@ -525,7 +525,7 @@ class EllipseShape(RectShape):
 
 class HighlightShape(BoxShape):
     """A marker box. It's blended like a real highlighter (multiply), so dark
-    text under it stays dark and sharp. Uses the line colour."""
+    text under it stays dark and sharp. Uses the line color."""
 
     USES_SHADOW = False
     USES_SIZE = False
@@ -688,7 +688,7 @@ def _make_layout(cr, text, size, font=DEFAULT_FONT):
 
 class TextShape(Shape):
     """Text, one or more lines. (x, y) is the top-left corner of the words.
-    The line colour colours the letters; the fill colour (if any) puts a
+    The line color colors the letters; the fill color (if any) puts a
     box behind them, which keeps text readable on busy screenshots."""
 
     USES_FILL = True
@@ -747,7 +747,7 @@ class TextShape(Shape):
 
 
 class StepShape(Shape):
-    """A numbered circle centred on (x, y), in the line colour. The number
+    """A numbered circle centred on (x, y), in the line color. The number
     isn't stored: steps are numbered 1, 2, 3… in the order they were added,
     so deleting one renumbers the rest."""
 

@@ -39,6 +39,6 @@ a = AnnotateWindow(); a.set_default_size(1000, 640); a.show_all(); settle(1)
 got = texts(a, [])
 check(f"{lang}: xl-Annotate tooltips translated", expect[3] in got)
 from xlannotate import window as aw
-check(f"{lang}: colour names translated", _("Red") != "Red")
+check(f"{lang}: color names translated", _("Red") != "Red")
 win = a.get_window(); Gdk.pixbuf_get_from_window(win, 0, 0, win.get_width(), win.get_height()).savev(os.path.join(helpers.PICTURES, f"i18n_annotate_{lang}.png"), "png", [], [])
 print("FAILURES:", fails or "none")

@@ -1,4 +1,4 @@
-"""The xl-Annotate window: tool bar, colour sidebar and the drawing canvas.
+"""The xl-Annotate window: tool bar, color sidebar and the drawing canvas.
 
 It works two ways:
   * on its own (xl-annotate, or "Annotate Image…" in Nemo): Open, Save and
@@ -9,7 +9,7 @@ It works two ways:
 Layout:
   header bar   title, menu (and Done when embedded)
   tool bar     Open Save SaveAs Copy | Undo Redo | tools | Crop | line style, shadow | size
-  sidebar      line/fill pair, swap, None + colours, Solid / Sheer, font
+  sidebar      line/fill pair, swap, None + colors, Solid / Sheer, font
   canvas       the image, with zoom buttons in the corner
 """
 
@@ -31,7 +31,7 @@ from .shapes import (COLORS, DASHES, SEE_THROUGH_ALPHA, SIZE_MIN, SIZE_MAX, DEFA
 TOOL_BUTTONS = (
     ("select", "xl-annotate-select-symbolic", "edit-select-symbolic",
      _("Select: click a mark to move it (Shift: straight across or down), reshape it with its "
-     "handles, change its colours and style, or press Delete. Double-click text to edit it.")),
+     "handles, change its colors and style, or press Delete. Double-click text to edit it.")),
     ("arrow", "xl-annotate-arrow-symbolic", "go-next-symbolic",
      _("Arrow (hold Shift for 45° angles)")),
     ("line", "xl-annotate-line-symbolic", "list-remove-symbolic",
@@ -46,7 +46,7 @@ TOOL_BUTTONS = (
     ("highlight", "xl-annotate-highlight-symbolic", "format-text-highlight-symbolic",
      _("Highlighter: drag a box over text to mark it")),
     ("text", "xl-annotate-text-symbolic", "insert-text-symbolic",
-     _("Text: click where it goes. A fill colour puts a box behind it.")),
+     _("Text: click where it goes. A fill color puts a box behind it.")),
     ("step", "xl-annotate-step-symbolic", "zoom-original-symbolic",
      _("Numbered steps: each click adds the next number")),
     ("pixelate", "xl-annotate-pixelate-symbolic", "view-grid-symbolic",
@@ -106,9 +106,9 @@ def _paint_checks(cr, x, y, w, h, square=4):
 
 
 def _paint_color(cr, x, y, w, h, color):
-    """A colour sample: None is all checkerboard; a see-through colour is
+    """A color sample: None is all checkerboard; a see-through color is
     split diagonally, solid in the top-left half and over the checkerboard in
-    the bottom-right half; a solid colour is just the colour."""
+    the bottom-right half; a solid color is just the color."""
     if color is None:
         _paint_checks(cr, x, y, w, h)
         return
@@ -149,8 +149,8 @@ def _flatten_toolbar(toolbar):
 
 class LineFillWell(Gtk.DrawingArea):
     """The line/fill pair at the top of the sidebar, as in GIMP: the line
-    colour is always the square in front (top left), the fill colour the
-    square behind (bottom right). Click one to choose which the colour
+    color is always the square in front (top left), the fill color the
+    square behind (bottom right). Click one to choose which the color
     buttons set; the chosen one is drawn a little bigger."""
 
     SIZE = 54
@@ -165,8 +165,8 @@ class LineFillWell(Gtk.DrawingArea):
         self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         self.connect("draw", self.on_draw)
         self.connect("button-press-event", self.on_press)
-        self.set_tooltip_text(_("Line colour (front) and fill colour (back).\n"
-                                "Click one, then pick a colour below."))
+        self.set_tooltip_text(_("Line color (front) and fill color (back).\n"
+                                "Click one, then pick a color below."))
 
     def _rect(self, which, chosen):
         """(x, y, w, h). The line square sits in the top-left corner, the fill
@@ -181,7 +181,7 @@ class LineFillWell(Gtk.DrawingArea):
         for which in ("fill", "line"):           # line always in front
             x, y, w, h = self._rect(which, which == target)
             _paint_color(cr, x, y, w, h, stroke if which == "line" else fill)
-            # A thin neutral edge, so white, None and theme-coloured
+            # A thin neutral edge, so white, None and theme-colored
             # squares always show
             cr.set_line_width(1)
             cr.set_source_rgba(0.25, 0.25, 0.25, 0.7)
@@ -211,7 +211,7 @@ class AnnotateWindow(Gtk.ApplicationWindow):
         self.doc_name = _("Untitled")
         self.modified = False
         self._syncing = False         # True while controls are updated to match a selection
-        self.color_target = "line"    # which colour the colour buttons set: "line" or "fill"
+        self.color_target = "line"    # which color the color buttons set: "line" or "fill"
 
         self.config = load_config()
         self.set_icon_name(themed_icon_name(APP_ID, APP_FALLBACK_ICON))
@@ -334,7 +334,7 @@ class AnnotateWindow(Gtk.ApplicationWindow):
         self.toolbar = toolbar
         _flatten_toolbar(toolbar)
 
-        # ---- Sidebar: colours ----
+        # ---- Sidebar: colors ----
         sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         for side in ("start", "end", "top", "bottom"):
             getattr(sidebar, f"set_margin_{side}")(8)
@@ -342,7 +342,7 @@ class AnnotateWindow(Gtk.ApplicationWindow):
         sidebar.pack_start(self.well, False, False, 0)
 
         swap_btn = Gtk.Button(label="⇄")
-        swap_btn.set_tooltip_text(_("Swap the line and fill colours"))
+        swap_btn.set_tooltip_text(_("Swap the line and fill colors"))
         swap_btn.set_relief(Gtk.ReliefStyle.NONE)
         swap_btn.set_halign(Gtk.Align.CENTER)
         swap_btn.connect("clicked", lambda b: self.swap_colors())
@@ -358,22 +358,22 @@ class AnnotateWindow(Gtk.ApplicationWindow):
             first = first or btn
             btn.set_mode(False)
             btn.set_relief(Gtk.ReliefStyle.NONE)
-            btn.set_tooltip_text(_("No colour") if name == "None" else _(name))
+            btn.set_tooltip_text(_("No color") if name == "None" else _(name))
             btn.add(self._make_swatch(name))
             btn.connect("toggled", self.on_color_toggled, name)
             grid.attach(btn, i % 2, i // 2, 1, 1)
             self.color_buttons[name] = btn
-        # Not shown: switched on when the colour isn't one of ours, so no
+        # Not shown: switched on when the color isn't one of ours, so no
         # swatch looks chosen
         self._no_match_btn = Gtk.RadioButton.new_from_widget(first)
         sidebar.pack_start(grid, False, False, 0)
 
         opacity_box, self.opacity_buttons = _radio_group(
-            [("solid", _("Solid colour")),
+            [("solid", _("Solid color")),
              # xgettext:no-python-format
              ("see-through", _("Semi-transparent ({percent}% opacity)").format(
                  percent=int(SEE_THROUGH_ALPHA * 100)))],
-            # Translators: "Sheer" is a see-through colour (the short label beside "Solid")
+            # Translators: "Sheer" is a see-through color (the short label beside "Solid")
             lambda v: Gtk.Label(label=_("Solid") if v == "solid" else _("Sheer")),
             self.on_opacity_toggled, vertical=True)
         sidebar.pack_start(opacity_box, False, False, 0)
@@ -501,7 +501,7 @@ class AnnotateWindow(Gtk.ApplicationWindow):
             r = min(w, h) / 2 - 1
             cr.arc(w / 2, h / 2, r, 0, 6.2832)
             if rgb is None:
-                # Checkerboard: no colour (transparent)
+                # Checkerboard: no color (transparent)
                 cr.save()
                 cr.clip_preserve()
                 _paint_checks(cr, 0, 0, w, h, square=4)

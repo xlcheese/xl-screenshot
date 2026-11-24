@@ -14,7 +14,7 @@ Two small apps for Linux Mint and the Cinnamon desktop, installed together:
   lines, freehand drawing, rectangles, ellipses, highlighter, text, numbered
   steps, pixelate, a magnifying loupe and crop. Rough freehand lines, arrows,
   circles and boxes are tidied into clean shapes (Keep My Drawing undoes that;
-  the menu turns it off). Each mark has a line and a fill colour (solid,
+  the menu turns it off). Each mark has a line and a fill color (solid,
   see-through or none), a size, a line style and an optional shadow, and stays
   editable (move, reshape, restyle, delete) until you save. It runs on its own,
   or from xl-Screenshot's Annotate button.

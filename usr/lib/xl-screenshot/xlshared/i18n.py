@@ -32,6 +32,6 @@ ngettext = gettext.ngettext         # for text with a number in it: "1 second", 
 
 
 def N_(text):
-    """Marks text for translation where it is also used as a name in the code (a colour,
+    """Marks text for translation where it is also used as a name in the code (a color,
     a tool); it is translated with _() only when shown."""
     return text

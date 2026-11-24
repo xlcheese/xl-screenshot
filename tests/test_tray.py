@@ -37,7 +37,7 @@ check("check it: starts at login with --tray", 'Exec="/home/wes/Downloads/my stu
 labels = [mi.get_label() for mi in app.tray.menu.get_children() if not isinstance(mi, Gtk.SeparatorMenuItem)]
 check("right-click menu items", labels == ["Show xl-Screenshot", "Screen", "Window", "Selection", "Quit"])
 user_icon = os.path.expanduser("~/.local/share/icons/hicolor/scalable/actions/xl-screenshot-tray-symbolic.svg")
-check("tray icon given by name (so Cinnamon recolours it)", tray._tray_icon_name() == "xl-screenshot-tray-symbolic")
+check("tray icon given by name (so Cinnamon recolors it)", tray._tray_icon_name() == "xl-screenshot-tray-symbolic")
 check("…and copied where Cinnamon finds it by name", os.path.isfile(user_icon)
       and open(user_icon, "rb").read() == open(tray._OUR_ICON, "rb").read())
 mtime = os.path.getmtime(user_icon); time.sleep(1.1); tray._tray_icon_name()

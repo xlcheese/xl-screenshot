@@ -17,7 +17,7 @@ def settle(t=0.6):
     while time.time() < end:
         while Gtk.events_pending(): Gtk.main_iteration_do(False)
         time.sleep(0.02)
-# a desktop with a distinct colour every 10 device pixels, so any offset or scale shows
+# a desktop with a distinct color every 10 device pixels, so any offset or scale shows
 root = Gdk.get_default_root_window(); W, H = root.get_width() * SC, root.get_height() * SC
 pat = cairo.ImageSurface(cairo.FORMAT_RGB24, W, H); cr = cairo.Context(pat)
 for x in range(0, W, 10):

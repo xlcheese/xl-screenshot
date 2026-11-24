@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xl-Screenshot 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/xlcheese/xl-screenshot/issues\n"
-"POT-Creation-Date: 2026-11-17 20:26+0000\n"
+"POT-Creation-Date: 2026-11-24 16:28+0000\n"
 "PO-Revision-Date: 2026-11-06 14:48+0000\n"
 "Last-Translator: Draft by Claude (needs native review)\n"
 "Language-Team: French\n"
@@ -91,8 +91,8 @@ msgstr "Blanc"
 #: usr/lib/xl-screenshot/xlannotate/window.py:33
 msgid ""
 "Select: click a mark to move it (Shift: straight across or down), reshape it "
-"with its handles, change its colours and style, or press Delete. Double-"
-"click text to edit it."
+"with its handles, change its colors and style, or press Delete. Double-click "
+"text to edit it."
 msgstr ""
 "Sélection : cliquez sur une marque pour la déplacer (Maj : uniquement à "
 "l’horizontale ou à la verticale), modifiez sa forme avec ses poignées, "
@@ -130,7 +130,7 @@ msgid "Highlighter: drag a box over text to mark it"
 msgstr "Surligneur : tracez un cadre sur du texte pour le marquer"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:49
-msgid "Text: click where it goes. A fill colour puts a box behind it."
+msgid "Text: click where it goes. A fill color puts a box behind it."
 msgstr ""
 "Texte : cliquez à l’endroit voulu. Une couleur de remplissage place un cadre "
 "derrière."
@@ -192,8 +192,8 @@ msgstr "Trait pointillé"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:168
 msgid ""
-"Line colour (front) and fill colour (back).\n"
-"Click one, then pick a colour below."
+"Line color (front) and fill color (back).\n"
+"Click one, then pick a color below."
 msgstr ""
 "Couleur du trait (devant) et couleur de remplissage (derrière).\n"
 "Cliquez sur l’une, puis choisissez une couleur en dessous."
@@ -255,15 +255,15 @@ msgid "Drop shadow"
 msgstr "Ombre portée"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:345
-msgid "Swap the line and fill colours"
+msgid "Swap the line and fill colors"
 msgstr "Échanger les couleurs du trait et du remplissage"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:361
-msgid "No colour"
+msgid "No color"
 msgstr "Aucune couleur"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:372
-msgid "Solid colour"
+msgid "Solid color"
 msgstr "Couleur opaque"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:374
@@ -271,7 +271,7 @@ msgstr "Couleur opaque"
 msgid "Semi-transparent ({percent}% opacity)"
 msgstr "Semi-transparent ({percent} % d’opacité)"
 
-#. Translators: "Sheer" is a see-through colour (the short label beside "Solid")
+#. Translators: "Sheer" is a see-through color (the short label beside "Solid")
 #: usr/lib/xl-screenshot/xlannotate/window.py:377
 msgid "Solid"
 msgstr "Opaque"

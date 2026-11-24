@@ -17,7 +17,7 @@ for alpha, label in ((0.4, "sheer"), (1.0, "solid")):
     overlap = pix(flat, bx + head * 0.15, 60)        # where the shaft runs into the head
     tip = pix(flat, 380 - head * 0.15, 60)
     print(f"  {label}: shaft {shaft}  overlap {overlap}  head {tip}")
-    check(f"{label} arrow: one even colour (shaft = overlap = head)", shaft == overlap == tip)
+    check(f"{label} arrow: one even color (shaft = overlap = head)", shaft == overlap == tip)
     # The shadow on its own (just below the shaft, outside the arrow) must be
     # an even grey too: no darker band where the shaft meets the head
     a.shadow = True

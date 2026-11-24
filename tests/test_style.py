@@ -43,13 +43,13 @@ win = AnnotateWindow(); win.ask_unsaved = lambda: "discard"
 win.show_all(); win.load_pixbuf(white(600, 400), name="w.png"); settle(0.5)
 cv = win.canvas
 
-# ---- Sidebar colours ----
+# ---- Sidebar colors ----
 names = [n for n in win.color_buttons]
-check("sidebar: None + 9 colours incl. Pink and Purple", names == ["None", "Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "Black", "White"])
-check("starts setting the line colour", win.color_target == "line")
+check("sidebar: None + 9 colors incl. Pink and Purple", names == ["None", "Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "Black", "White"])
+check("starts setting the line color", win.color_target == "line")
 tool(win, "rectangle"); color(win, "Blue"); color(win, "Yellow", "fill")
 win.opacity_buttons["see-through"].set_active(True)
-check("fill colour set see-through", cv.fill == rgba("Yellow", S.SEE_THROUGH_ALPHA) and cv.stroke == rgba("Blue"))
+check("fill color set see-through", cv.fill == rgba("Yellow", S.SEE_THROUGH_ALPHA) and cv.stroke == rgba("Blue"))
 drag(cv, 50, 50, 250, 150)
 r = cv.shapes[-1]
 check("rectangle gets blue line + see-through yellow fill", r.stroke == rgba("Blue") and r.fill == rgba("Yellow", 0.4))
@@ -58,9 +58,9 @@ inside = pix(flat, 150, 100)
 check("see-through fill blends with the image", inside[2] > 120 and inside[2] < 220 and inside[0] > 200)
 check("border is solid blue", close(pix(flat, 50, 100), (54, 133, 227), 30))
 win.set_color_target("fill")
-check("well click switches what the swatches set; sidebar shows fill's colour", win.color_buttons["Yellow"].get_active() and win.opacity_buttons["see-through"].get_active())
+check("well click switches what the swatches set; sidebar shows fill's color", win.color_buttons["Yellow"].get_active() and win.opacity_buttons["see-through"].get_active())
 win.set_color_target("line")
-check("…and back to the line's colour (solid)", win.color_buttons["Blue"].get_active() and win.opacity_buttons["solid"].get_active())
+check("…and back to the line's color (solid)", win.color_buttons["Blue"].get_active() and win.opacity_buttons["solid"].get_active())
 color(win, "None", "fill")
 check("None: no fill", cv.fill is None and not win.opacity_buttons["solid"].get_sensitive())
 win.set_color_target("line")
@@ -68,9 +68,9 @@ win.swap_colors()
 check("swap: line becomes None, fill becomes blue", cv.stroke is None and cv.fill == rgba("Blue"))
 win.swap_colors()
 
-# Select + recolour
+# Select + recolor
 tool(win, "select"); click(cv, 50, 100)
-check("select the rectangle: sidebar shows its line colour", cv.selected is r and win.color_buttons["Blue"].get_active())
+check("select the rectangle: sidebar shows its line color", cv.selected is r and win.color_buttons["Blue"].get_active())
 color(win, "Pink")
 check("pick Pink: the rectangle's line turns pink", r.stroke == rgba("Pink"))
 color(win, "None", "fill")
@@ -80,9 +80,9 @@ r = cv.shapes[-1]
 check("undo brings the fill back", r.fill == rgba("Yellow", 0.4))
 cv.select(None); click(cv, 150, 100)
 check("filled shape can be picked by clicking inside", cv.selected is r)
-# custom colour: no swatch looks chosen
+# custom color: no swatch looks chosen
 r.stroke = (0.3, 0.3, 0.3, 1.0); win.set_color_target("line")
-check("colour not in the palette: no swatch looks chosen", not any(b.get_active() for b in win.color_buttons.values()))
+check("color not in the palette: no swatch looks chosen", not any(b.get_active() for b in win.color_buttons.values()))
 cv.select(None)
 
 # ---- Line style, shadow ----

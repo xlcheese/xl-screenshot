@@ -24,7 +24,7 @@ except (ValueError, ImportError):
     HAS_XAPP = False
 
 # The icon: our Selection icon redrawn on the 16px grid tray icons use,
-# since a click starts a Selection. Cinnamon's tray only recolours icons
+# since a click starts a Selection. Cinnamon's tray only recolors icons
 # (dark on a light panel, light on a dark one) when it finds them by name:
 # given as a file, an icon shows up black, or not at all.
 TRAY_ICON = "xl-screenshot-tray-symbolic"
