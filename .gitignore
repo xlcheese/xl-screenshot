@@ -13,3 +13,5 @@ debian/*.debhelper
 debian/debhelper-build-stamp
 # pictures from a test run
 tests/*.png
+docs/screenshots/make/out/
+docs/screenshots/make/__pycache__/

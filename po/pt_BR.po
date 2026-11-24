@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xl-Screenshot 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/xlcheese/xl-screenshot/issues\n"
-"POT-Creation-Date: 2026-11-24 20:51+0000\n"
+"POT-Creation-Date: 2026-11-24 22:01+0000\n"
 "PO-Revision-Date: 2026-11-06 14:48+0000\n"
 "Last-Translator: Draft by Claude (needs native review)\n"
 "Language-Team: Portuguese (Brazil)\n"
@@ -111,17 +111,17 @@ msgid ""
 "tidied into clean shapes (you can keep your drawing, or turn this off in the "
 "menu)."
 msgstr ""
-"Mão livre: desenhe com o mouse. Linhas, setas, círculos e caixas tortos viram"
-" formas limpas (você pode manter seu desenho ou desativar isso no menu)."
+"Mão livre: desenhe com o mouse. Linhas, setas, círculos e caixas tortos "
+"viram formas limpas (você pode manter seu desenho ou desativar isso no menu)."
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:43
 msgid ""
-"Ink pen: the line is thicker where you draw slowly and thinner where you draw"
-" quickly (with a drawing tablet, it follows the pen's pressure)"
+"Ink pen: the line is thicker where you draw slowly and thinner where you "
+"draw quickly (with a drawing tablet, it follows the pen's pressure)"
 msgstr ""
 "Caneta tinteiro: a linha fica mais grossa onde você desenha devagar e mais "
-"fina onde desenha rápido (com uma mesa digitalizadora, ela segue a pressão da"
-" caneta)"
+"fina onde desenha rápido (com uma mesa digitalizadora, ela segue a pressão "
+"da caneta)"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:46
 msgid "Rectangle (hold Shift for a square)"
@@ -469,15 +469,13 @@ msgstr "Salvar imagem anotada como"
 msgid "_Save"
 msgstr "_Salvar"
 
-#. Translators: the suggested file name for a copy; {name} is the original's
-#. name
+#. Translators: the suggested file name for a copy; {name} is the original's name
 #: usr/lib/xl-screenshot/xlannotate/window.py:1137
 #, python-brace-format
 msgid "{name}-annotated"
 msgstr "{name}-anotada"
 
-#. Translators: the start of a new annotated image's file name (date and time
-#. follow)
+#. Translators: the start of a new annotated image's file name (date and time follow)
 #: usr/lib/xl-screenshot/xlannotate/window.py:1141
 msgid "Annotated"
 msgstr "Anotada"
@@ -660,8 +658,7 @@ msgid "Install it with: sudo apt install x11-utils"
 msgstr "Instale com: sudo apt install x11-utils"
 
 #. Translators: shown as the xl-Annotate window title while it edits a capture
-#. Translators: the start of a saved screenshot's file name (the date and time
-#. follow)
+#. Translators: the start of a saved screenshot's file name (the date and time follow)
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:629
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:674
 msgid "Screenshot"
@@ -729,8 +726,7 @@ msgstr "Ferramenta de captura de tela"
 msgid "Take a screenshot of the screen, a window or a selection"
 msgstr "Capturar a tela, uma janela ou uma seleção"
 
-#. Translators: search words for the menu, separated by semicolons (keep the
-#. last one)
+#. Translators: search words for the menu, separated by semicolons (keep the last one)
 #: data/io.github.xlcheese.XlScreenshot.desktop.in:13
 msgid "screenshot;capture;screen;snapshot;print screen;grab;"
 msgstr "captura;captura de tela;tela;screenshot;print screen;instantâneo;"
@@ -752,13 +748,13 @@ msgstr "Anotador de imagens"
 msgid "Add arrows, boxes, text, highlights and pixelation to images"
 msgstr "Adicionar setas, caixas, texto, destaques e pixelização a imagens"
 
-#. Translators: search words for the menu, separated by semicolons (keep the
-#. last one)
+#. Translators: search words for the menu, separated by semicolons (keep the last one)
 #: data/io.github.xlcheese.XlAnnotate.desktop.in:14
 msgid ""
 "annotate;markup;arrow;draw;highlight;pixelate;blur;crop;screenshot;edit;"
 msgstr ""
-"anotar;marcar;seta;desenhar;destacar;pixelizar;desfocar;recortar;captura;editar;"
+"anotar;marcar;seta;desenhar;destacar;pixelizar;desfocar;recortar;captura;"
+"editar;"
 
 #: data/xl-annotate.nemo_action.in:3
 msgid "Annotate Image…"

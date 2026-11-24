@@ -32,6 +32,17 @@
   </provides>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.2.0" date="2026-11-24">
+      <description>
+        <ul>
+          <li>The Selection panel shows the selection's size in pixels</li>
+          <li>The first time it's used, xl-Screenshot offers to stay in the system tray</li>
+          <li>Selection, Screen and pointer captures work on HiDPI screens at 200% scaling</li>
+          <li>xl-Annotate gained curved arrows, an ink pen, Resize, Rotate &amp; Flip and exact crop sizes</li>
+          <li>A Russian translation; all translations are drafts awaiting review</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.1" date="2026-11-06">
       <description>
         <p>The About window links to the project page.</p>

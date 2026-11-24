@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xl-Screenshot 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/xlcheese/xl-screenshot/issues\n"
-"POT-Creation-Date: 2026-11-24 20:51+0000\n"
+"POT-Creation-Date: 2026-11-24 22:01+0000\n"
 "PO-Revision-Date: 2026-11-06 14:48+0000\n"
 "Last-Translator: Draft by Claude (needs native review)\n"
 "Language-Team: Spanish\n"
@@ -93,9 +93,9 @@ msgid ""
 "with its handles, change its colors and style, or press Delete. Double-click "
 "text to edit it."
 msgstr ""
-"Seleccionar: haga clic en una marca para moverla (Mayús: solo en horizontal o"
-" vertical), cambie su forma con los tiradores, cambie sus colores y estilo, o"
-" pulse Supr. Haga doble clic en un texto para editarlo."
+"Seleccionar: haga clic en una marca para moverla (Mayús: solo en horizontal "
+"o vertical), cambie su forma con los tiradores, cambie sus colores y estilo, "
+"o pulse Supr. Haga doble clic en un texto para editarlo."
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:36
 msgid "Arrow (hold Shift for 45° angles)"
@@ -117,8 +117,8 @@ msgstr ""
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:43
 msgid ""
-"Ink pen: the line is thicker where you draw slowly and thinner where you draw"
-" quickly (with a drawing tablet, it follows the pen's pressure)"
+"Ink pen: the line is thicker where you draw slowly and thinner where you "
+"draw quickly (with a drawing tablet, it follows the pen's pressure)"
 msgstr ""
 "Pluma: la línea es más gruesa donde dibuja despacio y más fina donde dibuja "
 "deprisa (con una tableta gráfica, sigue la presión del lápiz)"
@@ -469,15 +469,13 @@ msgstr "Guardar imagen anotada como"
 msgid "_Save"
 msgstr "_Guardar"
 
-#. Translators: the suggested file name for a copy; {name} is the original's
-#. name
+#. Translators: the suggested file name for a copy; {name} is the original's name
 #: usr/lib/xl-screenshot/xlannotate/window.py:1137
 #, python-brace-format
 msgid "{name}-annotated"
 msgstr "{name}-anotada"
 
-#. Translators: the start of a new annotated image's file name (date and time
-#. follow)
+#. Translators: the start of a new annotated image's file name (date and time follow)
 #: usr/lib/xl-screenshot/xlannotate/window.py:1141
 msgid "Annotated"
 msgstr "Anotada"
@@ -585,14 +583,14 @@ msgid ""
 "Keep xl-Screenshot in the tray: click the icon for a Selection capture. "
 "Closing the window hides it, and it starts when you log in."
 msgstr ""
-"Mantener xl-Screenshot en la bandeja: haga clic en el icono para capturar una"
-" selección. Cerrar la ventana la oculta, y se inicia al iniciar sesión."
+"Mantener xl-Screenshot en la bandeja: haga clic en el icono para capturar "
+"una selección. Cerrar la ventana la oculta, y se inicia al iniciar sesión."
 
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:101
 msgid "Needs Mint's tray support: sudo apt install gir1.2-xapp-1.0"
 msgstr ""
-"Necesita la compatibilidad con la bandeja de Mint: sudo apt install "
-"gir1.2-xapp-1.0"
+"Necesita la compatibilidad con la bandeja de Mint: sudo apt install gir1.2-"
+"xapp-1.0"
 
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:107
 msgid "PNG (Lossless)"
@@ -662,8 +660,7 @@ msgid "Install it with: sudo apt install x11-utils"
 msgstr "Instálelo con: sudo apt install x11-utils"
 
 #. Translators: shown as the xl-Annotate window title while it edits a capture
-#. Translators: the start of a saved screenshot's file name (the date and time
-#. follow)
+#. Translators: the start of a saved screenshot's file name (the date and time follow)
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:629
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:674
 msgid "Screenshot"
@@ -732,13 +729,12 @@ msgstr "Herramienta de capturas de pantalla"
 msgid "Take a screenshot of the screen, a window or a selection"
 msgstr "Capturar la pantalla, una ventana o una selección"
 
-#. Translators: search words for the menu, separated by semicolons (keep the
-#. last one)
+#. Translators: search words for the menu, separated by semicolons (keep the last one)
 #: data/io.github.xlcheese.XlScreenshot.desktop.in:13
 msgid "screenshot;capture;screen;snapshot;print screen;grab;"
 msgstr ""
-"captura;captura de pantalla;pantalla;screenshot;imprimir "
-"pantalla;instantánea;"
+"captura;captura de pantalla;pantalla;screenshot;imprimir pantalla;"
+"instantánea;"
 
 #: data/io.github.xlcheese.XlScreenshot.desktop.in:19
 msgid "Capture a Selection"
@@ -757,13 +753,13 @@ msgstr "Anotador de imágenes"
 msgid "Add arrows, boxes, text, highlights and pixelation to images"
 msgstr "Añadir flechas, cuadros, texto, resaltados y pixelado a las imágenes"
 
-#. Translators: search words for the menu, separated by semicolons (keep the
-#. last one)
+#. Translators: search words for the menu, separated by semicolons (keep the last one)
 #: data/io.github.xlcheese.XlAnnotate.desktop.in:14
 msgid ""
 "annotate;markup;arrow;draw;highlight;pixelate;blur;crop;screenshot;edit;"
 msgstr ""
-"anotar;marcar;flecha;dibujar;resaltar;pixelar;difuminar;recortar;captura;editar;"
+"anotar;marcar;flecha;dibujar;resaltar;pixelar;difuminar;recortar;captura;"
+"editar;"
 
 #: data/xl-annotate.nemo_action.in:3
 msgid "Annotate Image…"

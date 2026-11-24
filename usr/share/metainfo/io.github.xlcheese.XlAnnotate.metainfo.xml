@@ -33,6 +33,20 @@
   </provides>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.2.0" date="2026-11-24">
+      <description>
+        <p>New tools and refinements:</p>
+        <ul>
+          <li>Curved arrows and lines: drag the middle handle</li>
+          <li>A speed-sensitive ink pen (follows pen pressure on a tablet)</li>
+          <li>Resize, and Rotate &amp; Flip, next to Crop</li>
+          <li>Crop to exact positions and sizes, from a popover by the Crop button</li>
+          <li>Open, Save, Save As and Copy moved to the header bar, for a narrower window</li>
+          <li>See-through shapes no longer show a darker band where the line meets the fill</li>
+          <li>A Russian translation; all translations are drafts awaiting review</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.1" date="2026-11-06">
       <description>
         <p>The About window links to the project page.</p>

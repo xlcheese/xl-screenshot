@@ -8,7 +8,7 @@ from xlshared.i18n import _
 APP_ID = "io.github.xlcheese.XlAnnotate"     # also the name of the .desktop and icon files
 APP_NAME = "xl-Annotate"
 APP_COMMAND = "xl-annotate"
-APP_VERSION = "0.1.1"
+APP_VERSION = "0.2.0"
 APP_FALLBACK_ICON = "applications-graphics"  # used until xl-Annotate has its own icon
 APP_WEBSITE = "https://github.com/xlcheese/xl-screenshot"
 APP_AUTHORS = ["Wesley Hayslip"]

@@ -1,0 +1,29 @@
+#!/bin/bash
+# Re-make the README screenshots, in Mint-Y and Mint-Y-Dark, into docs/screenshots/.
+# Needs xvfb, openbox, xdotool and the Ubuntu font (fonts-ubuntu), plus
+# python3-numpy for the window shadows. See README.md in this folder.
+set -e
+cd "$(dirname "$0")"
+PY="${PYTHON:-python3}"
+SCREEN="-screen 0 2880x1800x24"     # drawn at 2x, so the pictures are sharp on HiDPI screens
+for theme in Mint-Y Mint-Y-Dark; do
+    # scene_annotate first: scene_screens shows its picture in xl-Screenshot's thumbnail
+    for scene in scene_annotate scene_screens scene_empty; do
+        echo "$theme: $scene"
+        xvfb-run -a -s "$SCREEN" "$PY" "$scene.py" "$theme" >/dev/null 2>&1
+    done
+done
+"$PY" - <<'PY'
+import gi
+gi.require_version("GdkPixbuf", "2.0")
+from gi.repository import GdkPixbuf
+for theme in ("light", "dark"):
+    for name, out, width in (("annotate", "xl-annotate", None), ("screenshot", "xl-screenshot", None),
+                             ("screenshot-empty", "xl-screenshot-empty", None),
+                             ("selection", "xl-screenshot-selection", 1920)):     # the whole screen: 1920 wide is plenty
+        p = GdkPixbuf.Pixbuf.new_from_file(f"out/{name}-{theme}.png")
+        if width:
+            p = p.scale_simple(width, int(p.get_height() * width / p.get_width()), GdkPixbuf.InterpType.HYPER)
+        p.savev(f"../{out}-{theme}.png", "png", ["compression"], ["9"])
+        print("wrote", f"docs/screenshots/{out}-{theme}.png")
+PY

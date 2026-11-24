@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xl-Screenshot 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/xlcheese/xl-screenshot/issues\n"
-"POT-Creation-Date: 2026-11-24 20:51+0000\n"
+"POT-Creation-Date: 2026-11-24 22:01+0000\n"
 "PO-Revision-Date: 2026-11-06 14:48+0000\n"
 "Last-Translator: Draft by Claude (needs native review)\n"
 "Language-Team: German\n"
@@ -97,8 +97,8 @@ msgid ""
 msgstr ""
 "Auswählen: Klicken Sie auf eine Markierung, um sie zu verschieben (Umschalt: "
 "nur waagerecht oder senkrecht), ändern Sie ihre Form mit den Griffen, ändern "
-"Sie Farben und Stil oder drücken Sie Entf. Doppelklicken Sie auf Text, um ihn"
-" zu bearbeiten."
+"Sie Farben und Stil oder drücken Sie Entf. Doppelklicken Sie auf Text, um "
+"ihn zu bearbeiten."
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:36
 msgid "Arrow (hold Shift for 45° angles)"
@@ -120,8 +120,8 @@ msgstr ""
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:43
 msgid ""
-"Ink pen: the line is thicker where you draw slowly and thinner where you draw"
-" quickly (with a drawing tablet, it follows the pen's pressure)"
+"Ink pen: the line is thicker where you draw slowly and thinner where you "
+"draw quickly (with a drawing tablet, it follows the pen's pressure)"
 msgstr ""
 "Tintenstift: Die Linie wird dicker, wo Sie langsam zeichnen, und dünner, wo "
 "Sie schnell zeichnen (mit einem Grafiktablett folgt sie dem Druck des Stifts)"
@@ -160,8 +160,8 @@ msgid ""
 "more or less, and the white one to change its size."
 msgstr ""
 "Lupe: Klicken Sie, um eine Stelle zu vergrößern. Ziehen Sie den grünen Griff "
-"um den Ring, um mehr oder weniger zu vergrößern, und den weißen, um die Größe"
-" zu ändern."
+"um den Ring, um mehr oder weniger zu vergrößern, und den weißen, um die "
+"Größe zu ändern."
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:61
 msgid "Crop: drag the area to keep"
@@ -476,15 +476,13 @@ msgstr "Beschriftetes Bild speichern unter"
 msgid "_Save"
 msgstr "_Speichern"
 
-#. Translators: the suggested file name for a copy; {name} is the original's
-#. name
+#. Translators: the suggested file name for a copy; {name} is the original's name
 #: usr/lib/xl-screenshot/xlannotate/window.py:1137
 #, python-brace-format
 msgid "{name}-annotated"
 msgstr "{name}-beschriftet"
 
-#. Translators: the start of a new annotated image's file name (date and time
-#. follow)
+#. Translators: the start of a new annotated image's file name (date and time follow)
 #: usr/lib/xl-screenshot/xlannotate/window.py:1141
 msgid "Annotated"
 msgstr "Beschriftet"
@@ -602,8 +600,8 @@ msgstr ""
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:101
 msgid "Needs Mint's tray support: sudo apt install gir1.2-xapp-1.0"
 msgstr ""
-"Benötigt die Systemleisten-Unterstützung von Mint: sudo apt install "
-"gir1.2-xapp-1.0"
+"Benötigt die Systemleisten-Unterstützung von Mint: sudo apt install gir1.2-"
+"xapp-1.0"
 
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:107
 msgid "PNG (Lossless)"
@@ -647,8 +645,8 @@ msgid ""
 "in the menu."
 msgstr ""
 "Ein Klick auf das Symbol in der Systemleiste startet sofort eine "
-"Auswahlaufnahme. xl-Screenshot startet außerdem beim Anmelden. Sie können das"
-" jederzeit mit „In der Systemleiste anzeigen“ im Menü ändern."
+"Auswahlaufnahme. xl-Screenshot startet außerdem beim Anmelden. Sie können "
+"das jederzeit mit „In der Systemleiste anzeigen“ im Menü ändern."
 
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:359
 msgid "_Not Now"
@@ -675,8 +673,7 @@ msgid "Install it with: sudo apt install x11-utils"
 msgstr "Installieren Sie es mit: sudo apt install x11-utils"
 
 #. Translators: shown as the xl-Annotate window title while it edits a capture
-#. Translators: the start of a saved screenshot's file name (the date and time
-#. follow)
+#. Translators: the start of a saved screenshot's file name (the date and time follow)
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:629
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:674
 msgid "Screenshot"
@@ -748,8 +745,7 @@ msgstr ""
 "Ein Bildschirmfoto des Bildschirms, eines Fensters oder einer Auswahl "
 "aufnehmen"
 
-#. Translators: search words for the menu, separated by semicolons (keep the
-#. last one)
+#. Translators: search words for the menu, separated by semicolons (keep the last one)
 #: data/io.github.xlcheese.XlScreenshot.desktop.in:13
 msgid "screenshot;capture;screen;snapshot;print screen;grab;"
 msgstr ""
@@ -773,13 +769,13 @@ msgid "Add arrows, boxes, text, highlights and pixelation to images"
 msgstr ""
 "Pfeile, Rechtecke, Text, Markierungen und Verpixelung zu Bildern hinzufügen"
 
-#. Translators: search words for the menu, separated by semicolons (keep the
-#. last one)
+#. Translators: search words for the menu, separated by semicolons (keep the last one)
 #: data/io.github.xlcheese.XlAnnotate.desktop.in:14
 msgid ""
 "annotate;markup;arrow;draw;highlight;pixelate;blur;crop;screenshot;edit;"
 msgstr ""
-"beschriften;annotieren;Pfeil;zeichnen;markieren;verpixeln;unscharf;zuschneiden;Bildschirmfoto;bearbeiten;"
+"beschriften;annotieren;Pfeil;zeichnen;markieren;verpixeln;unscharf;"
+"zuschneiden;Bildschirmfoto;bearbeiten;"
 
 #: data/xl-annotate.nemo_action.in:3
 msgid "Annotate Image…"

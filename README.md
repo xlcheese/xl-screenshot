@@ -9,15 +9,19 @@
 
 Two small apps for Linux Mint and the Cinnamon desktop, installed together:
 
-- **xl-Screenshot**: Screen, Window, and Selection captures.
-- **xl-Annotate**: simple, light markup for images and screenshots: arrows,
-  lines, freehand drawing, rectangles, ellipses, highlighter, text, numbered
-  steps, pixelate, a magnifying loupe and crop. Rough freehand lines, arrows,
-  circles and boxes are tidied into clean shapes (Keep My Drawing undoes that;
-  the menu turns it off). Each mark has a line and a fill color (solid,
-  see-through or none), a size, a line style and an optional shadow, and stays
-  editable (move, reshape, restyle, delete) until you save. It runs on its own,
-  or from xl-Screenshot's Annotate button.
+- **xl-Screenshot**: Screen, Window, and Selection captures, with an
+  optional delay and tray icon.
+- **xl-Annotate**: simple, light markup for images and screenshots: arrows and
+  lines (straight, or curved with their middle handle), freehand drawing, a
+  speed-sensitive ink pen, rectangles, ellipses, highlighter, text, numbered
+  steps, pixelate and a magnifying loupe; plus crop (to exact sizes if you
+  like), resize, and rotate and flip. Rough freehand lines, arrows, circles and
+  boxes are tidied into clean shapes (Keep My Drawing undoes that; the menu
+  turns it off). Each mark has a line and a fill color (solid, see-through or
+  none), a size, a line style and an optional shadow, and stays editable
+  (move, reshape, restyle, delete) until you save; it follows the image when
+  it's cropped, resized, rotated or flipped. It runs on its own, or from
+  xl-Screenshot's Annotate button.
 
 **[Download the latest .deb](https://github.com/xlcheese/xl-screenshot/releases/latest)**
 
@@ -101,7 +105,7 @@ this list can grow.
 ## Installing
 
 ```bash
-sudo apt install ./xl-screenshot_0.1.1_all.deb
+sudo apt install ./xl-screenshot_0.2.0_all.deb
 ```
 
 This installs both apps (menu: Accessories and Graphics), their icons, the man
@@ -154,7 +158,9 @@ already open.
 Opens each image in its own window (or an empty window with no image).
 Shortcuts: Ctrl+O open, Ctrl+S save, Shift+Ctrl+S save as, Ctrl+V paste an
 image, Ctrl+C copy, Ctrl+Z / Shift+Ctrl+Z undo / redo, Delete removes the
-selected mark, Esc lets go of it. In Crop: Enter crops, Esc cancels.
+selected mark, Esc lets go of it. In Crop: Enter crops, Esc cancels; the
+popover by the Crop button takes exact positions and sizes. R / Shift+R rotate
+right / left, L / Shift+L flip horizontally / vertically.
 Hold Shift while drawing for 45° lines and squares/circles, or while moving
 to go straight across or down. Zoom: Ctrl++ / Ctrl+− / Ctrl+scroll, Ctrl+0
 fits the window, Ctrl+1 shows actual size. Text: Enter finishes, Shift+Enter
@@ -182,7 +188,7 @@ The folders mirror where the files go once installed:
 | `po/` | translations (one `.po` file per language) |
 | `install-local.sh` | try the menu entries and Nemo item before there's a .deb |
 | `tests/` | the automatic tests (`make check`) |
-| `docs/screenshots/` | the pictures on this page |
+| `docs/screenshots/` | the pictures on this page (`make/make-screenshots` re-makes them) |
 
 Inside `xlscreenshot/`:
 

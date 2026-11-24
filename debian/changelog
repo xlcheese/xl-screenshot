@@ -1,3 +1,30 @@
+xl-screenshot (0.2.0) unstable; urgency=medium
+
+  * xl-Annotate:
+    - Curved arrows and lines: a selected arrow or line has a middle
+      handle that bends it; the arrowhead follows the curve (#3).
+    - Ink pen: thicker where drawn slowly, thinner where fast, or
+      following a tablet pen's pressure (#7).
+    - Resize (width x height, keep proportions, percent) and Rotate &
+      Flip (also R, Shift+R, L, Shift+L), next to Crop. Marks follow the
+      image and stay editable (#8).
+    - Crop: drawn like xl-Screenshot's Selection, with its controls in a
+      popover by the Crop button: X and Y position, width and height (#2).
+    - Open, Save, Save As and Copy are in the header bar; the tool bar is
+      about 160 px narrower. Opened from xl-Screenshot, just Done (#6).
+    - See-through rectangles and ellipses: no darker band where the line
+      meets the fill.
+  * xl-Screenshot:
+    - The Selection panel shows the selection's size in real pixels.
+    - On first use, it offers to stay in the system tray (#5).
+    - Selection, Screen and pointer captures work on HiDPI screens at 200%
+      scaling.
+  * Both: US spelling (#4); a Russian translation (draft) (#1); depends on
+    librsvg2-common, which draws the SVG icons; automatic tests
+    (make check), run on GitHub for every change.
+
+ -- Wesley Hayslip <xl_cheese@hotmail.com>  Tue, 24 Nov 2026 22:01:20 +0000
+
 xl-screenshot (0.1.1) unstable; urgency=medium
 
   * Both About windows link to the project page on GitHub.

@@ -1,4 +1,4 @@
-.TH XL-ANNOTATE 1 "November 2026" "xl-Annotate 0.1.1" "User Commands"
+.TH XL-ANNOTATE 1 "November 2026" "xl-Annotate 0.2.0" "User Commands"
 .SH NAME
 xl-annotate \- mark up images and screenshots
 .SH SYNOPSIS
@@ -6,8 +6,9 @@ xl-annotate \- mark up images and screenshots
 [\fIIMAGE\fR...] [\-\-version]
 .SH DESCRIPTION
 .B xl-Annotate
-adds arrows, lines, freehand drawing, rectangles, ellipses, highlights, text, numbered steps,
-pixelation, a magnifying loupe, and cropping to an image. Rough freehand lines, arrows, circles,
+adds arrows and lines (straight or curved), freehand drawing, a speed-sensitive ink pen,
+rectangles, ellipses, highlights, text, numbered steps, pixelation and a magnifying loupe to an
+image, and crops, resizes, rotates and flips it. Rough freehand lines, arrows, circles,
 and boxes are tidied into clean shapes. Marks stay editable until the image is saved; Save draws
 them into the file, and Save As writes a copy.
 .PP
@@ -22,6 +23,8 @@ Ctrl+O open, Ctrl+S save, Shift+Ctrl+S save as, Ctrl+C copy, Ctrl+V paste an ima
 Ctrl+Z undo, Shift+Ctrl+Z redo, Delete removes the selected mark, Esc lets go of it.
 Hold Shift while drawing for 45\(de lines and squares, or while moving to go straight across.
 Ctrl+plus, Ctrl+minus, or Ctrl+scroll zoom; Ctrl+0 fits the window; Ctrl+1 shows actual size.
+R and Shift+R rotate right and left; L and Shift+L flip horizontally and vertically.
+In Crop, Enter crops and Esc cancels.
 .SH FILES
 .TP
 .I ~/.config/xl-annotate/config.json

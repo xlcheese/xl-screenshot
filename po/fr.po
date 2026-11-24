@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xl-Screenshot 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/xlcheese/xl-screenshot/issues\n"
-"POT-Creation-Date: 2026-11-24 20:51+0000\n"
+"POT-Creation-Date: 2026-11-24 22:01+0000\n"
 "PO-Revision-Date: 2026-11-06 14:48+0000\n"
 "Last-Translator: Draft by Claude (needs native review)\n"
 "Language-Team: French\n"
@@ -119,8 +119,8 @@ msgstr ""
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:43
 msgid ""
-"Ink pen: the line is thicker where you draw slowly and thinner where you draw"
-" quickly (with a drawing tablet, it follows the pen's pressure)"
+"Ink pen: the line is thicker where you draw slowly and thinner where you "
+"draw quickly (with a drawing tablet, it follows the pen's pressure)"
 msgstr ""
 "Plume : le trait est plus épais là où vous dessinez lentement et plus fin là "
 "où vous dessinez vite (avec une tablette graphique, il suit la pression du "
@@ -151,8 +151,8 @@ msgstr "Étapes numérotées : chaque clic ajoute le numéro suivant"
 #: usr/lib/xl-screenshot/xlannotate/window.py:56
 msgid "Pixelate: drag a box over anything private (passwords, emails, names)"
 msgstr ""
-"Pixelliser : tracez un cadre sur tout ce qui est privé (mots de passe, "
-"e-mails, noms)"
+"Pixelliser : tracez un cadre sur tout ce qui est privé (mots de passe, e-"
+"mails, noms)"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:58
 msgid ""
@@ -474,15 +474,13 @@ msgstr "Enregistrer l’image annotée sous"
 msgid "_Save"
 msgstr "_Enregistrer"
 
-#. Translators: the suggested file name for a copy; {name} is the original's
-#. name
+#. Translators: the suggested file name for a copy; {name} is the original's name
 #: usr/lib/xl-screenshot/xlannotate/window.py:1137
 #, python-brace-format
 msgid "{name}-annotated"
 msgstr "{name}-annotée"
 
-#. Translators: the start of a new annotated image's file name (date and time
-#. follow)
+#. Translators: the start of a new annotated image's file name (date and time follow)
 #: usr/lib/xl-screenshot/xlannotate/window.py:1141
 msgid "Annotated"
 msgstr "Annotée"
@@ -674,8 +672,7 @@ msgid "Install it with: sudo apt install x11-utils"
 msgstr "Installez-le avec : sudo apt install x11-utils"
 
 #. Translators: shown as the xl-Annotate window title while it edits a capture
-#. Translators: the start of a saved screenshot's file name (the date and time
-#. follow)
+#. Translators: the start of a saved screenshot's file name (the date and time follow)
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:629
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:674
 msgid "Screenshot"
@@ -744,8 +741,7 @@ msgstr "Outil de capture d’écran"
 msgid "Take a screenshot of the screen, a window or a selection"
 msgstr "Faire une capture de l’écran, d’une fenêtre ou d’une sélection"
 
-#. Translators: search words for the menu, separated by semicolons (keep the
-#. last one)
+#. Translators: search words for the menu, separated by semicolons (keep the last one)
 #: data/io.github.xlcheese.XlScreenshot.desktop.in:13
 msgid "screenshot;capture;screen;snapshot;print screen;grab;"
 msgstr "capture;capture d’écran;écran;screenshot;impression écran;cliché;"
@@ -769,13 +765,13 @@ msgstr ""
 "Ajouter des flèches, des cadres, du texte, du surlignage et de la "
 "pixellisation aux images"
 
-#. Translators: search words for the menu, separated by semicolons (keep the
-#. last one)
+#. Translators: search words for the menu, separated by semicolons (keep the last one)
 #: data/io.github.xlcheese.XlAnnotate.desktop.in:14
 msgid ""
 "annotate;markup;arrow;draw;highlight;pixelate;blur;crop;screenshot;edit;"
 msgstr ""
-"annoter;marquer;flèche;dessiner;surligner;pixelliser;flouter;rogner;capture;modifier;"
+"annoter;marquer;flèche;dessiner;surligner;pixelliser;flouter;rogner;capture;"
+"modifier;"
 
 #: data/xl-annotate.nemo_action.in:3
 msgid "Annotate Image…"
