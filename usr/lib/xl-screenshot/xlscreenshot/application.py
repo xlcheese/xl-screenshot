@@ -72,6 +72,9 @@ class ScreenshotApp(Gtk.Application):
             self.window.start_selection()
         else:
             self.window.present()
+            if first_start:
+                # Let the window appear first, then ask (only ever once)
+                GLib.timeout_add(400, self.window.offer_tray_once)
         return 0
 
     # ---- System tray ----

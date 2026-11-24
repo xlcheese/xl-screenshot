@@ -32,6 +32,7 @@ DEFAULT_CONFIG = {
     "delay_sec": 0,
     "include_pointer": False,
     "show_tray": False,
+    "tray_offered": False,     # the one-time "keep it in the tray?" question was asked
 }
 
 
@@ -60,6 +61,10 @@ def load_config():
         return cfg
     if not isinstance(data, dict):
         return cfg
+    # Settings saved before the tray question existed belong to someone who
+    # already uses xl-Screenshot: only a first-time user is asked
+    if "tray_offered" not in data:
+        data["tray_offered"] = True
     for key, default in DEFAULT_CONFIG.items():
         value = data.get(key, default)
         # Ignore values of the wrong type (e.g. a hand-edited config)

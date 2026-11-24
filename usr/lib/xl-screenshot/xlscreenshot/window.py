@@ -338,6 +338,34 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         if app is not None and hasattr(app, "set_tray"):
             app.set_tray(enabled)
 
+    def offer_tray_once(self):
+        """The first time xl-Screenshot is used, offer to keep it in the tray
+        (xlcheese/xl-screenshot#5). Asked once; never again either way."""
+        if self.config["tray_offered"]:
+            return False
+        self.config["tray_offered"] = True
+        save_config(self.config)
+        if self.config["show_tray"] or not HAS_XAPP or not self.get_visible():
+            return False
+        dlg = Gtk.MessageDialog(
+            transient_for=self, flags=0,
+            message_type=Gtk.MessageType.QUESTION,
+            buttons=Gtk.ButtonsType.NONE,
+            text=_("Keep xl-Screenshot in the system tray?"))
+        dlg.format_secondary_text(
+            _("Click the tray icon for a quick Selection capture. xl-Screenshot will also "
+              "start when you log in. You can change this any time with Show in System "
+              "Tray in the menu."))
+        dlg.add_button(_("_Not Now"), Gtk.ResponseType.CANCEL)
+        yes = dlg.add_button(_("_Show in Tray"), Gtk.ResponseType.ACCEPT)
+        yes.get_style_context().add_class("suggested-action")
+        dlg.set_default_response(Gtk.ResponseType.ACCEPT)
+        response = dlg.run()
+        dlg.destroy()
+        if response == Gtk.ResponseType.ACCEPT:
+            self.menu_tray.set_active(True)    # same as ticking it in the menu
+        return False
+
     def on_delete_event(self, widget, event):
         # With the tray icon on, closing the window only hides it, and
         # forgets the capture so it opens fresh next time
