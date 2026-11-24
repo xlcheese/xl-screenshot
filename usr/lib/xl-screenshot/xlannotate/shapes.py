@@ -716,6 +716,14 @@ class RectShape(BoxShape):
 
     def draw(self, cr, base=None, number=None):
         cr.save()
+        # The line straddles the edge, so its inside half lies on the fill.
+        # With either one see-through, the two would add up to a darker band
+        # there: draw them on a layer where the line replaces the fill under
+        # it, then put the layer on the picture once.
+        both = self.fill is not None and self.stroke is not None
+        layered = both and (self.fill[3] < 0.999 or self.stroke[3] < 0.999)
+        if layered:
+            cr.push_group()
         if self.fill is not None:
             self._path(cr)
             cr.set_source_rgba(*self.fill)
@@ -727,7 +735,12 @@ class RectShape(BoxShape):
             cr.set_line_width(width)
             cr.set_line_join(cairo.LineJoin.ROUND)
             _apply_dash(cr, self.dash, width)
+            if layered:
+                cr.set_operator(cairo.Operator.SOURCE)
             cr.stroke()
+        if layered:
+            cr.pop_group_to_source()
+            cr.paint()
         cr.restore()
 
     def bounds(self):

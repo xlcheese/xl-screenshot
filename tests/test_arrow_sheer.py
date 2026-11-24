@@ -27,4 +27,22 @@ for alpha, label in ((0.4, "sheer"), (1.0, "solid")):
 a = S.ArrowShape(20, 60, 380, 60, stroke=(0.88, 0.11, 0.14, 0.4), size=10, dash="dashed")
 f3 = S.render_flat(base, [a])
 check("sheer dashed arrow: dashes still have gaps", len({pix(f3, x, 60) for x in range(30, 300)}) >= 2)
+
+# Rectangles and ellipses with a see-through line and fill: no darker band where
+# the line's inside half lies on the fill (found testing 0.2.0~test3)
+RED_SHEER, GREEN_SHEER = (0.88, 0.11, 0.14, 0.4), (0.18, 0.76, 0.49, 0.4)
+big = GdkPixbuf.Pixbuf.new(GdkPixbuf.Colorspace.RGB, False, 8, 400, 240); big.fill(0xffffffff)
+for cls, label in ((S.RectShape, "rectangle"), (S.EllipseShape, "ellipse")):
+    for line, fill, kind in ((RED_SHEER, GREEN_SHEER, "sheer line, sheer fill"),
+                             (RED_SHEER, (0.18, 0.76, 0.49, 1.0), "sheer line, solid fill"),
+                             ((0.88, 0.11, 0.14, 1.0), GREEN_SHEER, "solid line, sheer fill")):
+        m = cls(100, 20, 200, 200, stroke=line, fill=fill, size=10)      # a 10 px line on the edge at x=100
+        flat = S.render_flat(big, [m])
+        outer, inner, middle = pix(flat, 97, 120), pix(flat, 103, 120), pix(flat, 200, 120)
+        check(f"{label}, {kind}: the line is one even color across its width ({outer} / {inner})", outer == inner)
+        check(f"{label}, {kind}: the fill still shows inside", middle not in ((255, 255, 255), outer))
+solid = S.render_flat(big, [S.RectShape(100, 20, 200, 200, stroke=(0.88, 0.11, 0.14, 1), fill=(0.18, 0.76, 0.49, 1), size=10)])
+check("solid line and fill look just as before", pix(solid, 103, 120) == pix(solid, 97, 120) and pix(solid, 200, 120)[1] > 150)
+dashed = S.render_flat(big, [S.RectShape(100, 20, 200, 200, stroke=RED_SHEER, fill=GREEN_SHEER, size=10, dash="dashed")])
+check("a dashed sheer outline still has gaps", len({pix(dashed, 103, y) for y in range(40, 200)}) >= 2)
 print("FAILURES:", fails or "none")
