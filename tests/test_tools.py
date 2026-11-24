@@ -62,8 +62,8 @@ check("image shown 1:1", cv._transform()[0] == 1.0)
 # ---- Toolbar layout ----
 kids = win.toolbar.get_children()
 crop_parent = win.tool_buttons["crop"].get_parent()
-check("Crop has its own group, after the drawing tools", crop_parent is not win.tool_buttons["arrow"].get_parent()
-      and kids.index(crop_parent) == kids.index(win.tool_buttons["arrow"].get_parent()) + 2)
+check("Crop has its own group, last, after the line styles and size", crop_parent is not win.tool_buttons["arrow"].get_parent()
+      and crop_parent is kids[-1] and kids.index(crop_parent) == kids.index(win.size_scale.get_parent()) + 2)
 order = [t for t in ("select", "arrow", "line", "freehand", "rectangle", "ellipse", "highlight", "text", "step", "pixelate", "loupe")]
 xs = [win.tool_buttons[t].translate_coordinates(win, 0, 0)[0] for t in order]
 check("drawing tools in order", xs == sorted(xs))

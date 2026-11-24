@@ -227,12 +227,17 @@ sw.open_annotate(); settle(0.3); aw = sw.annotate_window
 drag(aw.canvas, 50, 50, 150, 50); aw.done(); settle(0.3)
 cap2 = white(300, 200); sw.update_screenshot_buffer(cap2); settle(0.3)
 check("a new capture starts with no marks", sw.shapes == [] and sw.base_pixbuf is cap2)
-print("FAILURES:", fails or "none")
-# Toolbar order: Undo/Redo first, then a divider
+# Layout (xlcheese/xl-screenshot#6): Open Save SaveAs Copy in the header bar;
+# tool bar: Undo Redo | drawing tools | line styles | size | Crop...
 w4 = AnnotateWindow(); w4.show_all(); w4.load_pixbuf(white(300, 200), name="t.png"); settle(0.4)
-kids = w4.toolbar.get_children()
-check("toolbar: Open Save SaveAs Copy | Undo Redo | tools", kids[0] is w4.file_group and isinstance(kids[1], Gtk.Separator)
-      and w4.undo_btn.get_parent() is kids[2] and len(w4.file_group.get_children()) == 4
-      and w4.file_group.get_children()[3] is w4.copy_btn)
+kids = [k for k in w4.toolbar.get_children() if not isinstance(k, Gtk.Separator)]
+check("header bar: Open Save SaveAs Copy", isinstance(w4.file_group.get_parent(), Gtk.HeaderBar)
+      and len(w4.file_group.get_children()) == 4 and w4.file_group.get_children()[3] is w4.copy_btn)
+check("…and they're no longer in the tool bar", w4.file_group not in w4.toolbar.get_children())
+check("tool bar: Undo Redo | drawing tools | line styles | size | image tools",
+      kids[0] is w4.undo_btn.get_parent() and kids[1] is w4.tool_buttons["arrow"].get_parent()
+      and kids[2] is w4.dash_buttons["solid"].get_parent() and kids[3] is w4.size_scale.get_parent()
+      and kids[4] is w4.image_tools and w4.tool_buttons["crop"].get_parent() is w4.image_tools)
+check("dividers only between the groups", len(w4.toolbar.get_children()) == 2 * len(kids) - 1)
 gw = w4.get_window(); Gdk.pixbuf_get_from_window(gw, 0, 0, gw.get_width(), gw.get_height()).savev(os.path.join(SP, "annotate_toolbar.png"), "png", [], [])
 print("FAILURES:", fails or "none")

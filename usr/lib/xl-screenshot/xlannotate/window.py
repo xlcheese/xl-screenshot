@@ -258,7 +258,7 @@ class AnnotateWindow(Gtk.ApplicationWindow):
         self.canvas.connect("crop-changed", lambda c: self._update_state())
         self.canvas.connect("zoom-changed", lambda c: self._update_zoom_label())
 
-        # ---- Header bar: just the title and the menu ----
+        # ---- Header bar: the file buttons, the title and the menu ----
         hb = Gtk.HeaderBar()
         hb.set_show_close_button(True)
         self.set_titlebar(hb)
@@ -350,18 +350,20 @@ class AnnotateWindow(Gtk.ApplicationWindow):
         self.size_scale.set_size_request(130, -1)
         self.size_scale.connect("value-changed", self.on_size_changed)
 
-        groups = []
-        if file_buttons:
-            self.file_group = linked(*file_buttons, self.copy_btn)
-        else:
-            self.file_group = linked(self.copy_btn)
-        groups.append(self.file_group)
+        # Open, Save, Save As and Copy live in the header bar, which has room
+        # for them, so the tool bar (and the window) can be narrower
+        # (xlcheese/xl-screenshot#6)
+        self.file_group = linked(*file_buttons, self.copy_btn)
+        hb.pack_start(self.file_group)
         # The slider sits in its own box: the tool bar switches whole groups
         # on and off, and the slider has its own on/off per tool
         size_box = Gtk.Box()
         size_box.pack_start(self.size_scale, False, False, 0)
-        groups += [linked(self.undo_btn, self.redo_btn), tools_box, linked(crop_btn),
-                   dash_box, size_box]
+        # The tools that change the image itself come last, apart from the
+        # drawing tools, whose line styles and size sit right next to them
+        self.image_tools = linked(crop_btn)
+        groups = [linked(self.undo_btn, self.redo_btn), tools_box, dash_box, size_box,
+                  self.image_tools]
         for i, group in enumerate(groups):
             if i:
                 toolbar.pack_start(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL),
@@ -835,11 +837,10 @@ class AnnotateWindow(Gtk.ApplicationWindow):
 
     def _update_state(self):
         has_image = self.canvas.has_image()
-        # Everything needs an image except Open (Save, Save As and Copy are
-        # switched one by one below)
+        # The tool bar needs an image; so do Save, Save As and Copy in the
+        # header bar (switched one by one below), but not Open
         for child in self.toolbar.get_children():
-            if child is not self.file_group:
-                child.set_sensitive(has_image)
+            child.set_sensitive(has_image)
         self.sidebar.set_sensitive(has_image)
         self.undo_btn.set_sensitive(self.canvas.can_undo())
         self.redo_btn.set_sensitive(self.canvas.can_redo())
