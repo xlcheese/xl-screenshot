@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xl-Screenshot 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/xlcheese/xl-screenshot/issues\n"
-"POT-Creation-Date: 2026-11-24 19:22+0000\n"
+"POT-Creation-Date: 2026-11-24 20:51+0000\n"
 "PO-Revision-Date: 2026-11-06 14:48+0000\n"
 "Last-Translator: Draft by Claude (needs native review)\n"
 "Language-Team: German\n"
@@ -224,7 +224,7 @@ msgstr ""
 "Klicken Sie auf eine und wählen Sie darunter eine Farbe."
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:225
-#: usr/lib/xl-screenshot/xlannotate/window.py:1009
+#: usr/lib/xl-screenshot/xlannotate/window.py:1029
 msgid "Untitled"
 msgstr "Unbenannt"
 
@@ -359,7 +359,7 @@ msgid "Height in pixels"
 msgstr "Höhe in Pixeln"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:499
-#: usr/lib/xl-screenshot/xlannotate/window.py:821
+#: usr/lib/xl-screenshot/xlannotate/window.py:841
 #: usr/lib/xl-screenshot/xlscreenshot/selection.py:94
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -376,141 +376,151 @@ msgstr "Zuschneiden"
 msgid "Keep only the chosen area (Enter)"
 msgstr "Nur den gewählten Bereich behalten (Eingabe)"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:679
+#: usr/lib/xl-screenshot/xlannotate/window.py:524
+msgid "X Position"
+msgstr "X-Position"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:525
+msgid "Y Position"
+msgstr "Y-Position"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:526
+#: usr/lib/xl-screenshot/xlannotate/window.py:826
+msgid "Width"
+msgstr "Breite"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:527
+#: usr/lib/xl-screenshot/xlannotate/window.py:826
+msgid "Height"
+msgstr "Höhe"
+
+#: usr/lib/xl-screenshot/xlannotate/window.py:699
 msgid "Size"
 msgstr "Größe"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:681
+#: usr/lib/xl-screenshot/xlannotate/window.py:701
 msgid "Size (not used by this tool)"
 msgstr "Größe (von diesem Werkzeug nicht verwendet)"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:764
+#: usr/lib/xl-screenshot/xlannotate/window.py:784
 #, python-brace-format
 msgid "Font: {font}"
 msgstr "Schrift: {font}"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:768
+#: usr/lib/xl-screenshot/xlannotate/window.py:788
 msgid "Text Font"
 msgstr "Textschrift"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:796
+#: usr/lib/xl-screenshot/xlannotate/window.py:816
 msgid "Resize the image"
 msgstr "Bildgröße ändern"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:804
+#: usr/lib/xl-screenshot/xlannotate/window.py:824
 msgid "Keep proportions"
 msgstr "Seitenverhältnis beibehalten"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:806
-msgid "Width"
-msgstr "Breite"
-
-#: usr/lib/xl-screenshot/xlannotate/window.py:806
-msgid "Height"
-msgstr "Höhe"
-
-#: usr/lib/xl-screenshot/xlannotate/window.py:807
+#: usr/lib/xl-screenshot/xlannotate/window.py:827
 msgid "Scale"
 msgstr "Maßstab"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:823
+#: usr/lib/xl-screenshot/xlannotate/window.py:843
 msgid "Resize"
 msgstr "Größe ändern"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:885
+#: usr/lib/xl-screenshot/xlannotate/window.py:905
 msgid "Rotate or flip the image"
 msgstr "Bild drehen oder spiegeln"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1021
+#: usr/lib/xl-screenshot/xlannotate/window.py:1041
 msgid "Could not open image"
 msgstr "Das Bild konnte nicht geöffnet werden"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1048
+#: usr/lib/xl-screenshot/xlannotate/window.py:1068
 msgid "Open Image"
 msgstr "Bild öffnen"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1050
-#: usr/lib/xl-screenshot/xlannotate/window.py:1107
-#: usr/lib/xl-screenshot/xlannotate/window.py:1179
-#: usr/lib/xl-screenshot/xlannotate/window.py:1184
+#: usr/lib/xl-screenshot/xlannotate/window.py:1070
+#: usr/lib/xl-screenshot/xlannotate/window.py:1127
+#: usr/lib/xl-screenshot/xlannotate/window.py:1199
+#: usr/lib/xl-screenshot/xlannotate/window.py:1204
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:664
 #: usr/lib/xl-screenshot/xlshared/ui.py:83
 msgid "_Cancel"
 msgstr "_Abbrechen"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1050
+#: usr/lib/xl-screenshot/xlannotate/window.py:1070
 msgid "_Open"
 msgstr "Ö_ffnen"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1053
-#: usr/lib/xl-screenshot/xlannotate/window.py:1127
+#: usr/lib/xl-screenshot/xlannotate/window.py:1073
+#: usr/lib/xl-screenshot/xlannotate/window.py:1147
 msgid "Images"
 msgstr "Bilder"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1072
+#: usr/lib/xl-screenshot/xlannotate/window.py:1092
 msgid "Pasted Image"
 msgstr "Eingefügtes Bild"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1081
+#: usr/lib/xl-screenshot/xlannotate/window.py:1101
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:707
 msgid "Could not save image"
 msgstr "Das Bild konnte nicht gespeichert werden"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1105
+#: usr/lib/xl-screenshot/xlannotate/window.py:1125
 msgid "Save Annotated Image As"
 msgstr "Beschriftetes Bild speichern unter"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1107
-#: usr/lib/xl-screenshot/xlannotate/window.py:1185
+#: usr/lib/xl-screenshot/xlannotate/window.py:1127
+#: usr/lib/xl-screenshot/xlannotate/window.py:1205
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:664
 msgid "_Save"
 msgstr "_Speichern"
 
 #. Translators: the suggested file name for a copy; {name} is the original's
 #. name
-#: usr/lib/xl-screenshot/xlannotate/window.py:1117
+#: usr/lib/xl-screenshot/xlannotate/window.py:1137
 #, python-brace-format
 msgid "{name}-annotated"
 msgstr "{name}-beschriftet"
 
 #. Translators: the start of a new annotated image's file name (date and time
 #. follow)
-#: usr/lib/xl-screenshot/xlannotate/window.py:1121
+#: usr/lib/xl-screenshot/xlannotate/window.py:1141
 msgid "Annotated"
 msgstr "Beschriftet"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1177
+#: usr/lib/xl-screenshot/xlannotate/window.py:1197
 msgid "Keep your annotations?"
 msgstr "Ihre Beschriftungen behalten?"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1178
+#: usr/lib/xl-screenshot/xlannotate/window.py:1198
 msgid "Keep updates the screenshot. Discard throws these changes away."
 msgstr ""
 "„Behalten“ aktualisiert das Bildschirmfoto. „Verwerfen“ wirft diese "
 "Änderungen weg."
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1179
+#: usr/lib/xl-screenshot/xlannotate/window.py:1199
 msgid "_Discard"
 msgstr "_Verwerfen"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1180
+#: usr/lib/xl-screenshot/xlannotate/window.py:1200
 msgid "_Keep"
 msgstr "_Behalten"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1182
+#: usr/lib/xl-screenshot/xlannotate/window.py:1202
 #, python-brace-format
 msgid "Save changes to “{name}”?"
 msgstr "Änderungen an „{name}“ speichern?"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1183
+#: usr/lib/xl-screenshot/xlannotate/window.py:1203
 msgid "If you don't save, your annotations will be lost."
 msgstr "Wenn Sie nicht speichern, gehen Ihre Beschriftungen verloren."
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1184
+#: usr/lib/xl-screenshot/xlannotate/window.py:1204
 msgid "_Don't Save"
 msgstr "_Nicht speichern"
 
-#: usr/lib/xl-screenshot/xlannotate/window.py:1271
+#: usr/lib/xl-screenshot/xlannotate/window.py:1291
 msgid ""
 "Simple, light markup for images and screenshots: arrows, boxes and text that "
 "stay editable until you save."

@@ -483,7 +483,7 @@ class AnnotateWindow(Gtk.ApplicationWindow):
         for spin, which in ((self.crop_x_spin, "x"), (self.crop_y_spin, "y"),
                             (self.crop_w_spin, "width"), (self.crop_h_spin, "height")):
             spin.set_digits(0)
-            spin.set_width_chars(5)
+            spin.set_width_chars(4)      # room for 4 digits; bigger numbers still fit, they just scroll
             spin.set_numeric(True)
             spin.connect("value-changed", self.on_crop_typed, which)
 
@@ -503,9 +503,29 @@ class AnnotateWindow(Gtk.ApplicationWindow):
         self.crop_apply_btn.get_style_context().add_class("suggested-action")
         self.crop_apply_btn.set_tooltip_text(_("Keep only the chosen area (Enter)"))
         self.crop_apply_btn.connect("clicked", lambda b: self.apply_crop())
-        for widget in (dim("X"), self.crop_x_spin, dim("Y"), self.crop_y_spin, gap(),
-                       self.crop_w_spin, dim("×"), self.crop_h_spin, gap(),
-                       crop_cancel_btn, self.crop_apply_btn):
+        def labelled(text, spin):
+            """A small, dimmed label above a number box, so the popover reads at a glance."""
+            label = Gtk.Label(label=text, xalign=0)
+            label.get_style_context().add_class("dim-label")
+            attrs = Pango.AttrList()
+            attrs.insert(Pango.attr_scale_new(0.85))
+            label.set_attributes(attrs)
+            column = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+            column.pack_start(label, False, False, 0)
+            column.pack_start(spin, False, False, 0)
+            return column
+
+        def at_bottom(widget):
+            """Line a widget up with the number boxes, not their labels."""
+            widget.set_valign(Gtk.Align.END)
+            return widget
+        times = at_bottom(dim("×"))
+        times.set_margin_bottom(8)
+        for widget in (labelled(_("X Position"), self.crop_x_spin),
+                       labelled(_("Y Position"), self.crop_y_spin), gap(),
+                       labelled(_("Width"), self.crop_w_spin), times,
+                       labelled(_("Height"), self.crop_h_spin), gap(),
+                       at_bottom(crop_cancel_btn), at_bottom(self.crop_apply_btn)):
             controls.pack_start(widget, False, False, 0)
         self.crop_stack.add_named(controls, "controls")
         for side in ("start", "end", "top", "bottom"):
