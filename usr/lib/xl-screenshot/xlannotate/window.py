@@ -63,6 +63,17 @@ TOOL_BUTTONS = (
 )
 
 # What the size slider means, per remembered size
+# Rotate & Flip: (what, icon, label, key, with Shift), as Pix does it
+ROTATE_ITEMS = (
+    ("rotate-left", "object-rotate-left-symbolic", _("Rotate Left"), Gdk.KEY_r, True),
+    ("rotate-right", "object-rotate-right-symbolic", _("Rotate Right"), Gdk.KEY_r, False),
+    ("flip-horizontal", "object-flip-horizontal-symbolic", _("Flip Horizontally"), Gdk.KEY_l, False),
+    ("flip-vertical", "object-flip-vertical-symbolic", _("Flip Vertically"), Gdk.KEY_l, True),
+)
+# key: (without Shift, with Shift); decided by Shift itself, so Caps Lock doesn't matter
+ROTATE_KEYS = {Gdk.KEY_r: ("rotate-right", "rotate-left"),
+               Gdk.KEY_l: ("flip-horizontal", "flip-vertical")}
+
 SIZE_TOOLTIPS = {
     "line": _("Line thickness"),
     "text": _("Text size"),
@@ -364,7 +375,9 @@ class AnnotateWindow(Gtk.ApplicationWindow):
         size_box.pack_start(self.size_scale, False, False, 0)
         # The tools that change the image itself come last, apart from the
         # drawing tools, whose line styles and size sit right next to them
-        self.image_tools = linked(crop_btn)
+        self.resize_btn = self._build_resize_button()
+        self.rotate_btn = self._build_rotate_button()
+        self.image_tools = linked(crop_btn, self.resize_btn, self.rotate_btn)
         groups = [linked(self.undo_btn, self.redo_btn), tools_box, dash_box, size_box,
                   self.image_tools]
         for i, group in enumerate(groups):
@@ -784,6 +797,128 @@ class AnnotateWindow(Gtk.ApplicationWindow):
         self.config["tidy_shapes"] = item.get_active()
         save_config(self.config)
 
+    # ---- Resize, and Rotate & Flip (xlcheese/xl-screenshot#8) ----
+
+    def _build_resize_button(self):
+        """Resize: a popover with Width x Height, a proportions lock and a scale."""
+        btn = Gtk.MenuButton()
+        btn.set_image(Gtk.Image.new_from_icon_name(
+            themed_icon_name("xl-annotate-resize-symbolic", "zoom-fit-best-symbolic"), Gtk.IconSize.BUTTON))
+        btn.set_tooltip_text(_("Resize the image"))
+        pop = Gtk.Popover()
+        grid = Gtk.Grid(column_spacing=8, row_spacing=8)
+        for side in ("start", "end", "top", "bottom"):
+            getattr(grid, f"set_margin_{side}")(12)
+        self.resize_w = Gtk.SpinButton.new_with_range(1, 20000, 1)
+        self.resize_h = Gtk.SpinButton.new_with_range(1, 20000, 1)
+        self.resize_pct = Gtk.SpinButton.new_with_range(1, 1000, 1)
+        self.resize_lock = Gtk.CheckButton(label=_("Keep proportions"))
+        self.resize_lock.set_active(True)
+        rows = ((_("Width"), self.resize_w, "px"), (_("Height"), self.resize_h, "px"),
+                (_("Scale"), self.resize_pct, "%"))
+        for row, (label, spin, unit) in enumerate(rows):
+            name = Gtk.Label(label=label, xalign=1)
+            spin.set_digits(0)
+            spin.set_numeric(True)
+            spin.set_width_chars(6)
+            spin.set_activates_default(True)
+            unit_label = Gtk.Label(label=unit, xalign=0)
+            unit_label.get_style_context().add_class("dim-label")
+            grid.attach(name, 0, row, 1, 1)
+            grid.attach(spin, 1, row, 1, 1)
+            grid.attach(unit_label, 2, row, 1, 1)
+        grid.attach(self.resize_lock, 1, 3, 2, 1)
+        buttons = Gtk.Box(spacing=6, halign=Gtk.Align.END)
+        cancel = Gtk.Button(label=_("Cancel"))
+        cancel.connect("clicked", lambda b: pop.popdown())
+        self.resize_apply = Gtk.Button(label=_("Resize"))
+        self.resize_apply.get_style_context().add_class("suggested-action")
+        self.resize_apply.set_can_default(True)
+        self.resize_apply.connect("clicked", lambda b: self.apply_resize())
+        buttons.pack_start(cancel, False, False, 0)
+        buttons.pack_start(self.resize_apply, False, False, 0)
+        grid.attach(buttons, 0, 4, 3, 1)
+        grid.show_all()
+        pop.add(grid)
+        btn.set_popover(pop)
+        self.resize_popover = pop
+        self._resize_syncing = False
+        self.resize_w.connect("value-changed", self._on_resize_changed, "width")
+        self.resize_h.connect("value-changed", self._on_resize_changed, "height")
+        self.resize_pct.connect("value-changed", self._on_resize_changed, "percent")
+        pop.connect("show", lambda p: self._reset_resize())
+        return btn
+
+    def _reset_resize(self):
+        """Opening the popover: start from the image's own size."""
+        if not self.canvas.has_image():
+            return
+        self._resize_syncing = True
+        self.resize_w.set_value(self.canvas.base.get_width())
+        self.resize_h.set_value(self.canvas.base.get_height())
+        self.resize_pct.set_value(100)
+        self._resize_syncing = False
+        self.resize_apply.grab_default()
+
+    def _on_resize_changed(self, spin, which):
+        """Keep Width, Height and Scale in step (Width and Height only when
+        the proportions are locked)."""
+        if self._resize_syncing or not self.canvas.has_image():
+            return
+        w0, h0 = self.canvas.base.get_width(), self.canvas.base.get_height()
+        locked = self.resize_lock.get_active()
+        self._resize_syncing = True
+        if which == "percent":
+            f = self.resize_pct.get_value() / 100
+            self.resize_w.set_value(max(1, round(w0 * f)))
+            self.resize_h.set_value(max(1, round(h0 * f)))
+        elif which == "width":
+            f = self.resize_w.get_value() / w0
+            if locked:
+                self.resize_h.set_value(max(1, round(h0 * f)))
+            self.resize_pct.set_value(round(f * 100))
+        else:
+            f = self.resize_h.get_value() / h0
+            if locked:
+                self.resize_w.set_value(max(1, round(w0 * f)))
+            self.resize_pct.set_value(round(f * 100))
+        self._resize_syncing = False
+
+    def apply_resize(self):
+        self.resize_popover.popdown()
+        self.canvas.resize_image(self.resize_w.get_value_as_int(), self.resize_h.get_value_as_int())
+
+    def _build_rotate_button(self):
+        """Rotate & Flip: a popover of four choices, each with its key."""
+        btn = Gtk.MenuButton()
+        btn.set_image(Gtk.Image.new_from_icon_name(
+            themed_icon_name("object-rotate-right-symbolic", "view-refresh-symbolic"), Gtk.IconSize.BUTTON))
+        btn.set_tooltip_text(_("Rotate or flip the image"))
+        pop = Gtk.Popover()
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        for side in ("start", "end", "top", "bottom"):
+            getattr(box, f"set_margin_{side}")(6)
+        self.rotate_items = {}
+        for how, icon, label, keyval, shift in ROTATE_ITEMS:
+            item = Gtk.Button()
+            item.set_relief(Gtk.ReliefStyle.NONE)
+            row = Gtk.Box(spacing=10)
+            row.pack_start(Gtk.Image.new_from_icon_name(
+                themed_icon_name(icon, "image-x-generic-symbolic"), Gtk.IconSize.MENU), False, False, 0)
+            row.pack_start(Gtk.Label(label=label, xalign=0), True, True, 0)
+            key = Gtk.Label(label=Gtk.accelerator_get_label(
+                keyval, Gdk.ModifierType.SHIFT_MASK if shift else 0))
+            key.get_style_context().add_class("dim-label")
+            row.pack_end(key, False, False, 0)
+            item.add(row)
+            item.connect("clicked", lambda b, h=how: (pop.popdown(), self.canvas.transform_image(h)))
+            box.pack_start(item, False, False, 0)
+            self.rotate_items[how] = item
+        box.show_all()
+        pop.add(box)
+        btn.set_popover(pop)
+        return btn
+
     def _crop_area_moved(self):
         """The crop area changed: show its size, and keep the panel on it."""
         rect = self.canvas.crop_rect()
@@ -1111,6 +1246,9 @@ class AnnotateWindow(Gtk.ApplicationWindow):
             self.open_dialog()
         elif ctrl and not self.embedded and key == Gdk.KEY_v:
             self.paste()
+        elif not ctrl and self.canvas.has_image() and Gdk.keyval_to_lower(key) in ROTATE_KEYS:
+            shift = bool(event.state & Gdk.ModifierType.SHIFT_MASK)
+            self.canvas.transform_image(ROTATE_KEYS[Gdk.keyval_to_lower(key)][shift])
         elif not ctrl and key in (Gdk.KEY_Delete, Gdk.KEY_BackSpace):
             if not self.canvas.delete_selected():
                 return False

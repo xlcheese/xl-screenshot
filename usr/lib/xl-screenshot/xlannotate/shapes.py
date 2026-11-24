@@ -158,6 +158,16 @@ class Shape:
         """Move handle `name` to (x, y). start: a copy taken when the drag
         began. constrain: Shift is held."""
 
+    # Following the image when it's rotated, flipped or resized
+    # (xlcheese/xl-screenshot#8): fn maps an image point to its new place;
+    # mirrored: the image was flipped; size_scale: it was resized by this much
+    def transform(self, fn, mirrored=False, size_scale=1.0):
+        raise NotImplementedError
+
+    def _scale_size(self, size_scale):
+        if size_scale != 1.0:
+            self.size = max(SIZE_MIN, min(SIZE_MAX, self.size * size_scale))
+
 
 # ---- Line-shaped marks: two ends to drag, and a middle handle that bends them ----
 
@@ -235,16 +245,30 @@ class LineShape(Shape):
             return u
         return dx / length, dy / length
 
+    def transform(self, fn, mirrored=False, size_scale=1.0):
+        middle = fn(*self.middle()) if self.bend else None
+        (self.x1, self.y1), (self.x2, self.y2) = fn(self.x1, self.y1), fn(self.x2, self.y2)
+        if middle is not None:
+            self.bend = self._bend_through(*middle)
+        self._scale_size(size_scale)
+
+    def _bend_through(self, x, y):
+        """(along, across) for a curve through (x, y), or None if the ends meet."""
+        length, (ux, uy), (nx, ny) = self._frame()
+        if length < 1e-6:
+            return None
+        mx, my = (self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2
+        return (((x - mx) * ux + (y - my) * uy) / length, ((x - mx) * nx + (y - my) * ny) / length)
+
     def set_middle(self, x, y, centred=False):
         """Bend the line through (x, y); straight again when it's close to
         straight. centred: keep the bend in the middle (a symmetric curve)."""
-        length, (ux, uy), (nx, ny) = self._frame()
-        if length < 1e-6:
+        length = self._frame()[0]
+        bend = self._bend_through(x, y)
+        if bend is None:
             self.bend = None
             return
-        mx, my = (self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2
-        along = ((x - mx) * ux + (y - my) * uy) / length
-        across = ((x - mx) * nx + (y - my) * ny) / length
+        along, across = bend
         if centred:
             along = 0.0
         if abs(across) * length <= BEND_SNAP and abs(along) * length <= BEND_SNAP * 4:
@@ -486,6 +510,10 @@ class FreehandShape(Shape):
     def move_by(self, dx, dy):
         self.points = [(px + dx, py + dy) for px, py in self.points]
 
+    def transform(self, fn, mirrored=False, size_scale=1.0):
+        self.points = [fn(px, py) for px, py in self.points]
+        self._scale_size(size_scale)
+
     def handles(self):
         x0, y0, x1, y1 = self._box()
         w, h = x1 - x0, y1 - y0
@@ -625,6 +653,11 @@ class BoxShape(Shape):
     def __init__(self, x, y, w, h, **style):
         super().__init__(**style)
         self.x, self.y, self.w, self.h = x, y, w, h
+
+    def transform(self, fn, mirrored=False, size_scale=1.0):
+        # The new box holds both moved corners (rotating swaps width and height)
+        self.set_corners(*fn(self.x, self.y), *fn(self.x + self.w, self.y + self.h))
+        self._scale_size(size_scale)
 
     def set_corners(self, x1, y1, x2, y2):
         self.x, self.y = min(x1, x2), min(y1, y2)
@@ -820,6 +853,10 @@ class LoupeShape(Shape):
         super().__init__(**style)
         self.cx, self.cy, self.zoom = cx, cy, zoom
 
+    def transform(self, fn, mirrored=False, size_scale=1.0):
+        self.cx, self.cy = fn(self.cx, self.cy)
+        self._scale_size(size_scale)
+
     @property
     def radius(self):
         return loupe_radius(self.size)
@@ -913,6 +950,15 @@ class TextShape(Shape):
         super().__init__(**style)
         self.x, self.y, self.text = x, y, text
 
+    def transform(self, fn, mirrored=False, size_scale=1.0):
+        # Text stays upright and readable: it moves with its middle
+        bx, by, bw, bh = self.bounds()
+        self._scale_size(size_scale)
+        nx, ny = fn(bx + bw / 2, by + bh / 2)
+        bx2, by2, bw2, bh2 = self.bounds()
+        self.x += nx - (bx2 + bw2 / 2)
+        self.y += ny - (by2 + bh2 / 2)
+
     @property
     def text_size(self):
         return text_size(self.size)
@@ -970,6 +1016,10 @@ class StepShape(Shape):
     def __init__(self, x, y, **style):
         super().__init__(**style)
         self.x, self.y = x, y
+
+    def transform(self, fn, mirrored=False, size_scale=1.0):
+        self.x, self.y = fn(self.x, self.y)
+        self._scale_size(size_scale)
 
     @property
     def radius(self):

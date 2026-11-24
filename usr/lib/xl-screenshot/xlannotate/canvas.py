@@ -1,6 +1,6 @@
 """The drawing area: shows the image with its marks and handles the tools."""
 
-from gi.repository import Gtk, Gdk, GLib, GObject
+from gi.repository import Gtk, Gdk, GdkPixbuf, GLib, GObject
 from xlshared.i18n import _
 from xlshared.ui import SELECTION_DIM, SELECTION_HANDLE, theme_colors, draw_selection_box
 import cairo
@@ -374,6 +374,56 @@ class AnnotateCanvas(Gtk.DrawingArea):
         self.queue_draw()
         self.emit("crop-moved")
         return w, h
+
+    # ---- Rotate, flip and resize (xlcheese/xl-screenshot#8) ----
+    # Like Crop: the marks follow the image and stay editable, and one Undo
+    # puts everything back
+
+    def transform_image(self, how):
+        """how: "rotate-left", "rotate-right", "flip-horizontal" or "flip-vertical"."""
+        if self.base is None:
+            return False
+        w, h = self.base.get_width(), self.base.get_height()
+        if how == "rotate-right":
+            base = self.base.rotate_simple(GdkPixbuf.PixbufRotation.CLOCKWISE)
+            fn = lambda x, y: (h - y, x)
+        elif how == "rotate-left":
+            base = self.base.rotate_simple(GdkPixbuf.PixbufRotation.COUNTERCLOCKWISE)
+            fn = lambda x, y: (y, w - x)
+        elif how == "flip-horizontal":
+            base = self.base.flip(True)
+            fn = lambda x, y: (w - x, y)
+        elif how == "flip-vertical":
+            base = self.base.flip(False)
+            fn = lambda x, y: (x, h - y)
+        else:
+            raise ValueError(how)
+        self._replace_image(base, fn, mirrored=how.startswith("flip"))
+        return True
+
+    def resize_image(self, width, height):
+        """Scale the image to width x height pixels; the marks scale with it."""
+        if self.base is None or width < 1 or height < 1:
+            return False
+        w, h = self.base.get_width(), self.base.get_height()
+        if (width, height) == (w, h):
+            return False
+        sx, sy = width / w, height / h
+        base = self.base.scale_simple(int(width), int(height), GdkPixbuf.InterpType.HYPER)
+        self._replace_image(base, lambda x, y: (x * sx, y * sy), size_scale=math.sqrt(sx * sy))
+        return True
+
+    def _replace_image(self, base, fn, mirrored=False, size_scale=1.0):
+        self._push_undo()
+        self.base = base
+        for shape in self.shapes:
+            shape.transform(fn, mirrored=mirrored, size_scale=size_scale)
+        self.crop = None
+        self._update_size_request()
+        self.queue_draw()
+        self.emit("changed")
+        self.emit("selection-changed")
+        self.emit("crop-changed")
 
     def apply_crop(self):
         """Keep only the crop area. Marks move with the image; Undo

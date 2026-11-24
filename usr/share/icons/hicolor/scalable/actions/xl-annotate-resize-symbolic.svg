@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!-- Resize: a small picture in the corner of a bigger one, with an arrow from one corner to the other -->
+  <path fill="#000000" fill-rule="evenodd" d="M1 7h8v8H1z M2.5 8.5v5h5v-5z"/>
+  <path fill="#000000" d="M1 1h2v1.5H2.5V3H1z M5 1h2v1.5H5z M9 1h2v1.5H9z M13 1h2v2h-1.5v-0.5H13z M13.5 5H15v2h-1.5z M13.5 9H15v2h-1.5z M13.5 13H15v2h-2v-1.5h0.5z M1 5h1.5v1H1z M11 13.5h1v1.5h-1z"/>
+  <path fill="#000000" d="M8.2 6.7l4-4H10V1.6h4.4V6h-1.1V3.8l-4 4z"/>
+</svg>
