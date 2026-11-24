@@ -5,9 +5,10 @@ from xlshared.i18n import _
 from xlshared.ui import SELECTION_DIM, SELECTION_HANDLE, theme_colors, draw_selection_box
 import cairo
 import math
+import time
 
 from .shapes import (ArrowShape, LineShape, BoxShape, RectShape, EllipseShape, HighlightShape,
-                     PixelateShape, LoupeShape, TextShape, StepShape, FreehandShape, DEFAULT_FONT,
+                     PixelateShape, LoupeShape, TextShape, StepShape, FreehandShape, InkShape, ink_width_factor, DEFAULT_FONT,
                      snap_angle, snap_square, draw_shapes, render_flat)
 from .tidy import recognize
 
@@ -19,7 +20,7 @@ MARGIN_PX = 12
 
 ZOOM_MIN, ZOOM_MAX, ZOOM_STEP = 0.05, 8.0, 1.25
 
-TOOLS = ("select", "arrow", "line", "freehand", "rectangle", "ellipse", "highlight", "text",
+TOOLS = ("select", "arrow", "line", "freehand", "ink", "rectangle", "ellipse", "highlight", "text",
          "step", "pixelate", "loupe", "crop")
 
 # Marks drawn by dragging out a box, and by dragging a line
@@ -29,16 +30,17 @@ LINE_TOOLS = {"arrow": ArrowShape, "line": LineShape}
 
 # Which size each tool remembers: lines and shapes share one, the others
 # each have their own (text size is nothing like line thickness)
-SIZE_GROUPS = {"arrow": "line", "line": "line", "freehand": "line",
+SIZE_GROUPS = {"arrow": "line", "line": "line", "freehand": "line", "ink": "line",
                "rectangle": "line", "ellipse": "line",
                "text": "text", "step": "step", "pixelate": "pixelate", "loupe": "loupe"}
-SHAPE_SIZE_GROUPS = {ArrowShape: "line", LineShape: "line", FreehandShape: "line", RectShape: "line",
+SHAPE_SIZE_GROUPS = {ArrowShape: "line", LineShape: "line", FreehandShape: "line", InkShape: "line",
+                     RectShape: "line",
                      EllipseShape: "line", TextShape: "text", StepShape: "step",
                      PixelateShape: "pixelate", LoupeShape: "loupe"}
 DEFAULT_SIZES = {"line": 6, "text": 6, "step": 6, "pixelate": 6, "loupe": 6}
 
 # The mark class for a tool, so the window can ask what a tool uses
-TOOL_CLASSES = {"arrow": ArrowShape, "line": LineShape, "freehand": FreehandShape,
+TOOL_CLASSES = {"arrow": ArrowShape, "line": LineShape, "freehand": FreehandShape, "ink": InkShape,
                 "rectangle": RectShape,
                 "ellipse": EllipseShape, "highlight": HighlightShape, "text": TextShape,
                 "step": StepShape, "pixelate": PixelateShape, "loupe": LoupeShape}
@@ -52,6 +54,24 @@ HANDLE_CURSORS = {
     "se": "se-resize", "s": "s-resize", "sw": "sw-resize", "w": "w-resize",
     "start": "crosshair", "end": "crosshair", "size": "se-resize", "zoom": "pointer",
 }
+
+
+def _pressure(event):
+    """A tablet pen's pressure (0 to 1), or None for a mouse."""
+    get_axis = getattr(event, "get_axis", None)
+    if get_axis is None:
+        return None
+    try:
+        found, value = get_axis(Gdk.AxisUse.PRESSURE)
+    except TypeError:
+        return None
+    return value if found else None
+
+
+def _event_ms(event):
+    """When the event happened, in milliseconds."""
+    t = getattr(event, "time", None)
+    return t if isinstance(t, int) and t > 0 else time.monotonic() * 1000
 
 
 def _shift(event):
@@ -647,6 +667,10 @@ class AnnotateCanvas(Gtk.DrawingArea):
         style = self.style_for_new(self.tool)
         if self.tool == "freehand":
             self._draft = FreehandShape([(ix, iy)], **style)
+        elif self.tool == "ink":
+            factor = ink_width_factor(pressure=_pressure(event))
+            self._draft = InkShape([(ix, iy)], [factor], **style)
+            self._ink_last = (event.x, event.y, _event_ms(event))
         elif self.tool in LINE_TOOLS:
             self._draft = LINE_TOOLS[self.tool](ix, iy, ix, iy, **style)
         elif self.tool in BOX_TOOLS:
@@ -672,7 +696,9 @@ class AnnotateCanvas(Gtk.DrawingArea):
         shift = _shift(event)
 
         if self._draft is not None:
-            if isinstance(self._draft, FreehandShape):
+            if isinstance(self._draft, InkShape):
+                self._draft.add_point(ix, iy, self._ink_factor(event))
+            elif isinstance(self._draft, FreehandShape):
                 self._draft.add_point(ix, iy)
             elif isinstance(self._draft, LineShape):
                 if shift:
@@ -744,6 +770,8 @@ class AnnotateCanvas(Gtk.DrawingArea):
                 draft.finish()
             if draft.is_too_small():
                 self.queue_draw()
+            elif isinstance(draft, InkShape):
+                self.add_shape(draft)          # handwriting: never tidied
             elif isinstance(draft, FreehandShape):
                 self._add_freehand(draft)
             else:
@@ -768,6 +796,19 @@ class AnnotateCanvas(Gtk.DrawingArea):
             self.queue_draw()
             self.emit("crop-changed")
         return True
+
+    def _ink_factor(self, event):
+        """The ink width for this pointer move: the pen's pressure on a
+        tablet, otherwise from its speed in screen pixels (the same feel at
+        any zoom)."""
+        pressure = _pressure(event)
+        lx, ly, lt = self._ink_last
+        now = _event_ms(event)
+        self._ink_last = (event.x, event.y, now)
+        if pressure is not None:
+            return ink_width_factor(pressure=pressure)
+        seconds = max(now - lt, 1) / 1000.0
+        return ink_width_factor(speed=math.hypot(event.x - lx, event.y - ly) / seconds)
 
     # ---- Freehand tidy-up ----
 

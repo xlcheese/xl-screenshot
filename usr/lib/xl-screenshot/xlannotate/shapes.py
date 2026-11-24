@@ -401,7 +401,8 @@ def _path_length(points):
 def smooth_points(points, min_step=2.0, passes=2):
     """Take the jitter out of a mouse-drawn path: drop points closer than
     min_step to the last one kept, then round off the corners (Chaikin's
-    method). The first and last points stay where they were."""
+    method). The first and last points stay where they were. Points may
+    carry more than x and y (an ink stroke's widths): they're smoothed too."""
     if len(points) < 3:
         return list(points)
     kept = [points[0]]
@@ -414,8 +415,8 @@ def smooth_points(points, min_step=2.0, passes=2):
             break
         new = [kept[0]]
         for a, b in zip(kept, kept[1:]):
-            new.append((0.75 * a[0] + 0.25 * b[0], 0.75 * a[1] + 0.25 * b[1]))
-            new.append((0.25 * a[0] + 0.75 * b[0], 0.25 * a[1] + 0.75 * b[1]))
+            new.append(tuple(0.75 * ai + 0.25 * bi for ai, bi in zip(a, b)))
+            new.append(tuple(0.25 * ai + 0.75 * bi for ai, bi in zip(a, b)))
         new.append(kept[-1])
         kept = new
     return kept
@@ -520,6 +521,100 @@ class FreehandShape(Shape):
         def my(py):
             return y1 + (py - sy0) / sh * (y2 - y1) if sh > 0 else py + (y1 - sy0)
         self.points = [(mx(px), my(py)) for px, py in start.points]
+
+
+# ---- Ink: a freehand line whose width follows the pen ----
+
+INK_SLOW_SPEED = 500.0     # screen pixels a second where the line is half its full width
+INK_THINNEST = 0.25        # the thinnest an ink line gets, as part of its full width
+
+
+def ink_width_factor(speed=None, pressure=None):
+    """How wide (0.25 to 1) the ink is: from a tablet pen's pressure when
+    there is one, otherwise from how fast the pointer moves (slow is wide)."""
+    if pressure is not None:
+        return INK_THINNEST + (1 - INK_THINNEST) * max(0.0, min(1.0, pressure))
+    if speed is None:
+        return 1.0
+    return max(INK_THINNEST, 1.0 / (1.0 + speed / INK_SLOW_SPEED))
+
+
+class InkShape(FreehandShape):
+    """An ink pen line (xlcheese/xl-screenshot#7): thicker where it was
+    drawn slowly, thinner where it was drawn quickly (or following a tablet
+    pen's pressure). widths[i] is the width at points[i], as a part of the
+    full width the size slider sets. Never tidied into shapes."""
+
+    USES_DASH = False
+
+    def __init__(self, points, widths=None, **style):
+        super().__init__(points, **style)
+        self.widths = list(widths) if widths is not None else [1.0] * len(self.points)
+
+    def full_width(self):
+        return line_width(self.size) * 1.8
+
+    def add_point(self, x, y, factor=1.0):
+        last = self.points[-1] if self.points else None
+        if last is None or math.hypot(x - last[0], y - last[1]) >= 1.0:
+            # Ease into the new width, so it flows rather than jumps
+            prev = self.widths[-1] if self.widths else factor
+            self.points.append((x, y))
+            self.widths.append(prev + (factor - prev) * 0.3)
+
+    def finish(self):
+        smooth = smooth_points([(x, y, w) for (x, y), w in zip(self.points, self.widths)])
+        self.points = [(p[0], p[1]) for p in smooth]
+        self.widths = [p[2] for p in smooth]
+
+    def radius_at(self, i):
+        return self.full_width() * self.widths[i] / 2
+
+    def draw(self, cr, base=None, number=None):
+        if not self.points:
+            return
+        r, g, b, alpha = self.ink()
+        cr.save()
+        # Drawn as overlapping round pieces: solid on a layer, faded once,
+        # so a Sheer line stays one even color
+        cr.push_group()
+        cr.set_source_rgba(r, g, b, 1.0)
+        pts = self.points
+        # Each piece filled on its own: filled together, pieces drawn in
+        # opposite directions would cancel out where they overlap (holes)
+        for i, (x, y) in enumerate(pts):
+            cr.arc(x, y, self.radius_at(i), 0, 2 * math.pi)
+            cr.fill()
+        for i in range(len(pts) - 1):
+            (x1, y1), (x2, y2) = pts[i], pts[i + 1]
+            r1, r2 = self.radius_at(i), self.radius_at(i + 1)
+            d = math.hypot(x2 - x1, y2 - y1)
+            if d < 1e-6:
+                continue
+            nx, ny = -(y2 - y1) / d, (x2 - x1) / d
+            cr.move_to(x1 + nx * r1, y1 + ny * r1)
+            cr.line_to(x2 + nx * r2, y2 + ny * r2)
+            cr.line_to(x2 - nx * r2, y2 - ny * r2)
+            cr.line_to(x1 - nx * r1, y1 - ny * r1)
+            cr.close_path()
+            cr.fill()
+        cr.pop_group_to_source()
+        cr.paint_with_alpha(alpha)
+        cr.restore()
+
+    def bounds(self):
+        x0, y0, x1, y1 = self._box()
+        pad = self.full_width() / 2 + 1
+        return (x0 - pad, y0 - pad, x1 - x0 + 2 * pad, y1 - y0 + 2 * pad)
+
+    def contains(self, x, y, tolerance):
+        if len(self.points) == 1:
+            return math.hypot(x - self.points[0][0], y - self.points[0][1]) <= self.radius_at(0) + tolerance
+        for i in range(len(self.points) - 1):
+            reach = max(self.radius_at(i), self.radius_at(i + 1)) + tolerance
+            if _distance_to_segment(x, y, *self.points[i], *self.points[i + 1]) <= reach:
+                return True
+        return False
 
 
 # ---- Box-shaped marks: eight handles to drag ----

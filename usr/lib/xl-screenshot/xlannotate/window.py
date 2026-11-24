@@ -40,6 +40,9 @@ TOOL_BUTTONS = (
     ("freehand", "xl-annotate-freehand-symbolic", "document-edit-symbolic",
      _("Freehand: draw with the mouse. Rough lines, arrows, circles and boxes are tidied "
      "into clean shapes (you can keep your drawing, or turn this off in the menu).")),
+    ("ink", "xl-annotate-ink-symbolic", "document-edit-symbolic",
+     _("Ink pen: the line is thicker where you draw slowly and thinner where you draw "
+       "quickly (with a drawing tablet, it follows the pen's pressure)")),
     ("rectangle", "xl-annotate-rectangle-symbolic", "media-playback-stop-symbolic",
      _("Rectangle (hold Shift for a square)")),
     ("ellipse", "xl-annotate-ellipse-symbolic", "media-record-symbolic",
