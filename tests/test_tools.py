@@ -177,61 +177,65 @@ check("clicking a handle without moving adds no undo step", len(cv._undo) == n_b
 click(cv, 460, 260); settle(0.3)
 gw = win.get_window(); Gdk.pixbuf_get_from_window(gw, 0, 0, gw.get_width(), gw.get_height()).savev(os.path.join(SP, "tools_all.png"), "png", [], [])
 
-# ---- Crop (panel at the crop area, like xl-Screenshot's Selection: xlcheese/xl-screenshot#2) ----
-from xlshared.ui import PANEL_GAP, theme_colors
-def panel_card():
-    """The crop panel's card (x, y, w, h) and the crop area's box, in the overlay."""
-    p = win.crop_panel
-    px, py = p.translate_coordinates(win.overlay, 0, 0)
-    l, t, r, b = p.card_inset()
-    card = (px + l, py + t, p.get_allocated_width() - l - r, p.get_allocated_height() - t - b)
-    x1, y1 = cv.to_widget(cv.crop.x, cv.crop.y); x2, y2 = cv.to_widget(cv.crop.x + cv.crop.w, cv.crop.y + cv.crop.h)
-    bx1, by1 = cv.translate_coordinates(win.overlay, round(x1), round(y1))
-    bx2, by2 = cv.translate_coordinates(win.overlay, round(x2), round(y2))
-    return card, (bx1, by1, bx2 - bx1, by2 - by1)
-def panel_follows(name):
-    card, box = panel_card()
-    # right edges line up, unless that would push the panel off the left side
-    right_ok = abs((card[0] + card[2]) - (box[0] + box[2])) <= 2 or (card[0] <= 5 and box[0] + box[2] < card[2] + 4)
-    below = abs(card[1] - (box[1] + box[3] + PANEL_GAP)) <= 2
-    above = abs((card[1] + card[3]) - (box[1] - PANEL_GAP)) <= 2
-    inside = box[1] <= card[1] and card[1] + card[3] <= box[1] + box[3]
-    on_screen = card[1] >= 0 and card[1] + card[3] <= win.overlay.get_allocated_height()
-    check(f"{name}: panel at the crop area's bottom-right ({'below' if below else 'above' if above else 'inside' if inside else 'lost'})",
-          right_ok and (below or above or inside) and on_screen)
+# ---- Crop: its controls in a popover by the Crop button (xlcheese/xl-screenshot#2) ----
+from xlshared.ui import theme_colors
+def popover_in_place(name):
+    """Showing, pointing at the Crop button's left edge, centred on the line
+    between the header bar and the tool bar."""
+    p, btn = win.crop_popover, win.tool_buttons["crop"]
+    if not p.get_visible():
+        check(f"{name}: crop popover showing", False); return
+    px, py = p.translate_coordinates(win, 0, 0)
+    bx, by = btn.translate_coordinates(win, 0, 0)
+    line = win.get_child().translate_coordinates(win, 0, 0)[1]
+    middle = py + p.get_allocated_height() / 2
+    right = px + p.get_allocated_width()
+    check(f"{name}: crop popover over the header bar / tool bar line (middle {middle:.0f}, line {line}), "
+          f"just left of the Crop button (right edge {right}, button {bx})",
+          p.get_relative_to() is btn and abs(middle - line) <= 3 and bx - 20 <= right <= bx + 2)
 
 n_marks = len(cv.shapes)
 line_before = (cv.shapes[0].x1, cv.shapes[0].y1)
 tool(win, "crop"); settle(0.3)
-check("Crop: a hint shows until an area is drawn, no panel yet", win.crop_hint.get_visible() and not win.crop_panel.get_visible())
+check("Crop: the popover shows the hint until an area is drawn",
+      win.crop_popover.get_visible() and win.crop_stack.get_visible_child_name() == "hint")
+popover_in_place("Crop chosen")
 check("Crop clears the selection", cv.selected is None)
 drag(cv, -50, -50, 520, 340); settle(0.5)
 check("crop area stays on the image", (cv.crop.x, cv.crop.y) == (0, 0))
-check("drawn: the panel shows (Width, Height, Cancel, Crop), the hint goes",
-      win.crop_panel.get_visible() and not win.crop_hint.get_visible() and win.crop_apply_btn.get_mapped())
-check("spin buttons show the area's size", (win.crop_w_spin.get_value_as_int(), win.crop_h_spin.get_value_as_int()) == (520, 340))
-panel_follows("after drawing")
+check("drawn: X, Y, Width, Height, Cancel and Crop show in the popover",
+      win.crop_stack.get_visible_child_name() == "controls" and win.crop_apply_btn.get_mapped() and win.crop_x_spin.get_mapped())
+check("they show the area", [s_.get_value_as_int() for s_ in (win.crop_x_spin, win.crop_y_spin, win.crop_w_spin, win.crop_h_spin)] == [0, 0, 520, 340])
+popover_in_place("after drawing")
 # adjust with a handle and move it
 hx, hy = cv.to_widget(0, 0)
 wdrag(cv, hx, hy, *cv.to_widget(20, 10)); settle(0.3)
 check("crop handle adjusts the area", (cv.crop.x, cv.crop.y, cv.crop.w, cv.crop.h) == (20, 10, 500, 330))
-check("…and the spin buttons follow", (win.crop_w_spin.get_value_as_int(), win.crop_h_spin.get_value_as_int()) == (500, 330))
+check("…and the boxes follow", [s_.get_value_as_int() for s_ in (win.crop_x_spin, win.crop_y_spin, win.crop_w_spin, win.crop_h_spin)] == [20, 10, 500, 330])
 cx, cy = cv.to_widget(200, 200)
 wdrag(cv, cx, cy, cx + 500, cy); settle(0.3)
 check("moving the area stops at the image edge", (cv.crop.x, cv.crop.y) == (100, 10))
-panel_follows("after moving")
+popover_in_place("after moving")
 wdrag(cv, *cv.to_widget(300, 200), *cv.to_widget(220, 200)); settle(0.3)
 check("move it back", (cv.crop.x, cv.crop.y) == (20, 10))
 # typed sizes: width moves the right edge, height the bottom edge
 win.crop_w_spin.set_value(300); settle(0.3)
 check("typed width moves the right edge only", (cv.crop.x, cv.crop.y, cv.crop.w, cv.crop.h) == (20, 10, 300, 330))
-panel_follows("after typing a width")
 win.crop_h_spin.set_value(200); settle(0.3)
 check("typed height moves the bottom edge only", (cv.crop.x, cv.crop.y, cv.crop.w, cv.crop.h) == (20, 10, 300, 200))
 win.crop_w_spin.set_value(5000); settle(0.3)
-check("a width past the image stops at its edge", cv.crop.w == 580 and win.crop_w_spin.get_value_as_int() == 580)
+check("a width past the image's right edge pushes the left edge out, up to the whole width",
+      (cv.crop.x, cv.crop.w) == (0, 600) and (win.crop_x_spin.get_value_as_int(), win.crop_w_spin.get_value_as_int()) == (0, 600))
+win.crop_w_spin.set_value(300); win.crop_x_spin.set_value(5000); settle(0.3)
+check("X places the left edge, kept on the image (300 wide: at most 300)", (cv.crop.x, cv.crop.w) == (300, 300))
+win.crop_w_spin.set_value(400); settle(0.3)
+check("at the right edge, a bigger width grows to the left", (cv.crop.x, cv.crop.w) == (200, 400))
+win.crop_y_spin.set_value(5000); win.crop_h_spin.set_value(390); settle(0.3)
+check("at the bottom edge, a bigger height grows upwards", (cv.crop.y, cv.crop.h) == (10, 390))
+win.crop_x_spin.set_value(20); win.crop_y_spin.set_value(10); settle(0.3)
+check("X and Y move the area, keeping its size", (cv.crop.x, cv.crop.y, cv.crop.w, cv.crop.h) == (20, 10, 400, 390))
 win.crop_w_spin.set_value(500); win.crop_h_spin.set_value(330); settle(0.3)
-check("back to 500x330", (cv.crop.w, cv.crop.h) == (500, 330))
+check("back to 500x330 at 20,10", (cv.crop.x, cv.crop.y, cv.crop.w, cv.crop.h) == (20, 10, 500, 330))
 # Enter while typing a size sets the size, it doesn't crop; Esc still works from there
 win.crop_w_spin.grab_focus(); settle(0.2)
 key(win, Gdk.KEY_Return); settle(0.2)
@@ -244,30 +248,24 @@ hx, hy = (round(v) for v in cv.to_widget(cv.crop.x + cv.crop.w, cv.crop.y + cv.c
 close = lambda a, b: all(abs(x - y) <= 40 for x, y in zip(a, b))
 check("crop handles are white squares", pix(shot, hx - 4, hy - 4) == (255, 255, 255))
 check(f"…edged in the theme's accent color {accent}", close(pix(shot, hx + 8, hy + 2), accent) or close(pix(shot, hx + 7, hy + 2), accent))
-check("crop panel's buttons are actually on screen", win.crop_apply_btn.get_mapped() and win.crop_apply_btn.get_allocated_width() > 20)
+check("crop popover's buttons are actually on screen", win.crop_apply_btn.get_mapped() and win.crop_apply_btn.get_allocated_width() > 20)
 gw = win.get_window(); Gdk.pixbuf_get_from_window(gw, 0, 0, gw.get_width(), gw.get_height()).savev(os.path.join(SP, "tools_crop.png"), "png", [], [])
 key(win, Gdk.KEY_Return); settle(0.8)
 check("Enter crops to 500x330", (cv.base.get_width(), cv.base.get_height()) == (500, 330))
 check("marks moved with the crop", (cv.shapes[0].x1, cv.shapes[0].y1) == (line_before[0] - 20, line_before[1] - 10) and len(cv.shapes) == n_marks)
-check("after cropping: back to Select, panel hidden", win.tool_buttons["select"].get_active() and not win.crop_panel.get_visible() and not win.crop_hint.get_visible())
+check("after cropping: back to Select, popover gone", win.tool_buttons["select"].get_active() and not win.crop_popover.get_visible())
 check("title shows unsaved", win.get_title().startswith("*"))
 key(win, Gdk.KEY_z, Gdk.ModifierType.CONTROL_MASK)
 check("Undo brings back the whole image and mark positions", (cv.base.get_width(), cv.shapes[0].x1) == (600, line_before[0]))
 key(win, Gdk.KEY_z, Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK)
 check("Redo crops again", cv.base.get_width() == 500)
 tool(win, "crop"); drag(cv, 10, 10, 200, 200); settle(0.3)
-panel_follows("a smaller area")
-# near the bottom of the view: the panel goes above the area (or inside it)
-drag(cv, 10, 10, 12, 12); key(win, Gdk.KEY_Escape)
-drag(cv, 0, 120, 500, 330); settle(0.4)
-panel_follows("area reaching the bottom")
-card, box = panel_card()
-check("…the panel isn't pushed off the bottom", card[1] + card[3] <= win.overlay.get_allocated_height())
+popover_in_place("a second crop")
 win.crop_h_spin.grab_focus(); settle(0.2)
 key(win, Gdk.KEY_Escape)
 check("Esc while typing a size still clears the crop area", cv.crop is None and win.tool_buttons["crop"].get_active())
 key(win, Gdk.KEY_Escape); settle(0.8)
-check("Esc again leaves Crop", win.tool_buttons["select"].get_active() and not win.crop_panel.get_visible())
+check("Esc again leaves Crop", win.tool_buttons["select"].get_active() and not win.crop_popover.get_visible())
 tool(win, "crop"); drag(cv, 10, 10, 12, 12)
 check("a tiny crop area is ignored", cv.crop is None)
 win.leave_crop()

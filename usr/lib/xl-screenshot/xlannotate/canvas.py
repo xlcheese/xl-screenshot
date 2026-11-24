@@ -361,19 +361,38 @@ class AnnotateCanvas(Gtk.DrawingArea):
         return x0, y0, x1 - x0, y1 - y0
 
     def set_crop_size(self, width=None, height=None):
-        """Typed sizes: the width moves the right edge, the height the bottom
-        edge, kept on the image. Returns the size actually set."""
+        """Typed sizes: the width moves the right edge and the height the
+        bottom edge; once that edge reaches the image's, the left (or top)
+        edge moves out instead. Returns the size actually set."""
         if self.crop is None or self.base is None:
             return None
         x, y, w, h = self.crop_rect()
+        iw, ih = self.base.get_width(), self.base.get_height()
         if width is not None:
-            w = max(1, min(int(width), self.base.get_width() - x))
+            w = max(1, min(int(width), iw))
+            x = min(x, iw - w)
         if height is not None:
-            h = max(1, min(int(height), self.base.get_height() - y))
+            h = max(1, min(int(height), ih))
+            y = min(y, ih - h)
         self.crop.x, self.crop.y, self.crop.w, self.crop.h = x, y, w, h
         self.queue_draw()
         self.emit("crop-moved")
         return w, h
+
+    def set_crop_position(self, x=None, y=None):
+        """Typed positions: the crop area's top-left corner, keeping its size
+        and keeping it on the image."""
+        if self.crop is None or self.base is None:
+            return None
+        cx, cy, w, h = self.crop_rect()
+        if x is not None:
+            cx = max(0, min(int(x), self.base.get_width() - w))
+        if y is not None:
+            cy = max(0, min(int(y), self.base.get_height() - h))
+        self.crop.x, self.crop.y = cx, cy
+        self.queue_draw()
+        self.emit("crop-moved")
+        return cx, cy
 
     # ---- Rotate, flip and resize (xlcheese/xl-screenshot#8) ----
     # Like Crop: the marks follow the image and stay editable, and one Undo

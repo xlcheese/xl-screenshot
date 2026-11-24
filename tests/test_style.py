@@ -270,8 +270,9 @@ win.modified = False; win.destroy()
 sw = ScreenshotWindow(); sw.present(); settle(0.3)
 sw.update_screenshot_buffer(white(300, 200)); settle(0.3)
 sw.open_annotate(); settle(0.4); aw = sw.annotate_window
-check("from xl-Screenshot: Copy in the header bar, no Open/Save", aw.file_group.get_children() == [aw.copy_btn]
-      and isinstance(aw.file_group.get_parent(), Gtk.HeaderBar) and not hasattr(aw, "save_btn"))
+hb_buttons = [w for w in aw.get_titlebar().get_children() if isinstance(w, Gtk.Button) and not isinstance(w, Gtk.MenuButton)]
+check("from xl-Screenshot: just Done in the header bar (copy and save happen in xl-Screenshot)",
+      hb_buttons == [aw.done_btn] and aw.copy_btn.get_parent() is None and not hasattr(aw, "save_btn"))
 tool(aw, "ellipse"); drag(aw.canvas, 20, 20, 120, 90)
 aw.done(); settle(0.3)
 check("ellipse comes back to xl-Screenshot as an editable mark", isinstance(sw.shapes[0], S.EllipseShape))

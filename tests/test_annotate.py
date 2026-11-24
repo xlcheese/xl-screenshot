@@ -234,6 +234,7 @@ kids = [k for k in w4.toolbar.get_children() if not isinstance(k, Gtk.Separator)
 check("header bar: Open Save SaveAs Copy", isinstance(w4.file_group.get_parent(), Gtk.HeaderBar)
       and len(w4.file_group.get_children()) == 4 and w4.file_group.get_children()[3] is w4.copy_btn)
 check("…and they're no longer in the tool bar", w4.file_group not in w4.toolbar.get_children())
+check("…as plain header bar buttons, like the menu button (not boxed together)", not w4.file_group.get_style_context().has_class("linked"))
 check("tool bar: Undo Redo | drawing tools | line styles | size | image tools",
       kids[0] is w4.undo_btn.get_parent() and kids[1] is w4.tool_buttons["arrow"].get_parent()
       and kids[2] is w4.dash_buttons["solid"].get_parent() and kids[3] is w4.size_scale.get_parent()

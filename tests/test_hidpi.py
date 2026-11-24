@@ -49,6 +49,7 @@ shot = Gdk.pixbuf_get_from_window(ov.get_window(), 0, 0, ov.get_allocated_width(
 # inside the selection the overlay shows the desktop undimmed, at the same place
 check("overlay shows the desktop at its real size and place (inside the selection)",
       px(shot, 250 * SC + 3, 200 * SC + 7) == pat_px(250 * SC + 3, 200 * SC + 7))
+check(f"the panel shows the size in real pixels ({ov.size_label.get_text()})", ov.size_label.get_text() == f"{300 * SC} × {220 * SC}")
 ov.on_capture_confirmed(None); settle(1)
 check("a Selection capture was taken", len(got) == 1)
 if got:

@@ -84,6 +84,13 @@ class SelectionOverlay(Gtk.Window):
 
         self.control_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
 
+        # The selection's size in real pixels, e.g. "640 × 480"
+        self.size_label = Gtk.Label()
+        self.size_label.get_style_context().add_class("dim-label")
+        self.size_label.set_margin_start(4)
+        self.size_label.set_margin_end(6)
+        self.control_box.pack_start(self.size_label, False, False, 0)
+
         self.cancel_btn = Gtk.Button(label=_("Cancel"))
         self.cancel_btn.connect("clicked", self.on_cancel_clicked)
         self.control_box.pack_start(self.cancel_btn, False, False, 0)
@@ -186,6 +193,8 @@ class SelectionOverlay(Gtk.Window):
                        a.height + 2 * PANEL_PAD, self.panel_color, self.panel_border)
 
     def position_control_box(self):
+        scale = self.get_scale_factor()
+        self.size_label.set_text(f"{round(self.rect_w * scale)} × {round(self.rect_h * scale)}")
         _min, natural = self.control_box.get_preferred_size()
         btn_w, btn_h = natural.width, natural.height
 
