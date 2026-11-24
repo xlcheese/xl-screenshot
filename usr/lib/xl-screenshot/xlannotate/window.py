@@ -20,6 +20,7 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GLib, Pango
 
 from xlshared.ui import (EXT_TO_FORMAT, themed_icon_name, pixbuf_has_format,
                          save_pixbuf, show_error, confirm_overwrite, resolve_save_path)
+from xlshared.ui import PANEL_PAD, PANEL_SHADOW, theme_colors, draw_panel, place_panel
 from xlshared.i18n import _
 from .config import (APP_ID, APP_NAME, APP_VERSION, APP_FALLBACK_ICON, APP_WEBSITE,
                      APP_AUTHORS, APP_COPYRIGHT, APP_CREDIT, load_config, save_config)
@@ -200,6 +201,41 @@ class LineFillWell(Gtk.DrawingArea):
                 self.window.set_color_target(which)
                 break
         return True
+
+
+class FloatingPanel(Gtk.Box):
+    """Widgets on a rounded card with a soft shadow, floating over the
+    picture: the same panel as xl-Screenshot's Selection buttons sit on."""
+
+    def __init__(self):
+        super().__init__()
+        self.content = Gtk.Box(spacing=6)
+        s = PANEL_SHADOW + PANEL_PAD
+        self.content.set_margin_start(s)
+        self.content.set_margin_end(s)
+        self.content.set_margin_top(s)
+        self.content.set_margin_bottom(s + 3)     # the shadow sits a little low
+        self.add(self.content)
+        self.connect("draw", self._on_draw)
+        self.set_no_show_all(True)
+
+    def add_content(self, *widgets):
+        for widget in widgets:
+            self.content.pack_start(widget, False, False, 0)
+            widget.show_all()
+        self.content.show()
+
+    def card_inset(self):
+        """(left, top, right, bottom): the transparent shadow room round the card."""
+        s = PANEL_SHADOW
+        return s, s, s, s + 3
+
+    def _on_draw(self, widget, cr):
+        left, top, right, bottom = self.card_inset()
+        a = self.get_allocation()
+        _accent, background, border = theme_colors(self)
+        draw_panel(cr, left, top, a.width - left - right, a.height - top - bottom, background, border)
+        return False      # then GTK draws the buttons on top
 
 
 class AnnotateWindow(Gtk.ApplicationWindow):
@@ -433,26 +469,47 @@ class AnnotateWindow(Gtk.ApplicationWindow):
             child.show_all()
         overlay.add_overlay(self.zoom_box)
 
-        # ---- Bar along the bottom while cropping ----
-        self.crop_bar = Gtk.ActionBar()
+        # ---- Crop: a panel that follows the crop area, as in xl-Screenshot's
+        # ---- Selection (xlcheese/xl-screenshot#2), and a hint until one is drawn
+        self.crop_hint = FloatingPanel()
         crop_hint = Gtk.Label(label=_("Drag the area to keep. Adjust it with the handles, "
                                     "or drag it to move it."))
         crop_hint.get_style_context().add_class("dim-label")
-        self.crop_bar.pack_start(crop_hint)
+        self.crop_hint.add_content(crop_hint)
+        self.crop_hint.set_halign(Gtk.Align.CENTER)
+        self.crop_hint.set_valign(Gtk.Align.END)
+        overlay.add_overlay(self.crop_hint)
+
+        self.crop_panel = FloatingPanel()
+        self.crop_w_spin = Gtk.SpinButton.new_with_range(1, 100000, 1)
+        self.crop_h_spin = Gtk.SpinButton.new_with_range(1, 100000, 1)
+        self.crop_w_spin.set_tooltip_text(_("Width in pixels"))
+        self.crop_h_spin.set_tooltip_text(_("Height in pixels"))
+        for spin, which in ((self.crop_w_spin, "width"), (self.crop_h_spin, "height")):
+            spin.set_digits(0)
+            spin.set_width_chars(5)
+            spin.set_numeric(True)
+            spin.connect("value-changed", self.on_crop_size_typed, which)
+        times = Gtk.Label(label="×")
+        crop_cancel_btn = Gtk.Button(label=_("Cancel"))
+        crop_cancel_btn.set_tooltip_text(_("Leave Crop without changing the image (Esc)"))
+        crop_cancel_btn.connect("clicked", lambda b: self.leave_crop())
         self.crop_apply_btn = Gtk.Button(label=_("Crop"))
         self.crop_apply_btn.get_style_context().add_class("suggested-action")
         self.crop_apply_btn.set_tooltip_text(_("Keep only the chosen area (Enter)"))
         self.crop_apply_btn.connect("clicked", lambda b: self.apply_crop())
-        crop_cancel_btn = Gtk.Button(label=_("Cancel"))
-        crop_cancel_btn.set_tooltip_text(_("Leave Crop without changing the image (Esc)"))
-        crop_cancel_btn.connect("clicked", lambda b: self.leave_crop())
-        self.crop_bar.pack_end(self.crop_apply_btn)
-        self.crop_bar.pack_end(crop_cancel_btn)
-        # The bar stays hidden until Crop is chosen, but what's inside it must
-        # be shown now: show_all() skips the inside of a no-show-all widget
-        for child in (crop_hint, self.crop_apply_btn, crop_cancel_btn):
-            child.show()
-        self.crop_bar.set_no_show_all(True)
+        gap = Gtk.Box()
+        gap.set_size_request(6, -1)
+        self.crop_panel.add_content(self.crop_w_spin, times, self.crop_h_spin, gap,
+                                    crop_cancel_btn, self.crop_apply_btn)
+        overlay.add_overlay(self.crop_panel)
+        overlay.connect("get-child-position", self._place_crop_panel)
+        self.overlay = overlay
+        self._crop_syncing = False
+        self.canvas.connect("crop-moved", lambda c: self._crop_area_moved())
+        self.canvas.connect("zoom-changed", lambda c: self.crop_panel.queue_resize())
+        for adj in (self.scroller.get_hadjustment(), self.scroller.get_vadjustment()):
+            adj.connect("value-changed", lambda a: self.crop_panel.queue_resize())
 
         body = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         body.pack_start(sidebar, False, False, 0)
@@ -463,7 +520,6 @@ class AnnotateWindow(Gtk.ApplicationWindow):
         vbox.pack_start(toolbar, False, False, 0)
         vbox.pack_start(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL), False, False, 0)
         vbox.pack_start(body, True, True, 0)
-        vbox.pack_start(self.crop_bar, False, False, 0)
         self.add(vbox)
 
         # ---- Restore last choices (but never start in Crop) ----
@@ -723,6 +779,44 @@ class AnnotateWindow(Gtk.ApplicationWindow):
         self.config["tidy_shapes"] = item.get_active()
         save_config(self.config)
 
+    def _crop_area_moved(self):
+        """The crop area changed: show its size, and keep the panel on it."""
+        rect = self.canvas.crop_rect()
+        if rect is not None:
+            self._crop_syncing = True
+            self.crop_w_spin.set_range(1, self.canvas.base.get_width())
+            self.crop_h_spin.set_range(1, self.canvas.base.get_height())
+            self.crop_w_spin.set_value(rect[2])
+            self.crop_h_spin.set_value(rect[3])
+            self._crop_syncing = False
+        self.crop_panel.queue_resize()
+
+    def on_crop_size_typed(self, spin, which):
+        """Width moves the crop area's right edge, Height its bottom edge."""
+        if self._crop_syncing:
+            return
+        self.canvas.set_crop_size(**{which: spin.get_value_as_int()})
+
+    def _place_crop_panel(self, overlay, widget, allocation):
+        """Put the crop panel at the crop area's bottom-right corner (or above
+        it when there's no room below), like xl-Screenshot's Selection."""
+        if widget is not self.crop_panel or self.canvas.crop is None:
+            return False
+        crop = self.canvas.crop
+        x1, y1 = self.canvas.to_widget(crop.x, crop.y)
+        x2, y2 = self.canvas.to_widget(crop.x + crop.w, crop.y + crop.h)
+        ox1, oy1 = self.canvas.translate_coordinates(overlay, round(x1), round(y1))
+        ox2, oy2 = self.canvas.translate_coordinates(overlay, round(x2), round(y2))
+        _min, natural = widget.get_preferred_size()
+        left, top, right, bottom = widget.card_inset()
+        card_w = natural.width - left - right
+        card_h = natural.height - top - bottom
+        area = (4, 4, overlay.get_allocated_width() - 8, overlay.get_allocated_height() - 8)
+        cx, cy = place_panel((ox1, oy1, ox2 - ox1, oy2 - oy1), card_w, card_h, area)
+        allocation.x, allocation.y = cx - left, cy - top
+        allocation.width, allocation.height = natural.width, natural.height
+        return True
+
     def apply_crop(self):
         if self.canvas.apply_crop():
             self.leave_crop()
@@ -751,8 +845,11 @@ class AnnotateWindow(Gtk.ApplicationWindow):
         self.redo_btn.set_sensitive(self.canvas.can_redo())
         for btn in self.file_buttons:
             btn.set_sensitive(has_image)
-        self.crop_bar.set_visible(has_image and self.canvas.tool == "crop")
-        self.crop_apply_btn.set_sensitive(self.canvas.crop is not None)
+        cropping = has_image and self.canvas.tool == "crop"
+        self.crop_panel.set_visible(cropping and self.canvas.crop is not None)
+        self.crop_hint.set_visible(cropping and self.canvas.crop is None)
+        if cropping:
+            self._crop_area_moved()
         self.zoom_box.set_visible(has_image)
         if self.embedded:
             self.done_btn.set_sensitive(has_image)
@@ -979,7 +1076,11 @@ class AnnotateWindow(Gtk.ApplicationWindow):
     # ---- Keyboard ----
 
     def on_key_press(self, widget, event):
-        # Let text boxes have their keys (typing, Delete, Ctrl+C in the text...)
+        # Esc while typing a crop size still leaves Crop: take the focus back first
+        if isinstance(self.get_focus(), Gtk.SpinButton) and event.keyval == Gdk.KEY_Escape:
+            self.canvas.grab_focus()
+        # Let text boxes have their keys (typing, Delete, Ctrl+C in the text...);
+        # Enter in a crop size box sets the size, it doesn't crop
         if isinstance(self.get_focus(), (Gtk.Entry, Gtk.TextView)):
             return False
         ctrl = bool(event.state & Gdk.ModifierType.CONTROL_MASK)

@@ -2,6 +2,7 @@
 
 from gi.repository import Gtk, Gdk, GLib, GObject
 from xlshared.i18n import _
+from xlshared.ui import SELECTION_DIM, SELECTION_HANDLE, theme_colors, draw_selection_box
 import cairo
 
 from .shapes import (ArrowShape, LineShape, BoxShape, RectShape, EllipseShape, HighlightShape,
@@ -71,6 +72,8 @@ class AnnotateCanvas(Gtk.DrawingArea):
         "selection-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
         # A crop area was drawn or cleared
         "crop-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
+        # The crop area moved or changed size (for the panel that follows it)
+        "crop-moved": (GObject.SignalFlags.RUN_FIRST, None, ()),
         # The view's zoom changed
         "zoom-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
@@ -327,14 +330,37 @@ class AnnotateCanvas(Gtk.DrawingArea):
         return (max(0.0, min(ix, self.base.get_width())),
                 max(0.0, min(iy, self.base.get_height())))
 
+    def crop_rect(self):
+        """The crop area as whole image pixels (x, y, w, h), or None."""
+        if self.crop is None:
+            return None
+        x0, y0 = (int(round(v)) for v in self._clamp_to_image(self.crop.x, self.crop.y))
+        x1, y1 = (int(round(v)) for v in self._clamp_to_image(self.crop.x + self.crop.w,
+                                                              self.crop.y + self.crop.h))
+        return x0, y0, x1 - x0, y1 - y0
+
+    def set_crop_size(self, width=None, height=None):
+        """Typed sizes: the width moves the right edge, the height the bottom
+        edge, kept on the image. Returns the size actually set."""
+        if self.crop is None or self.base is None:
+            return None
+        x, y, w, h = self.crop_rect()
+        if width is not None:
+            w = max(1, min(int(width), self.base.get_width() - x))
+        if height is not None:
+            h = max(1, min(int(height), self.base.get_height() - y))
+        self.crop.x, self.crop.y, self.crop.w, self.crop.h = x, y, w, h
+        self.queue_draw()
+        self.emit("crop-moved")
+        return w, h
+
     def apply_crop(self):
         """Keep only the crop area. Marks move with the image; Undo
         brings back the whole image."""
         if self.crop is None or self.base is None:
             return False
-        x0, y0 = (int(round(v)) for v in self._clamp_to_image(self.crop.x, self.crop.y))
-        x1, y1 = (int(round(v)) for v in self._clamp_to_image(self.crop.x + self.crop.w,
-                                                              self.crop.y + self.crop.h))
+        x0, y0, w, h = self.crop_rect()
+        x1, y1 = x0 + w, y0 + h
         if x1 - x0 < 1 or y1 - y0 < 1:
             return False
         self._push_undo()
@@ -474,9 +500,10 @@ class AnnotateCanvas(Gtk.DrawingArea):
         (green) handles win when two overlap."""
         owner, handles = self._active_handles()
         special = owner.special_handles() if owner is not None else set()
+        reach = SELECTION_HANDLE if owner is self.crop else HANDLE_HIT_PX
         for name in sorted(handles, key=lambda n: n not in special):
             sx, sy = self.to_widget(*handles[name])
-            if abs(sx - wx) <= HANDLE_HIT_PX and abs(sy - wy) <= HANDLE_HIT_PX:
+            if abs(sx - wx) <= reach and abs(sy - wy) <= reach:
                 return name
         return None
 
@@ -519,23 +546,25 @@ class AnnotateCanvas(Gtk.DrawingArea):
         return False
 
     def _draw_crop(self, cr, ox, oy, shown_w, shown_h):
+        """The crop area drawn like xl-Screenshot's Selection: the rest
+        darkened, a theme-colored outline and square handles."""
         x1, y1 = self.to_widget(self.crop.x, self.crop.y)
         x2, y2 = self.to_widget(self.crop.x + self.crop.w, self.crop.y + self.crop.h)
-        # Darken what will be cut away
         cr.save()
         cr.set_fill_rule(cairo.FillRule.EVEN_ODD)
         cr.rectangle(ox, oy, shown_w, shown_h)
         cr.rectangle(x1, y1, x2 - x1, y2 - y1)
-        cr.set_source_rgba(0, 0, 0, 0.55)
+        cr.set_source_rgba(0, 0, 0, SELECTION_DIM)
         cr.fill()
         cr.restore()
-        cr.set_source_rgb(1, 1, 1)
-        cr.set_line_width(1)
-        cr.rectangle(round(x1) + 0.5, round(y1) + 0.5, round(x2 - x1) - 1, round(y2 - y1) - 1)
-        cr.stroke()
+        accent = theme_colors(self)[0]
+        centres = [self.to_widget(hx, hy) for hx, hy in self.crop.handles().values()]
+        draw_selection_box(cr, x1, y1, x2 - x1, y2 - y1, accent, centres)
 
     def _draw_handles(self, cr):
         owner, handles = self._active_handles()
+        if owner is not None and owner is self.crop:
+            return      # drawn with the crop area, in xl-Screenshot's style
         special = owner.special_handles() if owner is not None else set()
         half = HANDLE_SIZE_PX / 2
         for name, (hx, hy) in handles.items():
@@ -684,6 +713,8 @@ class AnnotateCanvas(Gtk.DrawingArea):
                 dy = max(-self.crop.y, min(iy - ly, self.base.get_height() - self.crop.y - self.crop.h))
                 self.crop.move_by(dx, dy)
                 drag["last"] = (lx + dx, ly + dy)
+            if kind.startswith("crop"):
+                self.emit("crop-moved")
             self.queue_draw()
             return True
 

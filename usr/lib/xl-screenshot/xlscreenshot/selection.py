@@ -1,14 +1,13 @@
 """The full-screen overlay for drawing a Selection rectangle."""
 
-import math
-
 from gi.repository import Gtk, Gdk, GLib
-
-# The panel behind Cancel / Capture Selection reaches this far past the buttons
-PANEL_PAD = 8
 
 from .capture import capture_region
 from xlshared.i18n import _
+# The look is shared with xl-Annotate's Crop. PANEL_PAD: how far the panel
+# behind Cancel / Capture Selection reaches past the buttons
+from xlshared.ui import (PANEL_PAD, SELECTION_DIM, SELECTION_HANDLE, theme_colors,
+                         draw_panel, place_panel, draw_selection_box)
 
 
 class SelectionOverlay(Gtk.Window):
@@ -59,23 +58,11 @@ class SelectionOverlay(Gtk.Window):
         self.active_handle = None
         # Edges (x1, y1, x2, y2) of the rectangle when a handle drag started
         self.drag_edges = None
-        self.handle_size = 8
+        self.handle_size = SELECTION_HANDLE
         self._current_cursor = Gdk.CursorType.CROSSHAIR
 
-        style_context = self.get_style_context()
-        found, color = style_context.lookup_color("theme_selected_bg_color")
-        if not found:
-            found, color = style_context.lookup_color("selected_bg_color")
-        if found:
-            self.theme_color = (color.red, color.green, color.blue, 1.0)
-        else:
-            self.theme_color = (0.2, 0.6, 1.0, 1.0)
-
-        # Colors for the panel behind Cancel / Capture Selection
-        found, color = style_context.lookup_color("theme_bg_color")
-        self.panel_color = (color.red, color.green, color.blue) if found else (0.96, 0.96, 0.95)
-        found, color = style_context.lookup_color("borders")
-        self.panel_border = (color.red, color.green, color.blue, 0.8) if found else (0, 0, 0, 0.25)
+        # The theme's accent color (the outline), and the panel's colors
+        self.theme_color, self.panel_color, self.panel_border = theme_colors(self)
 
         self.bg_pixbuf = Gdk.pixbuf_get_from_window(root, 0, 0, screen_w, screen_h)
 
@@ -182,60 +169,21 @@ class SelectionOverlay(Gtk.Window):
     def on_draw(self, widget, cr):
         # Dimmed screenshot everywhere...
         self._paint_screen(cr)
-        cr.set_source_rgba(0, 0, 0, 0.35)
+        cr.set_source_rgba(0, 0, 0, SELECTION_DIM)
         cr.paint()
 
         if self.rect_w > 0 and self.rect_h > 0:
             # ...except inside the selection, which shows it undimmed
             self._paint_screen(cr, (self.rect_x, self.rect_y, self.rect_w, self.rect_h))
 
-            cr.set_source_rgba(*self.theme_color)
-            cr.set_line_width(1.5)
-            cr.rectangle(self.rect_x, self.rect_y, self.rect_w, self.rect_h)
-            cr.stroke()
-
-            for hx, hy, hw, hh in self.get_handles().values():
-                cr.rectangle(hx, hy, hw, hh)
-                cr.set_source_rgba(1, 1, 1, 1)
-                cr.fill_preserve()
-                cr.set_source_rgba(*self.theme_color)
-                cr.stroke()
+            centres = [(hx + hw / 2, hy + hh / 2) for hx, hy, hw, hh in self.get_handles().values()]
+            draw_selection_box(cr, self.rect_x, self.rect_y, self.rect_w, self.rect_h,
+                               self.theme_color, centres)
 
         if self.control_box.get_visible():
             a = self.control_box.get_allocation()
-            self._draw_panel(cr, a.x - PANEL_PAD, a.y - PANEL_PAD,
-                             a.width + 2 * PANEL_PAD, a.height + 2 * PANEL_PAD)
-
-    @staticmethod
-    def _rounded_rect(cr, x, y, w, h, r):
-        cr.new_sub_path()
-        cr.arc(x + w - r, y + r, r, -math.pi / 2, 0)
-        cr.arc(x + w - r, y + h - r, r, 0, math.pi / 2)
-        cr.arc(x + r, y + h - r, r, math.pi / 2, math.pi)
-        cr.arc(x + r, y + r, r, math.pi, 3 * math.pi / 2)
-        cr.close_path()
-
-    def _draw_panel(self, cr, x, y, w, h):
-        """A rounded card in the theme's window color, with a soft drop
-        shadow, behind Cancel / Capture Selection, so they stand out on the
-        darkened screen. (Drawn here, under the buttons, which GTK draws
-        on top afterwards.)"""
-        radius = 8
-        cr.save()
-        cr.new_path()
-        # Soft shadow: a few widening, fading copies, nudged down a little
-        for spread in range(8, 0, -1):
-            self._rounded_rect(cr, x - spread, y - spread + 3, w + 2 * spread, h + 2 * spread,
-                               radius + spread)
-            cr.set_source_rgba(0, 0, 0, 0.035)
-            cr.fill()
-        self._rounded_rect(cr, x + 0.5, y + 0.5, w - 1, h - 1, radius)
-        cr.set_source_rgb(*self.panel_color)
-        cr.fill_preserve()
-        cr.set_source_rgba(*self.panel_border)
-        cr.set_line_width(1)
-        cr.stroke()
-        cr.restore()
+            draw_panel(cr, a.x - PANEL_PAD, a.y - PANEL_PAD, a.width + 2 * PANEL_PAD,
+                       a.height + 2 * PANEL_PAD, self.panel_color, self.panel_border)
 
     def position_control_box(self):
         _min, natural = self.control_box.get_preferred_size()
@@ -257,24 +205,11 @@ class SelectionOverlay(Gtk.Window):
         mon_x -= self.origin_x
         mon_y -= self.origin_y
 
-        # Work with the whole panel (buttons plus the card around them)
+        # Work with the whole panel (buttons plus the card around them): below
+        # the selection, its right edge lined up with the selection's
         pad = PANEL_PAD
-        panel_w, panel_h = btn_w + 2 * pad, btn_h + 2 * pad
-        gap = 6
-
-        # Panel's right edge lines up with the selection's, just below it
-        px = self.rect_x + self.rect_w - panel_w
-        py = self.rect_y + self.rect_h + gap
-
-        # Not enough room below the selection: put it above
-        if py + panel_h > mon_y + mon_h:
-            py = self.rect_y - panel_h - gap
-        # Not enough room above either: put it inside the selection's bottom edge
-        if py < mon_y:
-            py = self.rect_y + self.rect_h - panel_h - gap
-
-        px = max(mon_x, min(px, mon_x + mon_w - panel_w))
-        py = max(mon_y, min(py, mon_y + mon_h - panel_h))
+        px, py = place_panel((self.rect_x, self.rect_y, self.rect_w, self.rect_h),
+                             btn_w + 2 * pad, btn_h + 2 * pad, (mon_x, mon_y, mon_w, mon_h))
         target_x, target_y = px + pad, py + pad
 
         self.fixed.move(self.control_box, target_x, target_y)

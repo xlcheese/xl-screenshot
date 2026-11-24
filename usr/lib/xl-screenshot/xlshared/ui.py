@@ -1,5 +1,6 @@
 """Dialogs, icon lookup and image-format helpers used by both apps."""
 
+import math
 import os
 
 from gi.repository import Gtk, GdkPixbuf
@@ -99,3 +100,95 @@ def resolve_save_path(path, default_format):
         fmt = default_format
         path += "." + FORMAT_TO_EXT[fmt]
     return path, fmt
+
+
+# ---- The floating panel and selection box style, shared by xl-Screenshot's
+# ---- Selection and xl-Annotate's Crop, so the two always look the same
+
+PANEL_PAD = 8          # space between the panel's edge and its buttons
+PANEL_SHADOW = 8       # how far the panel's soft shadow reaches
+PANEL_GAP = 6          # space between the selection box and the panel
+SELECTION_DIM = 0.35   # how much the area outside the box is darkened
+SELECTION_HANDLE = 8   # half the size of the square handles
+
+
+def theme_colors(widget):
+    """(accent, panel background, panel border) from the widget's theme."""
+    ctx = widget.get_style_context()
+
+    def look(names, fallback):
+        for name in names:
+            found, c = ctx.lookup_color(name)
+            if found:
+                return (c.red, c.green, c.blue, c.alpha)
+        return fallback
+
+    accent = look(("theme_selected_bg_color", "selected_bg_color"), (0.2, 0.6, 1.0, 1.0))
+    background = look(("theme_bg_color",), (0.96, 0.96, 0.95, 1.0))
+    border = look(("borders",), (0, 0, 0, 0.25))
+    return accent[:3] + (1.0,), background[:3], border[:3] + (0.8,)
+
+
+def rounded_rect(cr, x, y, w, h, r):
+    cr.new_sub_path()
+    cr.arc(x + w - r, y + r, r, -math.pi / 2, 0)
+    cr.arc(x + w - r, y + h - r, r, 0, math.pi / 2)
+    cr.arc(x + r, y + h - r, r, math.pi / 2, math.pi)
+    cr.arc(x + r, y + r, r, math.pi, 3 * math.pi / 2)
+    cr.close_path()
+
+
+def draw_panel(cr, x, y, w, h, background, border):
+    """A rounded card in the theme's window color with a soft drop shadow,
+    to put buttons on over a darkened picture."""
+    radius = 8
+    cr.save()
+    cr.new_path()
+    # Soft shadow: a few widening, fading copies, nudged down a little
+    for spread in range(PANEL_SHADOW, 0, -1):
+        rounded_rect(cr, x - spread, y - spread + 3, w + 2 * spread, h + 2 * spread, radius + spread)
+        cr.set_source_rgba(0, 0, 0, 0.035)
+        cr.fill()
+    rounded_rect(cr, x + 0.5, y + 0.5, w - 1, h - 1, radius)
+    cr.set_source_rgb(*background)
+    cr.fill_preserve()
+    cr.set_source_rgba(*border)
+    cr.set_line_width(1)
+    cr.stroke()
+    cr.restore()
+
+
+def place_panel(box, panel_w, panel_h, area, gap=PANEL_GAP):
+    """Where a panel goes for a selection box: its right edge lined up with
+    the box's, just below it; above it when there's no room below; inside its
+    bottom edge when there's no room above either. Kept within area.
+    box and area are (x, y, w, h); returns the panel's (x, y)."""
+    bx, by, bw, bh = box
+    ax, ay, aw, ah = area
+    px = bx + bw - panel_w
+    py = by + bh + gap
+    if py + panel_h > ay + ah:
+        py = by - panel_h - gap
+    if py < ay:
+        py = by + bh - panel_h - gap
+    px = max(ax, min(px, ax + aw - panel_w))
+    py = max(ay, min(py, ay + ah - panel_h))
+    return px, py
+
+
+def draw_selection_box(cr, x, y, w, h, accent, handles):
+    """The selection outline in the theme's accent color, and its handles:
+    white squares edged in the accent color. handles: centre points."""
+    cr.save()
+    cr.set_source_rgba(*accent)
+    cr.set_line_width(1.5)
+    cr.rectangle(x, y, w, h)
+    cr.stroke()
+    s = SELECTION_HANDLE
+    for hx, hy in handles:
+        cr.rectangle(hx - s, hy - s, 2 * s, 2 * s)
+        cr.set_source_rgba(1, 1, 1, 1)
+        cr.fill_preserve()
+        cr.set_source_rgba(*accent)
+        cr.stroke()
+    cr.restore()
