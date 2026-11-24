@@ -4,6 +4,7 @@ from gi.repository import Gtk, Gdk, GLib, GObject
 from xlshared.i18n import _
 from xlshared.ui import SELECTION_DIM, SELECTION_HANDLE, theme_colors, draw_selection_box
 import cairo
+import math
 
 from .shapes import (ArrowShape, LineShape, BoxShape, RectShape, EllipseShape, HighlightShape,
                      PixelateShape, LoupeShape, TextShape, StepShape, FreehandShape, DEFAULT_FONT,
@@ -496,16 +497,20 @@ class AnnotateCanvas(Gtk.DrawingArea):
         return None, {}
 
     def handle_at(self, wx, wy):
-        """Name of the handle under a screen point, or None. Shape-changing
-        (green) handles win when two overlap."""
+        """Name of the handle under a screen point, or None."""
         owner, handles = self._active_handles()
         special = owner.special_handles() if owner is not None else set()
         reach = SELECTION_HANDLE if owner is self.crop else HANDLE_HIT_PX
-        for name in sorted(handles, key=lambda n: n not in special):
-            sx, sy = self.to_widget(*handles[name])
+        # The nearest handle within reach (so the ends of a short line can still
+        # be grabbed past its middle handle); a green one wins a tie
+        best = None
+        for name, (hx, hy) in handles.items():
+            sx, sy = self.to_widget(hx, hy)
             if abs(sx - wx) <= reach and abs(sy - wy) <= reach:
-                return name
-        return None
+                rank = (math.hypot(sx - wx, sy - wy), name not in special)
+                if best is None or rank < best[0]:
+                    best = (rank, name)
+        return best[1] if best else None
 
     # ---- Drawing ----
 

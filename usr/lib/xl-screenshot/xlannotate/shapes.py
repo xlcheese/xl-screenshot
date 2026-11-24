@@ -159,33 +159,127 @@ class Shape:
         began. constrain: Shift is held."""
 
 
-# ---- Line-shaped marks: two ends to drag ----
+# ---- Line-shaped marks: two ends to drag, and a middle handle that bends them ----
+
+BEND_SNAP = 6.0       # a middle handle this close to straight snaps straight (image px)
+_CURVE_STEPS = 48     # points used to measure a curve (selecting it, its bounds)
+
 
 class LineShape(Shape):
-    """A straight line from (x1, y1) to (x2, y2)."""
+    """A line from (x1, y1) to (x2, y2): straight, or bent into a smooth
+    curve through its middle handle (xlcheese/xl-screenshot#3).
+
+    bend is None (straight) or (along, across): where the curve's middle
+    point sits relative to the straight line between the ends, as fractions
+    of its length. Kept that way, the curve keeps its shape when an end is
+    moved."""
 
     USES_DASH = True
 
-    def __init__(self, x1, y1, x2, y2, **style):
+    def __init__(self, x1, y1, x2, y2, bend=None, **style):
         super().__init__(**style)
         self.x1, self.y1, self.x2, self.y2 = x1, y1, x2, y2
+        self.bend = bend
 
     def is_too_small(self):
         return math.hypot(self.x2 - self.x1, self.y2 - self.y1) < 4
 
-    def _stroke_line(self, cr, to_x, to_y, color=None):
+    # -- the curve --
+
+    def _frame(self):
+        """(length, unit vector along the line, unit vector across it)."""
+        dx, dy = self.x2 - self.x1, self.y2 - self.y1
+        length = math.hypot(dx, dy)
+        if length < 1e-6:
+            return 0.0, (1.0, 0.0), (0.0, 1.0)
+        ux, uy = dx / length, dy / length
+        return length, (ux, uy), (-uy, ux)
+
+    def middle(self):
+        """The middle handle: the curve's point halfway along it."""
+        mx, my = (self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2
+        if not self.bend:
+            return mx, my
+        length, (ux, uy), (nx, ny) = self._frame()
+        along, across = self.bend
+        return (mx + (along * ux + across * nx) * length,
+                my + (along * uy + across * ny) * length)
+
+    def control(self):
+        """The curve's control point (a quadratic Bezier through middle()),
+        or None when straight."""
+        if not self.bend:
+            return None
+        mx, my = self.middle()
+        return (2 * mx - (self.x1 + self.x2) / 2, 2 * my - (self.y1 + self.y2) / 2)
+
+    def point_at(self, t):
+        c = self.control()
+        if c is None:
+            return (self.x1 + (self.x2 - self.x1) * t, self.y1 + (self.y2 - self.y1) * t)
+        u = 1 - t
+        return (u * u * self.x1 + 2 * u * t * c[0] + t * t * self.x2,
+                u * u * self.y1 + 2 * u * t * c[1] + t * t * self.y2)
+
+    def points(self, steps=_CURVE_STEPS):
+        return [self.point_at(i / steps) for i in range(steps + 1)]
+
+    def tip_direction(self):
+        """Unit vector the line is heading in at its end (where an arrowhead points)."""
+        c = self.control()
+        fx, fy = (c if c is not None else (self.x1, self.y1))
+        dx, dy = self.x2 - fx, self.y2 - fy
+        length = math.hypot(dx, dy)
+        if length < 1e-6:
+            _l, u, _n = self._frame()
+            return u
+        return dx / length, dy / length
+
+    def set_middle(self, x, y, centred=False):
+        """Bend the line through (x, y); straight again when it's close to
+        straight. centred: keep the bend in the middle (a symmetric curve)."""
+        length, (ux, uy), (nx, ny) = self._frame()
+        if length < 1e-6:
+            self.bend = None
+            return
+        mx, my = (self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2
+        along = ((x - mx) * ux + (y - my) * uy) / length
+        across = ((x - mx) * nx + (y - my) * ny) / length
+        if centred:
+            along = 0.0
+        if abs(across) * length <= BEND_SNAP and abs(along) * length <= BEND_SNAP * 4:
+            self.bend = None
+        else:
+            self.bend = (along, across)
+
+    def _trace(self, cr, t_end=1.0):
+        """Add the line (or its first t_end of it) to cr's path."""
+        c = self.control()
+        cr.move_to(self.x1, self.y1)
+        if c is None:
+            ex, ey = self.point_at(t_end)
+            cr.line_to(ex, ey)
+            return
+        # The first part of a quadratic curve (de Casteljau), as the cubic cairo draws
+        p0 = (self.x1, self.y1)
+        q1 = (p0[0] + (c[0] - p0[0]) * t_end, p0[1] + (c[1] - p0[1]) * t_end)
+        p2 = self.point_at(t_end)
+        c1 = (p0[0] + 2 / 3 * (q1[0] - p0[0]), p0[1] + 2 / 3 * (q1[1] - p0[1]))
+        c2 = (p2[0] + 2 / 3 * (q1[0] - p2[0]), p2[1] + 2 / 3 * (q1[1] - p2[1]))
+        cr.curve_to(c1[0], c1[1], c2[0], c2[1], p2[0], p2[1])
+
+    def _stroke_line(self, cr, t_end=1.0, color=None):
         width = line_width(self.size)
         cr.set_source_rgba(*(color or self.ink()))
         cr.set_line_width(width)
         cr.set_line_cap(cairo.LineCap.ROUND)
         _apply_dash(cr, self.dash, width)
-        cr.move_to(self.x1, self.y1)
-        cr.line_to(to_x, to_y)
+        self._trace(cr, t_end)
         cr.stroke()
 
     def draw(self, cr, base=None, number=None):
         cr.save()
-        self._stroke_line(cr, self.x2, self.y2)
+        self._stroke_line(cr)
         cr.restore()
 
     def _pad(self):
@@ -193,13 +287,19 @@ class LineShape(Shape):
 
     def bounds(self):
         pad = self._pad()
-        x = min(self.x1, self.x2) - pad
-        y = min(self.y1, self.y2) - pad
-        return (x, y, abs(self.x2 - self.x1) + 2 * pad, abs(self.y2 - self.y1) + 2 * pad)
+        pts = self.points() if self.bend else [(self.x1, self.y1), (self.x2, self.y2)]
+        xs = [p[0] for p in pts]
+        ys = [p[1] for p in pts]
+        return (min(xs) - pad, min(ys) - pad, max(xs) - min(xs) + 2 * pad, max(ys) - min(ys) + 2 * pad)
+
+    def _distance(self, x, y):
+        if not self.bend:
+            return _distance_to_segment(x, y, self.x1, self.y1, self.x2, self.y2)
+        pts = self.points()
+        return min(_distance_to_segment(x, y, *a, *b) for a, b in zip(pts, pts[1:]))
 
     def contains(self, x, y, tolerance):
-        d = _distance_to_segment(x, y, self.x1, self.y1, self.x2, self.y2)
-        return d <= line_width(self.size) / 2 + tolerance
+        return self._distance(x, y) <= line_width(self.size) / 2 + tolerance
 
     def move_by(self, dx, dy):
         self.x1 += dx
@@ -208,7 +308,10 @@ class LineShape(Shape):
         self.y2 += dy
 
     def handles(self):
-        return {"start": (self.x1, self.y1), "end": (self.x2, self.y2)}
+        return {"start": (self.x1, self.y1), "bend": self.middle(), "end": (self.x2, self.y2)}
+
+    def special_handles(self):
+        return {"bend"}     # green and round: it changes the shape
 
     def drag_handle(self, name, x, y, start, constrain=False):
         if name == "start":
@@ -219,19 +322,37 @@ class LineShape(Shape):
             if constrain:
                 x, y = snap_angle(start.x1, start.y1, x, y)
             self.x2, self.y2 = x, y
+        elif name == "bend":
+            self.set_middle(x, y, centred=constrain)
 
 
 class ArrowShape(LineShape):
-    """A straight arrow from (x1, y1) to the head at (x2, y2)."""
+    """An arrow from (x1, y1) to the head at (x2, y2), straight or curved;
+    the head points the way the line is going at its tip."""
 
     def _head_size(self):
         return max(12.0, line_width(self.size) * 4.0)
+
+    def _t_back_from_tip(self, distance):
+        """How far along the line (0..1) is `distance` back from the tip."""
+        if not self.bend:
+            length = math.hypot(self.x2 - self.x1, self.y2 - self.y1)
+            return max(0.0, 1 - distance / length) if length else 0.0
+        pts = self.points()
+        walked = 0.0
+        for i in range(len(pts) - 1, 0, -1):
+            step = math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])
+            if walked + step >= distance:
+                frac = (distance - walked) / step if step else 0
+                return (i - frac) / (len(pts) - 1)
+            walked += step
+        return 0.0
 
     def draw(self, cr, base=None, number=None):
         length = math.hypot(self.x2 - self.x1, self.y2 - self.y1)
         if length < 1:
             return
-        ux, uy = (self.x2 - self.x1) / length, (self.y2 - self.y1) / length
+        ux, uy = self.tip_direction()
         head = min(self._head_size(), length)
         half = head * 0.55
         # Point where the head starts
@@ -247,7 +368,7 @@ class ArrowShape(LineShape):
             cr.push_group()
         solid = (r, g, b, 1.0)
         # Shaft stops a little inside the head so the round cap doesn't poke out
-        self._stroke_line(cr, bx + ux * head * 0.3, by + uy * head * 0.3, solid)
+        self._stroke_line(cr, self._t_back_from_tip(head * 0.7), solid)
         # Head (never dashed)
         cr.set_dash([])
         cr.set_source_rgba(*solid)

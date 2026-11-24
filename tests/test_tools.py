@@ -160,7 +160,7 @@ tool(win, "arrow"); color(win, "Red")
 drag(cv, 100, 300, 250, 300)
 arrow = cv.shapes[-1]
 tool(win, "select"); click(cv, 175, 300)
-check("select an arrow: 2 end handles", set(arrow.handles()) == {"start", "end"})
+check("select an arrow: 2 end handles and a middle (bend) handle", set(arrow.handles()) == {"start", "bend", "end"} and arrow.special_handles() == {"bend"})
 ex, ey = cv.to_widget(250, 300)
 cv.on_motion(cv, Ev(ex, ey))
 check("hover an end: crosshair", cv._cursor_name == "crosshair")
