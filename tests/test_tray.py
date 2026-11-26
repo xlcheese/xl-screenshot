@@ -34,8 +34,9 @@ check("check it: remembered in settings", config.load_config()["show_tray"] is T
 entry = open(tray.AUTOSTART_PATH).read()
 print("  autostart Exec:", [l for l in entry.splitlines() if l.startswith("Exec")][0])
 check("check it: starts at login with --tray", 'Exec="/home/wes/Downloads/my stuff/xl-screenshot/usr/bin/xl-screenshot" --tray' in entry)
-labels = [mi.get_label() for mi in app.tray.menu.get_children() if not isinstance(mi, Gtk.SeparatorMenuItem)]
-check("right-click menu items", labels == ["Show xl-Screenshot", "Screen", "Window", "Selection", "Quit"])
+labels = [mi.get_label() for mi in app.tray.menu.get_children()
+          if not isinstance(mi, Gtk.SeparatorMenuItem) and mi.get_visible()]
+check("right-click menu items (one monitor: no Screens)", labels == ["Show xl-Screenshot", "Screen", "Window", "Selection", "Quit"])
 user_icon = os.path.expanduser("~/.local/share/icons/hicolor/scalable/actions/xl-screenshot-tray-symbolic.svg")
 check("tray icon given by name (so Cinnamon recolors it)", tray._tray_icon_name() == "xl-screenshot-tray-symbolic")
 check("…and copied where Cinnamon finds it by name", os.path.isfile(user_icon)

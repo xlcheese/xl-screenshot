@@ -166,6 +166,9 @@ for wayland in (False, True):
 # (the test screen is one monitor, so GTK is told there are two, side by side)
 class FakeMonitor:
     def __init__(self, x): self.x = x
+    def connect(self, *a): return 0
+    def __hash__(self): return self.x
+    def __eq__(self, o): return isinstance(o, FakeMonitor) and o.x == self.x
     def get_geometry(self):
         r = Gdk.Rectangle(); r.x, r.y, r.width, r.height = self.x, 0, 640, 800; return r
 real_n, real_get = Gdk.Display.get_n_monitors, Gdk.Display.get_monitor

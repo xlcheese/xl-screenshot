@@ -16,7 +16,8 @@ from .escape_grab import EscapeKeyGrab
 from .selection import SelectionOverlay, WindowPickerOverlay
 from .x11_windows import list_windows
 from .window_look import finish_window, corner_radius_for
-from .capture import screen_scale
+from .capture import screen_scale, get_pointer_position
+from . import screens_icon
 from .tray import HAS_XAPP
 from .cinnamon_service import CinnamonScreenshot, session_is_wayland
 
@@ -59,6 +60,9 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
 
         # True from the moment a capture starts until the window comes back
         self._capturing = False
+        self.multi_monitor = False      # set by _update_monitors()
+        self._capture_one_screen = False  # Screen with several monitors: just one
+        self._screen_monitor = None       # ...and which, on Wayland
         # Pending delayed capture (see start_delay)
         self._delay_source = None
         self._delay_on_cancel = None
@@ -174,14 +178,27 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         self.preview_area.set_no_show_all(True)
 
         btn_cluster = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        btn_cluster.set_homogeneous(True)       # three or four buttons, all the same width
         # Sets the window's minimum width; the default thumbnail matches it
         btn_cluster.set_size_request(THUMB_DEFAULT_MAX_W + 2, -1)
         self.btn_cluster = btn_cluster
         self.main_box.pack_start(btn_cluster, False, False, 0)
 
+        # Screens: every monitor; only shown when there's more than one. Its
+        # icon is drawn from the monitors' layout (see _update_monitors)
+        self.screens_btn = self._create_icon_button(_("Screens"), *BUTTON_ICONS["screen"])
+        self.screens_btn.set_tooltip_text(_("All your screens"))
+        self.screens_btn.connect("clicked", self.on_screens_capture_clicked)
+        # Hidden until there are several monitors; what's inside it must be
+        # shown now, as show_all() skips the inside of a no-show-all widget
+        self.screens_btn.get_child().show_all()
+        self.screens_btn.set_no_show_all(True)
+        btn_cluster.pack_start(self.screens_btn, True, True, 0)
+
         screen_btn = self._create_icon_button(_("Screen"), *BUTTON_ICONS["screen"])
         screen_btn.connect("clicked", self.on_screen_capture_clicked)
         btn_cluster.pack_start(screen_btn, True, True, 0)
+        self.screen_btn = screen_btn
 
         window_btn = self._create_icon_button(_("Window"), *BUTTON_ICONS["window"])
         window_btn.connect("clicked", self.on_window_capture_clicked)
@@ -190,6 +207,7 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         selection_btn = self._create_icon_button(_("Selection"), *BUTTON_ICONS["selection"])
         selection_btn.connect("clicked", self.on_selection_clicked)
         btn_cluster.pack_start(selection_btn, True, True, 0)
+        self._watch_monitors()
 
         # Row under the buttons: Annotate on the left (once there's a
         # capture), Delay on the right, lined up with the buttons' right edge
@@ -415,6 +433,8 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         """Start a capture from the tray icon (works with the window hidden)."""
         if self.is_busy():
             self.present_current()
+        elif kind == "screens":
+            self.on_screens_capture_clicked(None)
         elif kind == "screen":
             self.on_screen_capture_clicked(None)
         elif kind == "window":
@@ -489,11 +509,88 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
 
     # ---- Screen ----
 
+    # ---- Monitors: one, or several (then Screens and Screen) ----
+
+    def monitor_rects(self):
+        """Every monitor's (x, y, w, h), in desktop units."""
+        display = Gdk.Display.get_default()
+        rects = []
+        for i in range(display.get_n_monitors()):
+            g = display.get_monitor(i).get_geometry()
+            rects.append((g.x, g.y, g.width, g.height))
+        return rects
+
+    def _watch_monitors(self):
+        display = Gdk.Display.get_default()
+        display.connect("monitor-added", lambda d, m: self._update_monitors())
+        display.connect("monitor-removed", lambda d, m: self._update_monitors())
+        self.connect("style-updated", lambda w: self._update_monitors())
+        self.connect("notify::scale-factor", lambda w, p: self._update_monitors())
+        self._watched_monitors = set()
+        self._update_monitors()
+
+    def _update_monitors(self):
+        """Show Screens only with several monitors, its icon drawn from their
+        layout; called again whenever monitors come, go or move."""
+        display = Gdk.Display.get_default()
+        for i in range(display.get_n_monitors()):
+            monitor = display.get_monitor(i)
+            if monitor not in self._watched_monitors:      # moved in the display settings
+                self._watched_monitors.add(monitor)
+                monitor.connect("notify::geometry", lambda m, p: self._update_monitors())
+        rects = self.monitor_rects()
+        self.multi_monitor = len(rects) > 1
+        if self.multi_monitor:
+            fg = self.screens_btn.get_style_context().get_color(Gtk.StateFlags.NORMAL)
+            icon = screens_icon.render(rects, (fg.red, fg.green, fg.blue, fg.alpha),
+                                       scale=self.get_scale_factor())
+            if icon is not None:
+                self.screens_btn.get_child().get_children()[0].set_from_surface(icon)
+        self.screens_btn.set_visible(self.multi_monitor)
+        self.screen_btn.set_tooltip_text(_("The screen the pointer is on") if self.multi_monitor else None)
+        app = self.get_application()
+        tray = getattr(app, "tray", None) if app is not None else None
+        if tray is not None:
+            tray.show_screens(self.multi_monitor)
+
+    def _monitor_for_screen(self):
+        """The monitor Screen captures: where the pointer is (X11, checked at
+        capture time, so after a delay it follows you); on Wayland apps
+        aren't told, so the one xl-Screenshot was on when Screen was clicked."""
+        display = Gdk.Display.get_default()
+        monitor = None
+        if not self.wayland:
+            pos = get_pointer_position()          # device pixels
+            if pos is not None:
+                scale = screen_scale()
+                monitor = display.get_monitor_at_point(int(pos[0] / scale), int(pos[1] / scale))
+        if monitor is None and self._screen_monitor is not None:
+            return self._screen_monitor
+        if monitor is None:
+            monitor = display.get_primary_monitor() or display.get_monitor(0)
+        g = monitor.get_geometry()
+        return (g.x, g.y, g.width, g.height)
+
+    def on_screens_capture_clicked(self, button):
+        """Screens: every monitor."""
+        self._capture_one_screen = False
+        self._begin_capture()
+        self.start_delay(self.perform_full_screen_capture)
+
     def on_screen_capture_clicked(self, button):
+        """Screen: with one monitor, the whole screen; with several, the one
+        you're on."""
+        self._capture_one_screen = self.multi_monitor
+        self._screen_monitor = None
+        if self.multi_monitor and self.get_visible() and self.get_window() is not None:
+            g = Gdk.Display.get_default().get_monitor_at_window(self.get_window()).get_geometry()
+            self._screen_monitor = (g.x, g.y, g.width, g.height)
         self._begin_capture()
         self.start_delay(self.perform_full_screen_capture)
 
     def perform_full_screen_capture(self):
+        if self._capture_one_screen:
+            return self._capture_monitor(self._monitor_for_screen())
         if self.cinnamon is not None:
             self.cinnamon.screenshot(self.include_pointer, self._capture_done)
             return False
@@ -524,6 +621,19 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
 
     def _pick_window_with_cinnamon(self):
         self.cinnamon.select_window(self._cinnamon_window_picked)
+        return False
+
+    def _capture_monitor(self, rect):
+        """Screen with several monitors: just that one."""
+        x, y, w, h = rect
+        if self.cinnamon is not None:
+            self.cinnamon.screenshot_area(x, y, w, h, self.include_pointer, self._capture_done)
+            return False
+        if self.wayland:
+            return self._cannot_capture()
+        scale = screen_scale()
+        pixbuf = capture_region(x * scale, y * scale, w * scale, h * scale, self.include_pointer)
+        self._capture_done(pixbuf)
         return False
 
     def _cinnamon_window_picked(self, window_id):

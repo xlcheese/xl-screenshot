@@ -96,13 +96,19 @@ class TrayIcon:
         # Translators: {name} is the program name, xl-Screenshot
         item(_("Show {name}").format(name=APP_NAME), self.window.show_from_tray)
         menu.append(Gtk.SeparatorMenuItem())
+        self.screens_item = item(_("Screens"), lambda: self.window.tray_capture("screens"))
         item(_("Screen"), lambda: self.window.tray_capture("screen"))
         item(_("Window"), lambda: self.window.tray_capture("window"))
         item(_("Selection"), lambda: self.window.tray_capture("selection"))
         menu.append(Gtk.SeparatorMenuItem())
         item(_("Quit"), self.on_quit)
         menu.show_all()
+        self.show_screens(getattr(self.window, "multi_monitor", False))
         return menu
+
+    def show_screens(self, multi):
+        """Offer Screens only with more than one monitor."""
+        self.screens_item.set_visible(multi)
 
     def on_activate(self, icon, button, time):
         # Left click: straight into a Selection capture
