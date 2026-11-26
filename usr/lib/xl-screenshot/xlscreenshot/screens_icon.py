@@ -152,7 +152,9 @@ def render(monitors, color, scale=1, max_width=ICON_MAX_WIDTH, height=ICON_HEIGH
         w, h = m[2] * k - GAP, m[3] * ky - GAP
         _monitor(cr, _frame_art, x, y, w, h, f, color, scale)
         if not _has_below(m, monitors):        # stands only under the bottom row
+            # Every stand keeps the Screen icon's height; a narrow (portrait)
+            # monitor gets a narrower one, not a shorter one, so its base shows
             sw = min(_STAND[2] * f, w * 0.6)
-            sh = sw * _STAND[3] / _STAND[2]
+            sh = stand_h
             _tile(cr, art, _STAND, (x + (w - sw) / 2, y + h, sw, sh), color)
     return surface

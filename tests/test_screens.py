@@ -109,6 +109,23 @@ for dark in column + [False]:
 check(f"…stands only under the bottom row (runs down the middle: {runs})",
       len(runs) == 4 and runs[1] < runs[3] - 4)
 check("…with one monitor: no icon needed (Screen's own)", SI.render([], col) is None)
+# A portrait monitor's stand: narrower than the others, but just as tall,
+# so its base still shows (it used to shrink to a stub)
+def stand_rows(surface, cx, top):
+    """How many rows below `top` have ink in column cx (the stand's middle)."""
+    d, stp = surface.get_data(), surface.get_stride()
+    rows = 0
+    for yy in range(top, surface.get_height()):
+        if d[yy * stp + cx * 4 + 3] > 40: rows += 1
+    return rows
+pl = [(0, 0, 1080, 1920), (1080, 0, 2560, 1440), (3640, 0, 2560, 1440)]
+ps = SI.render(pl, col, scale=4)
+k = SI.ICON_MAX_WIDTH / 6200 * 4
+port_bottom = round(1920 * k) ; land_bottom = round(1440 * k)
+p_rows = stand_rows(ps, round(540 * k), port_bottom - 4)
+l_rows = stand_rows(ps, round((1080 + 1280) * k), land_bottom - 4)
+check(f"portrait monitor: its stand is as tall as the others' ({p_rows} vs {l_rows} rows)",
+      p_rows > 0 and abs(p_rows - l_rows) <= 3)
 six = SI.render([(i * 1920, 0, 1920, 1080) for i in range(6)], col)
 grid = SI.render([(0, 0, 1920, 1080), (1920, 0, 1920, 1080), (0, 1080, 1920, 1080), (1920, 1080, 1920, 1080)], col)
 check("…more than four monitors: drawn as a 2 x 2 (still readable)", (six.get_width(), six.get_height()) == (grid.get_width(), grid.get_height()))
