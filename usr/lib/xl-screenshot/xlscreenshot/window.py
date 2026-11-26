@@ -9,7 +9,7 @@ from xlshared.ui import (FORMAT_TO_EXT, themed_icon_name, pixbuf_has_format, sav
                          show_error, confirm_overwrite, resolve_save_path)
 from xlannotate.window import AnnotateWindow
 from xlshared.i18n import _
-from .config import (APP_ID, APP_NAME, APP_VERSION, APP_FALLBACK_ICON, APP_WEBSITE,
+from .config import (MAX_DELAY_SEC, APP_ID, APP_NAME, APP_VERSION, APP_FALLBACK_ICON, APP_WEBSITE,
                      APP_AUTHORS, APP_COPYRIGHT, APP_CREDIT, load_config, save_config)
 from .capture import capture_region, window_capture_rect
 from .escape_grab import EscapeKeyGrab
@@ -208,7 +208,7 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         delay_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
 
         delay_lbl = Gtk.Label(label=_("Delay in Seconds:"))
-        self.delay_spin = Gtk.SpinButton.new_with_range(0, 99, 1)
+        self.delay_spin = Gtk.SpinButton.new_with_range(0, MAX_DELAY_SEC, 1)
         self.delay_spin.set_value(self.delay_sec)
         self.delay_spin.set_width_chars(3)
         self.delay_spin.connect("value-changed", self.on_delay_changed)

@@ -10,7 +10,7 @@
 Two small apps for Linux Mint and the Cinnamon desktop, installed together:
 
 - **xl-Screenshot**: Screen, Window, and Selection captures, with an
-  optional delay and tray icon.
+  optional delay (up to 11 seconds) and tray icon.
 - **xl-Annotate**: simple, light markup for images and screenshots: arrows and
   lines (straight, or curved with their middle handle), freehand drawing, a
   speed-sensitive ink pen, rectangles, ellipses, highlighter, text, numbered

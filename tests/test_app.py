@@ -103,6 +103,11 @@ open(xs.CONFIG_PATH, "w").write('["not", "a", "dict"]')
 check("bad config -> defaults", xs.load_config() == xs.DEFAULT_CONFIG)
 open(xs.CONFIG_PATH, "w").write('{"delay_sec": "five", "save_format": "bmp"}')
 c = xs.load_config(); check("wrong types ignored", c["delay_sec"] == 0 and c["save_format"] == "png")
+open(xs.CONFIG_PATH, "w").write('{"delay_sec": 99}')
+c = xs.load_config(); check("a delay saved before the cap (99) becomes 11", c["delay_sec"] == 11)
+w99 = xs.XLScreenshotTool(); w99.delay_spin.set_value(50)
+check("the delay box stops at 11 seconds", w99.delay_spin.get_value_as_int() == 11 and xs.MAX_DELAY_SEC == 11); w99.destroy()
+open(xs.CONFIG_PATH, "w").write('{}')
 
 # Real save
 p = os.path.join(os.environ["HOME"], "x.jpg")

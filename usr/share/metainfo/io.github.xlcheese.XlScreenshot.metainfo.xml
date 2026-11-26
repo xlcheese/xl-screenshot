@@ -16,7 +16,7 @@
       <li>Selection: draw an area over a still picture of the desktop, and adjust it with handles</li>
     </ul>
     <p>
-      A delay gives you time to open a menu first (Esc cancels it). Captures can be copied, saved as
+      A delay of up to 11 seconds gives you time to open a menu first. Captures can be copied, saved as
       PNG, JPEG, or WebP, or marked up in xl-Annotate. An optional tray icon starts a selection with
       one click.
     </p>

@@ -26,6 +26,10 @@ CONFIG_PATH = os.path.join(CONFIG_DIR, "config.json")
 # Where versions before the rename kept their settings
 OLD_CONFIG_PATH = os.path.expanduser("~/.config/xlscreenshot/config.json")
 
+# The longest delay: on Wayland, Esc can't cancel a countdown (apps can't
+# listen for keys there), so a long one would mean a long wait. These go to 11.
+MAX_DELAY_SEC = 11
+
 DEFAULT_CONFIG = {
     "save_format": "png",
     "last_save_dir": "",
@@ -71,6 +75,7 @@ def load_config():
         # Ignore values of the wrong type (e.g. a hand-edited config)
         if isinstance(value, type(default)):
             cfg[key] = value
+    cfg["delay_sec"] = max(0, min(cfg["delay_sec"], MAX_DELAY_SEC))
     if cfg["save_format"] not in ("png", "jpeg", "webp"):
         cfg["save_format"] = "png"
     return cfg
