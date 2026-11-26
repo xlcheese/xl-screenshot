@@ -22,6 +22,7 @@ _SVG_NAME = "xl-screenshot-screen-symbolic.svg"
 _CURVE_BOTTOM = 404                # the lowest point of the curved bottom bezel
 _FRAME = (0, 55, 512, _CURVE_BOTTOM - 55)        # the monitor, curved bezel included
 _STAND = (132, _CURVE_BOTTOM, 247, 457 - _CURVE_BOTTOM)   # neck and oval base, below the bezel
+_OPENING = (20, 76, 472, 286)      # the screen inside the frame (x, y, w, h)
 _CORNER = 44                       # how much of each frame edge keeps its size
 _BOTTOM = 70                       # the curved bottom bezel keeps its height too
 _SCREEN_SCALE = ICON_HEIGHT / 512  # units per SVG unit in the Screen icon
@@ -121,17 +122,20 @@ def render(monitors, color, scale=1, max_width=ICON_MAX_WIDTH, height=ICON_HEIGH
     # Monitors as big as fits: at most max_width across, `height` tall with the stands
     room_k = (height - stand_h) / bh
     k = min(max_width / bw, room_k)
-    # Our Screen drawing is a little taller than a real 16:9 monitor. When the
-    # width is what limits the icon (side by side, three in a row), stretch it
-    # upwards toward the Screen drawing's shape, as far as the height allows,
-    # so the monitors look like the Screen icon; stacked and 2x2 layouts,
-    # limited by the height, keep their real shape
+    # When the width is what limits the icon (side by side, three in a row),
+    # stretch it upwards so each monitor's screen opening has the Screen
+    # icon's shape. The bezels keep the Screen icon's thickness, so a small
+    # monitor needs a little extra height to make up for them. Stacked and
+    # 2x2 layouts, limited by the height, keep their real shape
     ky = k
     if max_width / bw < room_k:
-        landscape = sorted(m[2] / m[3] for m in monitors if m[2] >= m[3]) or [16 / 9]
-        typical = landscape[len(landscape) // 2]
-        ky = min(k * typical / (_FRAME[2] / _FRAME[3]), room_k)
-        ky = max(ky, k)
+        landscape = sorted((m for m in monitors if m[2] >= m[3]), key=lambda m: m[2] / m[3])
+        typical = landscape[len(landscape) // 2] if landscape else monitors[0]
+        ox, oy_, ow, oh = _OPENING
+        side, top, bottom = ox * f, (oy_ - _FRAME[1]) * f, (_FRAME[1] + _FRAME[3] - oy_ - oh) * f
+        drawn_w = typical[2] * k - GAP
+        wanted_h = (drawn_w - 2 * side) * oh / ow + top + bottom
+        ky = max(k, min((wanted_h + GAP) / typical[3], room_k))
     width = math.ceil(bw * k)
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, math.ceil(width * scale), math.ceil(height * scale))
     surface.set_device_scale(scale, scale)
