@@ -80,7 +80,7 @@ on Cinnamon's **Wayland** session. Without it, it captures through **X11**.
 **Tested**
 
 - **Linux Mint 22 Cinnamon** (X11): everyday use, with one and two monitors.
-- **The current Linux Mint beta** (Cinnamon): its X11 and Wayland sessions.
+- **Linux Mint 27 beta** (Cinnamon): its X11 and Wayland sessions.
 - **Ubuntu 24.04** (the base of Mint 22): the .deb installs, and the
   [automatic tests](tests/README.md) run on it after every change, including
   both apps running as real Wayland apps.
