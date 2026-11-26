@@ -34,6 +34,8 @@ class SelectionOverlay(Gtk.Window):
         # Never shown on screen, but names the overlay in window lists
         self.set_title("xl-Screenshot Selection")
         self.captured = False
+        # Fast Selection: no handles or buttons; letting go captures
+        self.fast = bool(getattr(parent_tool, "fast_selection", False))
 
         self.set_app_paintable(True)
         self.set_decorated(False)
@@ -131,6 +133,10 @@ class SelectionOverlay(Gtk.Window):
         self.control_box.pack_start(self.capture_btn, False, False, 0)
 
         self.fixed.put(self.control_box, 10, 10)
+        if self.fast:
+            # Only the size, shown while you drag
+            self.cancel_btn.set_no_show_all(True)
+            self.capture_btn.set_no_show_all(True)
 
         self.connect("map-event", lambda w, e: self._grab_input())
         self.connect("unmap-event", lambda w, e: self._release_input())
@@ -176,6 +182,8 @@ class SelectionOverlay(Gtk.Window):
         self.get_window().set_cursor(cursor)
 
     def get_handles(self):
+        if self.fast:
+            return {}
         x, y, w, h = self.rect_x, self.rect_y, self.rect_w, self.rect_h
         s = self.handle_size
         return {
@@ -342,6 +350,8 @@ class SelectionOverlay(Gtk.Window):
                 self.rect_h = abs(cy - self.start_y)
 
             self.queue_draw()
+            if self.fast and not self.control_box.get_visible() and self.rect_w > 5 and self.rect_h > 5:
+                self.control_box.show_all()
             if self.control_box.get_visible():
                 self.position_control_box()
             return True
@@ -365,6 +375,16 @@ class SelectionOverlay(Gtk.Window):
             self.active_handle = None
             self.drag_edges = None
             self._set_cursor_if_changed(Gdk.CursorType.CROSSHAIR)
+            if self.fast:
+                if self.rect_w > 5 and self.rect_h > 5:
+                    self.control_box.hide()
+                    self.on_capture_confirmed(None)
+                else:
+                    # Just a click, or a slip: nothing to capture, try again
+                    self.rect_w = self.rect_h = 0
+                    self.control_box.hide()
+                    self.queue_draw()
+                return True
             if self.rect_w > 5 and self.rect_h > 5:
                 # Show before positioning: a hidden box measures as 0x0,
                 # which would put the buttons off to the right of the selection.

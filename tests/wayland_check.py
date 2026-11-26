@@ -49,6 +49,24 @@ if ovs:
     p = w.active_pixbuf
     check("…and captures that area (300x150); the window comes back",
           p is not None and (p.get_width(), p.get_height()) == (300, 150) and w.get_visible())
+# Fast Selection: letting go captures, with no buttons
+w.fast_selection = True; w.active_pixbuf = None; w.start_selection()
+t0 = time.time()
+while time.time() - t0 < 6 and not [t for t in Gtk.Window.list_toplevels() if isinstance(t, SelectionOverlay) and t.get_mapped()]:
+    settle(0.1)
+ovs = [t for t in Gtk.Window.list_toplevels() if isinstance(t, SelectionOverlay) and t.get_mapped()]
+if ovs:
+    ov = ovs[0]
+    ov.on_button_press(None, Ev(50, 60)); ov.on_motion_notify(None, Ev(250, 160)); settle(0.3)
+    check(f"Wayland Fast Selection: the size ({ov.size_label.get_text()}) shows while dragging, no buttons",
+          ov.size_label.get_mapped() and ov.size_label.get_text() == "200 × 100" and not ov.capture_btn.get_mapped())
+    ov.on_button_release(None, Ev(250, 160))
+    t0 = time.time()
+    while time.time() - t0 < 6 and w.active_pixbuf is None: settle(0.1)
+p = w.active_pixbuf
+check("…letting go captures that area (200x100); the window comes back",
+      p is not None and (p.get_width(), p.get_height()) == (200, 100) and w.get_visible())
+w.fast_selection = False
 w.delay_sec = 1; w.active_pixbuf = None; t0 = time.time(); w.on_screen_capture_clicked(None)
 while time.time() - t0 < 6 and w.active_pixbuf is None: settle(0.1)
 check("Wayland: a delay works, with no X11 key grab", w.active_pixbuf is not None and w._escape_grab is None)

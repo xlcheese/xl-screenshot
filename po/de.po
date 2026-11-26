@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xl-Screenshot 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/xlcheese/xl-screenshot/issues\n"
-"POT-Creation-Date: 2026-11-26 14:16+0000\n"
+"POT-Creation-Date: 2026-11-26 16:25+0000\n"
 "PO-Revision-Date: 2026-11-06 14:48+0000\n"
 "Last-Translator: Draft by Claude (needs native review)\n"
 "Language-Team: German\n"
@@ -247,7 +247,7 @@ msgstr ""
 "verwandeln"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:258
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:152
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:164
 msgid "About"
 msgstr "Info"
 
@@ -360,7 +360,7 @@ msgstr "Höhe in Pixeln"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:499
 #: usr/lib/xl-screenshot/xlannotate/window.py:841
-#: usr/lib/xl-screenshot/xlscreenshot/selection.py:124
+#: usr/lib/xl-screenshot/xlscreenshot/selection.py:126
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -443,7 +443,7 @@ msgstr "Bild öffnen"
 #: usr/lib/xl-screenshot/xlannotate/window.py:1127
 #: usr/lib/xl-screenshot/xlannotate/window.py:1199
 #: usr/lib/xl-screenshot/xlannotate/window.py:1204
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:836
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:851
 #: usr/lib/xl-screenshot/xlshared/ui.py:83
 msgid "_Cancel"
 msgstr "_Abbrechen"
@@ -462,7 +462,7 @@ msgid "Pasted Image"
 msgstr "Eingefügtes Bild"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:1101
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:879
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:894
 msgid "Could not save image"
 msgstr "Das Bild konnte nicht gespeichert werden"
 
@@ -472,7 +472,7 @@ msgstr "Beschriftetes Bild speichern unter"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:1127
 #: usr/lib/xl-screenshot/xlannotate/window.py:1205
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:836
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:851
 msgid "_Save"
 msgstr "_Speichern"
 
@@ -535,7 +535,7 @@ msgid "Start with just the tray icon (used when logging in)"
 msgstr ""
 "Nur mit dem Symbol in der Systemleiste starten (beim Anmelden verwendet)"
 
-#: usr/lib/xl-screenshot/xlscreenshot/selection.py:128
+#: usr/lib/xl-screenshot/xlscreenshot/selection.py:130
 msgid "Capture Selection"
 msgstr "Auswahl aufnehmen"
 
@@ -550,22 +550,22 @@ msgid "Show {name}"
 msgstr "{name} anzeigen"
 
 #: usr/lib/xl-screenshot/xlscreenshot/tray.py:99
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:189
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:201
 msgid "Screens"
 msgstr "Bildschirme"
 
 #: usr/lib/xl-screenshot/xlscreenshot/tray.py:100
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:198
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:209
 msgid "Screen"
 msgstr "Bildschirm"
 
 #: usr/lib/xl-screenshot/xlscreenshot/tray.py:101
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:203
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:214
 msgid "Window"
 msgstr "Fenster"
 
 #: usr/lib/xl-screenshot/xlscreenshot/tray.py:102
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:207
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:218
 msgid "Selection"
 msgstr "Auswahl"
 
@@ -577,27 +577,27 @@ msgstr "Beenden"
 msgid "Keep xl-Screenshot in the system tray"
 msgstr "xl-Screenshot in der Systemleiste behalten"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:87
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:88
 msgid "Save As…"
 msgstr "Speichern unter …"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:94
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:95
 msgid "Copy to Clipboard"
 msgstr "In die Zwischenablage kopieren"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:100
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:101
 msgid "Include Pointer"
 msgstr "Mauszeiger einbeziehen"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:105
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:106
 msgid "Include Window Shadow"
 msgstr "Fensterschatten einbeziehen"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:113
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:114
 msgid "Show in System Tray"
 msgstr "In der Systemleiste anzeigen"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:116
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:117
 msgid ""
 "Keep xl-Screenshot in the tray: click the icon for a Selection capture. "
 "Closing the window hides it, and it starts when you log in."
@@ -606,52 +606,56 @@ msgstr ""
 "eine Auswahlaufnahme. Das Schließen des Fensters blendet es aus, und es "
 "startet beim Anmelden."
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:120
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:121
 msgid "Needs Mint's tray support: sudo apt install gir1.2-xapp-1.0"
 msgstr ""
 "Benötigt die Systemleisten-Unterstützung von Mint: sudo apt install gir1.2-"
 "xapp-1.0"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:126
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:129
+msgid "Accurate Selection"
+msgstr "Genaue Auswahl"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:130
+msgid "Fast Selection"
+msgstr "Schnelle Auswahl"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:138
 msgid "PNG (Lossless)"
 msgstr "PNG (verlustfrei)"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:127
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:139
 msgid "JPEG (Compressed)"
 msgstr "JPEG (komprimiert)"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:128
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:140
 msgid "WebP (Compressed)"
 msgstr "WebP (komprimiert)"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:132
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:144
 msgid "WebP support not installed. Install 'webp-pixbuf-loader'."
 msgstr ""
 "WebP-Unterstützung ist nicht installiert. Installieren Sie „webp-pixbuf-"
 "loader“."
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:190
-msgid "All your screens"
-msgstr "Alle Ihre Bildschirme"
-
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:217
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:228
 msgid "Annotate"
 msgstr "Beschriften"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:221
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:232
 msgid "Add arrows, boxes and text (or double-click the thumbnail)"
 msgstr ""
 "Pfeile, Rechtecke und Text hinzufügen (oder auf die Vorschau doppelklicken)"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:228
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:239
 msgid "Delay in Seconds:"
 msgstr "Verzögerung in Sekunden:"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:387
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:398
 msgid "Keep xl-Screenshot in the system tray?"
 msgstr "xl-Screenshot in der Systemleiste behalten?"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:389
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:400
 msgid ""
 "Click the tray icon for a quick Selection capture. xl-Screenshot will also "
 "start when you log in. You can change this any time with Show in System Tray "
@@ -661,32 +665,28 @@ msgstr ""
 "Auswahlaufnahme. xl-Screenshot startet außerdem beim Anmelden. Sie können "
 "das jederzeit mit „In der Systemleiste anzeigen“ im Menü ändern."
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:392
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:403
 msgid "_Not Now"
 msgstr "_Nicht jetzt"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:393
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:404
 msgid "_Show in Tray"
 msgstr "In der Systemleiste _anzeigen"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:550
-msgid "The screen the pointer is on"
-msgstr "Der Bildschirm, auf dem der Mauszeiger ist"
-
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:669
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:684
 msgid "Window capture needs xwininfo"
 msgstr "Die Fensteraufnahme benötigt xwininfo"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:670
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:685
 msgid "Install it with: sudo apt install x11-utils"
 msgstr "Installieren Sie es mit: sudo apt install x11-utils"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:738
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:753
 msgid "xl-Screenshot can't capture on this desktop yet"
 msgstr ""
 "xl-Screenshot kann auf dieser Arbeitsumgebung noch keine Aufnahmen machen"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:739
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:754
 msgid ""
 "In a Wayland session, xl-Screenshot captures through Cinnamon's screenshot "
 "service, which this desktop doesn't have. Log in to an X11 session to use it "
@@ -698,32 +698,32 @@ msgstr ""
 
 #. Translators: shown as the xl-Annotate window title while it edits a capture
 #. Translators: the start of a saved screenshot's file name (the date and time follow)
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:801
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:846
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:816
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:861
 msgid "Screenshot"
 msgstr "Bildschirmfoto"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:833
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:848
 msgid "Save Screenshot As"
 msgstr "Bildschirmfoto speichern unter"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:851
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:866
 msgid "JPEG Images"
 msgstr "JPEG-Bilder"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:854
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:869
 msgid "WebP Images"
 msgstr "WebP-Bilder"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:857
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:872
 msgid "PNG Images"
 msgstr "PNG-Bilder"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:862
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:877
 msgid "All Images"
 msgstr "Alle Bilder"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:902
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:917
 msgid ""
 "A screenshot tool for Linux Mint and the Cinnamon desktop, with Screen, "
 "Window, and Selection capture modes."
@@ -808,6 +808,12 @@ msgstr "Bild beschriften …"
 #: data/xl-annotate.nemo_action.in:4
 msgid "Add arrows, boxes, text and more with xl-Annotate"
 msgstr "Pfeile, Rechtecke, Text und mehr mit xl-Annotate hinzufügen"
+
+#~ msgid "All your screens"
+#~ msgstr "Alle Ihre Bildschirme"
+
+#~ msgid "The screen the pointer is on"
+#~ msgstr "Der Bildschirm, auf dem der Mauszeiger ist"
 
 #~ msgid "Needs Cinnamon's screenshot service (a newer Cinnamon)"
 #~ msgstr ""

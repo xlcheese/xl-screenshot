@@ -60,7 +60,7 @@ check("two monitors: Screens appears, as the first of four buttons",
 check("…and the row keeps its width", w.btn_cluster.get_allocated_width() == one_width)
 widths = [b.get_allocated_width() for b in w.btn_cluster.get_children()]
 check(f"…the four buttons are the same width {widths}", max(widths) - min(widths) <= 1)
-check("…Screen says it's the screen the pointer is on", w.screen_btn.get_tooltip_text() == "The screen the pointer is on")
+check("…no tooltips on Screen or Screens (the labels say it)", w.screen_btn.get_tooltip_text() is None and w.screens_btn.get_tooltip_text() is None)
 img, label = w.screens_btn.get_child().get_children()
 check("…Screens' icon is drawn from the layout", img.get_storage_type() == Gtk.ImageType.SURFACE)
 check("…and its icon and label actually show (not an empty button)", img.get_mapped() and label.get_mapped() and label.get_text() == "Screens")
@@ -159,6 +159,6 @@ check("…and not with one", not tray.screens_item.get_visible())
 MONS[:] = [FakeMonitor(0)]
 w._update_monitors(); settle(0.3)
 check("unplugging back to one monitor: Screens goes, three buttons again",
-      not w.screens_btn.get_visible() and not w.multi_monitor and w.screen_btn.get_tooltip_text() is None)
+      not w.screens_btn.get_visible() and not w.multi_monitor)
 for n, f in real.items(): setattr(Gdk.Display, n, f)
 print("FAILURES:", fails or "none")

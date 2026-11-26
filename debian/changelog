@@ -15,6 +15,10 @@ xl-screenshot (0.3.0) unstable; urgency=medium
       lifted. xdotool is no longer needed.
     - Clean rounded corners at the GTK theme's radius, and an Include
       Window Shadow option (Cinnamon's real shadow, or a drawn one on X11).
+  * Accurate Selection and Fast Selection (in the menu): Accurate is the
+    Selection you know, with handles and Cancel / Capture; Fast captures as
+    soon as you let go, showing only the size while you drag.
+  * Screen and Screens have no tooltips: their labels say it.
   * Selection (and xl-Annotate's Crop) tinted with the theme's selection
     color, as Cinnamon's picker is.
   * The delay goes up to 11 seconds (Esc can't cancel it on Wayland).

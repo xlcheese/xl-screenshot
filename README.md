@@ -12,8 +12,8 @@ Two small apps for Linux Mint and the Cinnamon desktop, installed together:
 - **xl-Screenshot**: Screen, Window, and Selection captures (and Screens, for
   every monitor, when you have more than one), with an optional delay (up to
   11 seconds) and tray icon. Window capture picks windows like Cinnamon does,
-  with clean rounded corners and an optional shadow. Works on X11 and, with
-  Cinnamon, on Wayland.
+  with clean rounded corners and an optional shadow. Fast Selection captures as
+  soon as you let go. Works on X11 and, with Cinnamon, on Wayland.
 - **xl-Annotate**: simple, light markup for images and screenshots: arrows and
   lines (straight, or curved with their middle handle), freehand drawing, a
   speed-sensitive ink pen, rectangles, ellipses, highlighter, text, numbered

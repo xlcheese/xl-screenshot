@@ -38,6 +38,7 @@
           <li>Works on Cinnamon's Wayland session, through Cinnamon's own screenshot service</li>
           <li>Screens: every monitor; Screen: just the one you're on (with several monitors)</li>
           <li>Window capture picks windows like Cinnamon's picker, with clean rounded corners and an optional shadow</li>
+          <li>Fast Selection: the capture is taken as soon as you let go (Accurate Selection keeps the handles and buttons)</li>
           <li>Selection is tinted with the theme's selection color</li>
           <li>The delay goes up to 11 seconds</li>
         </ul>

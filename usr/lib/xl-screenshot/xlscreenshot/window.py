@@ -47,6 +47,7 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         self.delay_sec = self.config["delay_sec"]
         self.include_pointer = self.config["include_pointer"]
         self.include_shadow = self.config["include_shadow"]
+        self.fast_selection = self.config["fast_selection"]
         # How to capture (xlcheese/xl-screenshot#10): Cinnamon's own screenshot
         # service when it's there (X11 and Wayland alike), otherwise X11 tools.
         # On Wayland without the service there's no way yet: say so, never hang.
@@ -123,6 +124,17 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
 
         menu.append(Gtk.SeparatorMenuItem())
 
+        # Accurate: adjust the box with its handles, then Capture. Fast: the
+        # capture is taken as soon as you let go
+        self.menu_accurate = Gtk.RadioMenuItem(label=_("Accurate Selection"))
+        self.menu_fast = Gtk.RadioMenuItem.new_with_label_from_widget(self.menu_accurate, _("Fast Selection"))
+        (self.menu_fast if self.fast_selection else self.menu_accurate).set_active(True)
+        self.menu_fast.connect("toggled", self.on_selection_mode_toggled)
+        menu.append(self.menu_accurate)
+        menu.append(self.menu_fast)
+
+        menu.append(Gtk.SeparatorMenuItem())
+
         self.menu_png = Gtk.RadioMenuItem(label=_("PNG (Lossless)"))
         self.menu_jpg = Gtk.RadioMenuItem.new_with_label_from_widget(self.menu_png, _("JPEG (Compressed)"))
         self.menu_webp = Gtk.RadioMenuItem.new_with_label_from_widget(self.menu_png, _("WebP (Compressed)"))
@@ -187,7 +199,6 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         # Screens: every monitor; only shown when there's more than one. Its
         # icon is drawn from the monitors' layout (see _update_monitors)
         self.screens_btn = self._create_icon_button(_("Screens"), *BUTTON_ICONS["screen"])
-        self.screens_btn.set_tooltip_text(_("All your screens"))
         self.screens_btn.connect("clicked", self.on_screens_capture_clicked)
         # Hidden until there are several monitors; what's inside it must be
         # shown now, as show_all() skips the inside of a no-show-all widget
@@ -447,6 +458,11 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         self.config["include_shadow"] = self.include_shadow
         save_config(self.config)
 
+    def on_selection_mode_toggled(self, menu_item):
+        self.fast_selection = self.menu_fast.get_active()
+        self.config["fast_selection"] = self.fast_selection
+        save_config(self.config)
+
     def on_menu_toggled(self, menu_item):
         self.include_pointer = self.menu_pointer.get_active()
         self.config["include_pointer"] = self.include_pointer
@@ -547,7 +563,6 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
             if icon is not None:
                 self.screens_btn.get_child().get_children()[0].set_from_surface(icon)
         self.screens_btn.set_visible(self.multi_monitor)
-        self.screen_btn.set_tooltip_text(_("The screen the pointer is on") if self.multi_monitor else None)
         app = self.get_application()
         tray = getattr(app, "tray", None) if app is not None else None
         if tray is not None:

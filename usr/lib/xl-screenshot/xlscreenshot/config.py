@@ -37,6 +37,7 @@ DEFAULT_CONFIG = {
     "include_pointer": False,
     "show_tray": False,
     "include_shadow": False,   # Window captures with the window's shadow (Cinnamon's service)
+    "fast_selection": False,   # Selection captures as soon as you let go (no handles or buttons)
     "tray_offered": False,     # the one-time "keep it in the tray?" question was asked
 }
 
