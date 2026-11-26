@@ -41,8 +41,15 @@ leftovers = lambda: [f for f in os.listdir(GLib.get_user_runtime_dir() or GLib.g
 
 # ---- no service: X11 falls back to its own tools; Wayland says so, never hangs ----
 check("no service running: not found", CS.CinnamonScreenshot.find(timeout_ms=500) is None)
+import xlscreenshot.window as W
+x11 = window(wayland=False)
+check("X11, no service: Include Window Shadow is available (a shadow is drawn)", x11.menu_shadow.get_sensitive())
+x11.destroy()
+real_session = W.session_is_wayland
+W.session_is_wayland = lambda: True           # created as on Wayland
 w = window(wayland=True)
-check("…the shadow option is off and greyed out", not w.menu_shadow.get_sensitive())
+W.session_is_wayland = real_session
+check("Wayland, no service: Include Window Shadow is greyed out (no capture possible)", not w.menu_shadow.get_sensitive())
 errors = []
 w._show_error = lambda text, secondary: errors.append(text)
 for name, start in (("Screen", lambda: w.on_screen_capture_clicked(None)),

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xl-Screenshot 0.2.0\n"
 "Report-Msgid-Bugs-To: https://github.com/xlcheese/xl-screenshot/issues\n"
-"POT-Creation-Date: 2026-11-26 01:18+0000\n"
+"POT-Creation-Date: 2026-11-26 02:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,11 +38,11 @@ msgstr ""
 msgid "Tidied into a rectangle"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlannotate/canvas.py:930
+#: usr/lib/xl-screenshot/xlannotate/canvas.py:931
 msgid "Keep My Drawing"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlannotate/canvas.py:978
+#: usr/lib/xl-screenshot/xlannotate/canvas.py:979
 msgid "Enter to finish · Shift+Enter for a new line · Esc to cancel"
 msgstr ""
 
@@ -334,7 +334,7 @@ msgstr ""
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:499
 #: usr/lib/xl-screenshot/xlannotate/window.py:841
-#: usr/lib/xl-screenshot/xlscreenshot/selection.py:94
+#: usr/lib/xl-screenshot/xlscreenshot/selection.py:124
 msgid "Cancel"
 msgstr ""
 
@@ -417,7 +417,7 @@ msgstr ""
 #: usr/lib/xl-screenshot/xlannotate/window.py:1127
 #: usr/lib/xl-screenshot/xlannotate/window.py:1199
 #: usr/lib/xl-screenshot/xlannotate/window.py:1204
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:734
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:724
 #: usr/lib/xl-screenshot/xlshared/ui.py:83
 msgid "_Cancel"
 msgstr ""
@@ -436,7 +436,7 @@ msgid "Pasted Image"
 msgstr ""
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:1101
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:777
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:767
 msgid "Could not save image"
 msgstr ""
 
@@ -446,7 +446,7 @@ msgstr ""
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:1127
 #: usr/lib/xl-screenshot/xlannotate/window.py:1205
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:734
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:724
 msgid "_Save"
 msgstr ""
 
@@ -504,7 +504,7 @@ msgstr ""
 msgid "Start with just the tray icon (used when logging in)"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlscreenshot/selection.py:98
+#: usr/lib/xl-screenshot/xlscreenshot/selection.py:128
 msgid "Capture Selection"
 msgstr ""
 
@@ -555,10 +555,6 @@ msgstr ""
 
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:101
 msgid "Include Window Shadow"
-msgstr ""
-
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:106
-msgid "Needs Cinnamon's screenshot service (a newer Cinnamon)"
 msgstr ""
 
 #: usr/lib/xl-screenshot/xlscreenshot/window.py:109
@@ -622,27 +618,19 @@ msgstr ""
 msgid "_Show in Tray"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:546
-msgid "Window capture needs xdotool"
-msgstr ""
-
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:547
-msgid "Install it with: sudo apt install xdotool"
-msgstr ""
-
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:587
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:559
 msgid "Window capture needs xwininfo"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:588
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:560
 msgid "Install it with: sudo apt install x11-utils"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:636
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:626
 msgid "xl-Screenshot can't capture on this desktop yet"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:637
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:627
 msgid ""
 "In a Wayland session, xl-Screenshot captures through Cinnamon's screenshot "
 "service, which this desktop doesn't have. Log in to an X11 session to use it "
@@ -651,32 +639,32 @@ msgstr ""
 
 #. Translators: shown as the xl-Annotate window title while it edits a capture
 #. Translators: the start of a saved screenshot's file name (the date and time follow)
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:699
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:744
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:689
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:734
 msgid "Screenshot"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:731
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:721
 msgid "Save Screenshot As"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:749
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:739
 msgid "JPEG Images"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:752
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:742
 msgid "WebP Images"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:755
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:745
 msgid "PNG Images"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:760
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:750
 msgid "All Images"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:800
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:790
 msgid ""
 "A screenshot tool for Linux Mint and the Cinnamon desktop, with Screen, "
 "Window, and Selection capture modes."

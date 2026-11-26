@@ -443,3 +443,67 @@ class SelectionOverlay(Gtk.Window):
             self.captured = True
             tool.update_screenshot_buffer(self.bg_pixbuf.new_subpixbuf(px, py, pw, ph).copy())
         self.destroy()
+
+
+class WindowPickerOverlay(SelectionOverlay):
+    """Window capture on X11 without Cinnamon's screenshot service: our
+    look-alike of Cinnamon's window picker. The desktop is tinted like
+    Selection, and the window under the pointer is lifted out of the tint;
+    a click picks it; Esc, or a click on the desktop, cancels. windows: from x11_windows.list_windows(),
+    top first, in desktop pixels. on_picked(window) is called with the
+    window picked (the overlay is gone by then)."""
+
+    def __init__(self, parent_tool, windows, on_picked):
+        self.windows = windows
+        self.on_picked = on_picked
+        self.hovered = None
+        super().__init__(parent_tool)
+        self.set_title("xl-Screenshot Window")
+        # Lift the window already under the pointer, before the mouse moves
+        try:
+            _screen, px, py = Gdk.Display.get_default().get_default_seat().get_pointer().get_position()
+            self._hover(px - self.origin_x, py - self.origin_y)
+        except Exception:
+            pass
+
+    def get_handles(self):
+        return {}                  # a window is picked, not adjusted
+
+    def position_control_box(self):
+        pass                       # no panel: a click is the choice
+
+    def _hover(self, x, y):
+        """Lift the top window under overlay point (x, y)."""
+        from .x11_windows import window_at
+        scale = self.get_scale_factor()
+        win = window_at(self.windows, (x + self.origin_x) * scale, (y + self.origin_y) * scale)
+        if win is self.hovered:
+            return
+        self.hovered = win
+        if win is None:
+            self.rect_x = self.rect_y = self.rect_w = self.rect_h = 0
+        else:
+            wx, wy, ww, wh = win["rect"]
+            self.rect_x, self.rect_y = wx / scale - self.origin_x, wy / scale - self.origin_y
+            self.rect_w, self.rect_h = ww / scale, wh / scale
+        self.queue_draw()
+
+    def on_motion_notify(self, widget, event):
+        self._hover(event.x, event.y)
+        return True
+
+    def on_button_press(self, widget, event):
+        if event.button != 1:
+            return True
+        self._hover(event.x, event.y)
+        picked = self.hovered
+        if picked is None:
+            self.destroy()         # a click on the desktop cancels, as in Cinnamon's picker
+            return True
+        self.captured = True       # don't bring the main window back: a capture follows
+        self.destroy()
+        self.on_picked(picked)
+        return True
+
+    def on_button_release(self, widget, event):
+        return True

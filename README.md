@@ -110,7 +110,7 @@ sudo apt install ./xl-screenshot_0.2.0_all.deb
 
 This installs both apps (menu: Accessories and Graphics), their icons, the man
 pages, and Nemo's "Annotate Image…", along with what they need (GTK,
-xdotool, x11-utils, python3-xlib and Mint's tray support). Remove it with
+x11-utils, python3-xlib and Mint's tray support). Remove it with
 `sudo apt remove xl-screenshot`.
 
 If you used `install-local.sh` before, run `./install-local.sh --uninstall`
@@ -168,9 +168,11 @@ starts a new line.
 
 ## Needs
 
-`python3-gi`, `python3-gi-cairo`, `gir1.2-gtk-3.0`, `xdotool` and `x11-utils`
-(for Window captures), and `python3-xlib` (for Esc to cancel). `webp-pixbuf-loader`
-is optional, for saving WebP.
+`python3-gi`, `python3-gi-cairo`, `gir1.2-gtk-3.0`, `librsvg2-common`,
+`gir1.2-xapp-1.0` (the tray icon), and, for capturing on X11, `x11-utils` and
+`python3-xlib`. `webp-pixbuf-loader` is optional, for saving WebP. Newer Cinnamon
+versions also have a screenshot service of their own, which xl-Screenshot uses
+when it's there, on X11 and Wayland alike.
 
 ## Layout
 

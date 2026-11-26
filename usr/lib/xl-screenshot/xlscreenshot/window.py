@@ -3,7 +3,7 @@
 import os
 import time
 
-from gi.repository import Gtk, Gdk, Gio, GLib, GdkPixbuf
+from gi.repository import Gtk, Gdk, GLib, GdkPixbuf
 
 from xlshared.ui import (FORMAT_TO_EXT, themed_icon_name, pixbuf_has_format, save_pixbuf,
                          show_error, confirm_overwrite, resolve_save_path)
@@ -13,7 +13,10 @@ from .config import (MAX_DELAY_SEC, APP_ID, APP_NAME, APP_VERSION, APP_FALLBACK_
                      APP_AUTHORS, APP_COPYRIGHT, APP_CREDIT, load_config, save_config)
 from .capture import capture_region, window_capture_rect
 from .escape_grab import EscapeKeyGrab
-from .selection import SelectionOverlay
+from .selection import SelectionOverlay, WindowPickerOverlay
+from .x11_windows import list_windows
+from .window_look import finish_window, corner_radius_for
+from .capture import screen_scale
 from .tray import HAS_XAPP
 from .cinnamon_service import CinnamonScreenshot, session_is_wayland
 
@@ -60,9 +63,6 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         self._delay_source = None
         self._delay_on_cancel = None
         self._escape_grab = None
-        # Running "xdotool selectwindow" while the user picks a window
-        self._picker = None
-        self._picker_cancelled = False
 
         self.has_webp = pixbuf_has_format("webp")
         if self.save_format == "webp" and not self.has_webp:
@@ -99,11 +99,11 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         menu.append(self.menu_pointer)
 
         self.menu_shadow = Gtk.CheckMenuItem(label=_("Include Window Shadow"))
-        self.menu_shadow.set_active(self.include_shadow and self.cinnamon is not None)
+        self.menu_shadow.set_active(self.include_shadow and (self.cinnamon is not None or not self.wayland))
         self.menu_shadow.connect("toggled", self.on_shadow_toggled)
-        if self.cinnamon is None:
+        # Cinnamon's service gives the real shadow; on X11 without it, one is drawn
+        if self.cinnamon is None and self.wayland:
             self.menu_shadow.set_sensitive(False)
-            self.menu_shadow.set_tooltip_text(_("Needs Cinnamon's screenshot service (a newer Cinnamon)"))
         menu.append(self.menu_shadow)
 
         self.menu_tray = Gtk.CheckMenuItem(label=_("Show in System Tray"))
@@ -534,50 +534,22 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
             window_id, self.include_shadow, self.include_pointer, self._capture_done))
 
     def prompt_window_selection(self):
-        """Let the user click a window. Runs xdotool in the background so
-        Esc can cancel while it waits for the click."""
-        try:
-            self._picker = Gio.Subprocess.new(
-                ["xdotool", "selectwindow"],
-                Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_SILENCE
-            )
-        except GLib.Error:
-            self._picker = None
-            self._show_error(_("Window capture needs xdotool"),
-                             _("Install it with: sudo apt install xdotool"))
+        """X11 without Cinnamon's service: our look-alike of Cinnamon's window
+        picker (the desktop tinted, the window under the pointer lifted)."""
+        windows = list_windows()
+        if not windows:
             self.restore_window()
             return False
-
-        self._picker_cancelled = False
-        self._release_escape()
-        self._escape_grab = EscapeKeyGrab(self.on_picker_escape)
-        self._picker.communicate_utf8_async(None, None, self.on_window_picked)
+        WindowPickerOverlay(self, windows, self._x11_window_picked)
         return False
 
-    def on_picker_escape(self):
-        # Stop xdotool; on_window_picked then sees the cancel and restores us
-        self._picker_cancelled = True
-        if self._picker is not None:
-            self._picker.force_exit()
+    def _x11_window_picked(self, window):
+        self.start_delay(self.perform_window_grab, hex(window["id"]), window)
 
-    def on_window_picked(self, proc, result):
-        self._release_escape()
-        self._picker = None
-        try:
-            _ok, out, _err = proc.communicate_utf8_finish(result)
-        except GLib.Error:
-            out = ""
-        window_id = (out or "").strip()
-
-        if self._picker_cancelled or not proc.get_successful() or not window_id:
-            if self._picker_cancelled:
-                print("Screenshot cancelled.")
-            self.restore_window()
-            return
-
-        self.start_delay(self.perform_window_grab, window_id)
-
-    def perform_window_grab(self, window_id):
+    def perform_window_grab(self, window_id, window=None):
+        """Capture a window's rectangle. With the picker's window details, its
+        top corners are rounded like the theme's, and with Include Window
+        Shadow on, a shadow is drawn (the screen can't give either on X11)."""
         pixbuf = None
         try:
             x, y, w, h = window_capture_rect(window_id)
@@ -589,6 +561,11 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         except Exception as e:
             print(f"Window capture failed: {e}")
 
+        if pixbuf and window is not None:
+            radius = corner_radius_for(window)
+            maximized = window.get("maximized")
+            pixbuf = finish_window(pixbuf, scale=screen_scale(), radius=radius, rounded=radius > 0,
+                                   shadow=self.include_shadow and not maximized)
         if pixbuf:
             self.update_screenshot_buffer(pixbuf)
         else:
