@@ -16,6 +16,7 @@ from gi.repository import GdkPixbuf
 ICON_HEIGHT = 48     # units: the same height as the other button icons
 ICON_MAX_WIDTH = 76  # units: wide layouts may use most of the button
 GAP = 2.5            # units between neighbouring monitors
+MAX_DRAWN = 4        # more monitors than this are drawn as a 2x2
 
 # Where things are in the Screen SVG (512 x 512 units)
 _SVG_NAME = "xl-screenshot-screen-symbolic.svg"
@@ -113,6 +114,10 @@ def render(monitors, color, scale=1, max_width=ICON_MAX_WIDTH, height=ICON_HEIGH
     art = _artwork()
     if art is None or not monitors:
         return None
+    if len(monitors) > MAX_DRAWN:
+        # More than four would be too small to read: a 2x2 stands for "many"
+        # (the capture still takes every monitor)
+        monitors = [(0, 0, 16, 9), (16, 0, 16, 9), (0, 9, 16, 9), (16, 9, 16, 9)]
     f = _SCREEN_SCALE                         # bezels and stands as in the Screen icon
     stand_h = _STAND[3] * f
     x0 = min(m[0] for m in monitors)

@@ -9,8 +9,11 @@
 
 Two small apps for Linux Mint and the Cinnamon desktop, installed together:
 
-- **xl-Screenshot**: Screen, Window, and Selection captures, with an
-  optional delay (up to 11 seconds) and tray icon.
+- **xl-Screenshot**: Screen, Window, and Selection captures (and Screens, for
+  every monitor, when you have more than one), with an optional delay (up to
+  11 seconds) and tray icon. Window capture picks windows like Cinnamon does,
+  with clean rounded corners and an optional shadow. Works on X11 and, with
+  Cinnamon, on Wayland.
 - **xl-Annotate**: simple, light markup for images and screenshots: arrows and
   lines (straight, or curved with their middle handle), freehand drawing, a
   speed-sensitive ink pen, rectangles, ellipses, highlighter, text, numbered
@@ -32,10 +35,10 @@ whichever theme you use.
 
 <table>
   <tr><th>Mint-Y</th><th>Mint-Y-Dark</th></tr>
-  <tr><td colspan="2" align="center"><b>xl-Screenshot</b>: choose Screen, Window or Selection, with an optional delay</td></tr>
+  <tr><td colspan="2" align="center"><b>xl-Screenshot</b>: choose Screen, Window or Selection (and Screens, with more than one monitor), with an optional delay</td></tr>
   <tr>
-    <td align="center"><img src="docs/screenshots/xl-screenshot-empty-light.png" width="380" alt="xl-Screenshot ready to capture, Mint-Y theme"></td>
-    <td align="center"><img src="docs/screenshots/xl-screenshot-empty-dark.png" width="380" alt="xl-Screenshot ready to capture, Mint-Y-Dark theme"></td>
+    <td align="center"><img src="docs/screenshots/xl-screenshot-empty-light.png" width="380" alt="xl-Screenshot ready to capture, with two monitors, Mint-Y theme"></td>
+    <td align="center"><img src="docs/screenshots/xl-screenshot-empty-dark.png" width="380" alt="xl-Screenshot ready to capture, with two monitors, Mint-Y-Dark theme"></td>
   </tr>
   <tr><td colspan="2" align="center"><b>After a capture</b>: save it, copy it, or annotate it (or double-click the thumbnail)</td></tr>
   <tr>
@@ -69,14 +72,18 @@ so it picks up the new item. `./install-local.sh --uninstall` removes it all.
 
 ## Works on
 
-xl-Screenshot needs an **X11** desktop session. It's made for Linux Mint's
-Cinnamon desktop, and looks at home on other GTK desktops too.
+It's made for Linux Mint's Cinnamon desktop, and looks at home on other GTK
+desktops too. Newer versions of Cinnamon have a screenshot service of their
+own; xl-Screenshot uses it when it's there, which is also what makes it work
+on Cinnamon's **Wayland** session. Without it, it captures through **X11**.
 
 **Tested**
 
-- **Linux Mint 22 Cinnamon**: everyday use.
+- **Linux Mint 22 Cinnamon** (X11): everyday use, with one and two monitors.
+- **The current Linux Mint beta** (Cinnamon): its X11 and Wayland sessions.
 - **Ubuntu 24.04** (the base of Mint 22): the .deb installs, and the
-  [automatic tests](tests/README.md) run on it after every change.
+  [automatic tests](tests/README.md) run on it after every change, including
+  both apps running as real Wayland apps.
 
 **Should work: not tried yet, reports welcome**
 
@@ -91,12 +98,13 @@ The tray icon uses Mint's XApp library (`gir1.2-xapp-1.0`), which Debian and
 Ubuntu also package. On Debian and Ubuntu based systems the .deb should
 install as it is.
 
-**Doesn't work: Wayland sessions**
+**Doesn't work yet: Wayland without Cinnamon**
 
-Screen, Window and Selection captures need X11, so xl-Screenshot can't capture
-on Wayland, the default for GNOME (Ubuntu, Fedora Workstation), KDE Plasma 6
-and COSMIC. xl-Annotate doesn't depend on X11 and may work there on its own,
-but that hasn't been tried.
+On other Wayland desktops, the default for GNOME (Ubuntu, Fedora Workstation),
+KDE Plasma 6 and COSMIC, xl-Screenshot can't capture yet: it says so rather
+than trying. xl-Annotate works there on its own. Support through the
+desktops' screenshot portal is on the
+[roadmap](https://github.com/xlcheese/xl-screenshot/issues/10).
 
 Tried it somewhere else? Please say how it went in an
 [issue](https://github.com/xlcheese/xl-screenshot/issues), working or not, so
@@ -105,7 +113,7 @@ this list can grow.
 ## Installing
 
 ```bash
-sudo apt install ./xl-screenshot_0.2.0_all.deb
+sudo apt install ./xl-screenshot_0.3.0_all.deb
 ```
 
 This installs both apps (menu: Accessories and Graphics), their icons, the man
@@ -198,8 +206,12 @@ Inside `xlscreenshot/`:
 |---|---|
 | `application.py` | start-up, single copy, command-line options |
 | `window.py` | the main window: buttons, delay, thumbnail, save and copy |
-| `selection.py` | the full-screen overlay for drawing a selection |
-| `capture.py` | grabbing the screen, a region or a window |
+| `selection.py` | the full-screen overlay for drawing a selection, and the window picker |
+| `capture.py` | grabbing the screen, a region or a window (X11) |
+| `cinnamon_service.py` | capturing through Cinnamon's own screenshot service (X11 and Wayland) |
+| `x11_windows.py` | where the windows are, for the window picker (X11) |
+| `window_look.py` | rounded corners and a drawn shadow for X11 window captures |
+| `screens_icon.py` | the Screens button's icon, drawn from your monitors' layout |
 | `escape_grab.py` | Esc to cancel while our windows are hidden |
 | `tray.py` | the optional tray icon and starting at login |
 | `config.py` | name, version, settings file |

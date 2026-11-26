@@ -1,4 +1,4 @@
-.TH XL-SCREENSHOT 1 "November 2026" "xl-Screenshot 0.2.0" "User Commands"
+.TH XL-SCREENSHOT 1 "November 2026" "xl-Screenshot 0.3.0" "User Commands"
 .SH NAME
 xl-screenshot \- take a screenshot of the screen, a window, or a selection
 .SH SYNOPSIS
@@ -6,8 +6,11 @@ xl-screenshot \- take a screenshot of the screen, a window, or a selection
 [\-\-selection] [\-\-tray] [\-\-version]
 .SH DESCRIPTION
 .B xl-Screenshot
-captures the whole screen, a single window (with its titlebar), or an area drawn over a still
-picture of the desktop. A delay of up to 11 seconds can be set before the capture; on X11, Esc cancels it. The capture can be
+captures the whole desktop, a single monitor (with more than one, the one the pointer is on),
+a single window (with its titlebar, optionally with a shadow), or an area drawn over a still
+picture of the desktop. It uses Cinnamon's own screenshot service when there is one, which
+also makes it work on Cinnamon's Wayland session; otherwise it captures through X11.
+A delay of up to 11 seconds can be set before the capture; on X11, Esc cancels it. The capture can be
 copied, saved as PNG, JPEG, or WebP, or marked up in
 .BR xl-annotate (1).
 .PP

@@ -33,6 +33,11 @@
   </provides>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.3.0" date="2026-11-26">
+      <description>
+        <p>Crop is tinted with the theme's selection color; xl-Annotate also runs on Wayland.</p>
+      </description>
+    </release>
     <release version="0.2.0" date="2026-11-24">
       <description>
         <p>New tools and refinements:</p>

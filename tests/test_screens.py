@@ -109,6 +109,9 @@ for dark in column + [False]:
 check(f"…stands only under the bottom row (runs down the middle: {runs})",
       len(runs) == 4 and runs[1] < runs[3] - 4)
 check("…with one monitor: no icon needed (Screen's own)", SI.render([], col) is None)
+six = SI.render([(i * 1920, 0, 1920, 1080) for i in range(6)], col)
+grid = SI.render([(0, 0, 1920, 1080), (1920, 0, 1920, 1080), (0, 1080, 1920, 1080), (1920, 1080, 1920, 1080)], col)
+check("…more than four monitors: drawn as a 2 x 2 (still readable)", (six.get_width(), six.get_height()) == (grid.get_width(), grid.get_height()))
 
 # ---- capturing on X11 (no Cinnamon service) ----
 W.get_pointer_position = lambda: (900, 300)       # over the right (blue) monitor

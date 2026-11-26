@@ -11,7 +11,7 @@ import shutil
 APP_ID = "io.github.xlcheese.XlScreenshot"   # also the name of the .desktop and icon files
 APP_NAME = "xl-Screenshot"
 APP_COMMAND = "xl-screenshot"                 # the command that starts it
-APP_VERSION = "0.2.0"
+APP_VERSION = "0.3.0"
 APP_FALLBACK_ICON = "applets-screenshooter"   # used until xl-Screenshot has its own icon
 APP_WEBSITE = "https://github.com/xlcheese/xl-screenshot"
 APP_AUTHORS = ["Wesley Hayslip"]

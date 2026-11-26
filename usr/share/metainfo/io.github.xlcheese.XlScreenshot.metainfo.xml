@@ -32,6 +32,17 @@
   </provides>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.3.0" date="2026-11-26">
+      <description>
+        <ul>
+          <li>Works on Cinnamon's Wayland session, through Cinnamon's own screenshot service</li>
+          <li>Screens: every monitor; Screen: just the one you're on (with several monitors)</li>
+          <li>Window capture picks windows like Cinnamon's picker, with clean rounded corners and an optional shadow</li>
+          <li>Selection is tinted with the theme's selection color</li>
+          <li>The delay goes up to 11 seconds</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.2.0" date="2026-11-24">
       <description>
         <ul>

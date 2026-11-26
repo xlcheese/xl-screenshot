@@ -1,3 +1,28 @@
+xl-screenshot (0.3.0) unstable; urgency=medium
+
+  * Wayland and Cinnamon's screenshot service (#10):
+    - Uses Cinnamon's own screenshot service when the desktop has it, on
+      X11 and on Wayland alike; otherwise captures through X11 as before.
+      On Wayland without it, says so instead of hanging.
+    - Selection on Wayland: our own overlay over a picture of the desktop
+      (one per monitor), with the size label and Cancel / Capture.
+  * Screens and Screen: with more than one monitor, Screens captures every
+    monitor and Screen just the one you're on. Screens' icon is drawn from
+    the monitors' layout; the buttons follow monitors coming and going.
+  * Window capture like Cinnamon's:
+    - Cinnamon's own picker where available; elsewhere (Mint 22) a
+      look-alike with the theme's tint and the window under the pointer
+      lifted. xdotool is no longer needed.
+    - Clean rounded corners at the GTK theme's radius, and an Include
+      Window Shadow option (Cinnamon's real shadow, or a drawn one on X11).
+  * Selection (and xl-Annotate's Crop) tinted with the theme's selection
+    color, as Cinnamon's picker is.
+  * The delay goes up to 11 seconds (Esc can't cancel it on Wayland).
+  * Tests: a stand-in for Cinnamon's service, both apps run as real
+    Wayland apps under Weston, faked multi-monitor layouts.
+
+ -- Wesley Hayslip <xl_cheese@hotmail.com>  Thu, 26 Nov 2026 14:16:55 +0000
+
 xl-screenshot (0.2.0) unstable; urgency=medium
 
   * xl-Annotate:
