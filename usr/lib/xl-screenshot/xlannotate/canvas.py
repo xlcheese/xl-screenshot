@@ -2,7 +2,7 @@
 
 from gi.repository import Gtk, Gdk, GdkPixbuf, GLib, GObject
 from xlshared.i18n import _
-from xlshared.ui import SELECTION_DIM, SELECTION_HANDLE, theme_colors, draw_selection_box
+from xlshared.ui import SELECTION_HANDLE, rubberband_colors, draw_selection_box
 import cairo
 import math
 import time
@@ -648,10 +648,11 @@ class AnnotateCanvas(Gtk.DrawingArea):
         cr.set_fill_rule(cairo.FillRule.EVEN_ODD)
         cr.rectangle(ox, oy, shown_w, shown_h)
         cr.rectangle(x1, y1, x2 - x1, y2 - y1)
-        cr.set_source_rgba(0, 0, 0, SELECTION_DIM)
+        mask, outline = rubberband_colors(self)     # as xl-Screenshot's Selection
+        cr.set_source_rgba(*mask)
         cr.fill()
         cr.restore()
-        accent = theme_colors(self)[0]
+        accent = outline
         centres = [self.to_widget(hx, hy) for hx, hy in self.crop.handles().values()]
         draw_selection_box(cr, x1, y1, x2 - x1, y2 - y1, accent, centres)
 

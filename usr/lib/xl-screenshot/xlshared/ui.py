@@ -129,6 +129,26 @@ def theme_colors(widget):
     return accent[:3] + (1.0,), background[:3], border[:3] + (0.8,)
 
 
+def rubberband_colors(widget):
+    """(tint, outline): the theme's "rubberband" colors, the see-through box
+    you get when drag-selecting files. Cinnamon tints the screen with them
+    when you pick a window or an area, so our Selection and Crop do too.
+    Themes without one: the old grey dimming and the accent color."""
+    path = Gtk.WidgetPath()
+    path.append_type(Gtk.IconView)
+    ctx = Gtk.StyleContext()
+    ctx.set_path(path)
+    ctx.set_screen(widget.get_screen())
+    ctx.add_class("rubberband")
+    bg = ctx.get_property("background-color", Gtk.StateFlags.NORMAL)
+    border = ctx.get_property("border-top-color", Gtk.StateFlags.NORMAL)
+    accent = theme_colors(widget)[0]
+    if bg is None or bg.alpha < 0.02:
+        return (0, 0, 0, SELECTION_DIM), accent
+    outline = (border.red, border.green, border.blue, 1.0) if border is not None and border.alpha > 0.02 else accent
+    return (bg.red, bg.green, bg.blue, bg.alpha), outline
+
+
 def rounded_rect(cr, x, y, w, h, r):
     cr.new_sub_path()
     cr.arc(x + w - r, y + r, r, -math.pi / 2, 0)

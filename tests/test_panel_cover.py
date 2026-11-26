@@ -31,7 +31,7 @@ sw = ScreenshotWindow(); sw.hide()
 ov = SelectionOverlay(sw); settle(1.0)
 ov.on_button_press(None, Ev(400, 500)); ov.on_motion_notify(None, Ev(900, H - 5)); ov.on_button_release(None, Ev(900, H - 5)); settle(0.6)
 shot = Gdk.pixbuf_get_from_window(root, 0, 0, W, H)
-p_out = pix(shot, 200, H - 20)           # panel area, outside the selection: should be the dimmed panel
+p_out = pix(shot, 200, H - 20)           # panel area, outside the selection: should be the tinted panel
 p_in = pix(shot, 600, H - 20)            # panel area, inside the selection: the panel, undimmed
 print(f"   panel area outside selection: {p_out}, inside selection: {p_in}")
 xid = ov.get_window().get_xid()
@@ -39,7 +39,8 @@ info = subprocess.run(["xwininfo", "-id", str(xid)], capture_output=True, text=T
 check("overlay is override-redirect (no window manager, so no Cinnamon effects)", "Override Redirect State: yes" in info)
 check("overlay covers the whole desktop", "Width: 1280" in info and "Height: 800" in info and "Absolute upper-left X:  0" in info)
 check("overlay holds the mouse and keyboard while it's up", ov._grabbed)
-check("selection screen covers the panel (panel shows dimmed under it)", p_out != ORANGE and p_out[0] < 200)
+# the overlay tints with the theme's selection color (or dims grey): either way, not the plain panel
+check("selection screen covers the panel (panel shows tinted under it)", p_out != ORANGE and sum(abs(a - b) for a, b in zip(p_out, ORANGE)) > 40)
 check("inside the selection, the panel shows at normal brightness", p_in == ORANGE)
 a = ov.control_box.get_allocation()
 check("Cancel/Capture panel stays on screen", a.y + a.height <= H and a.y >= 0)

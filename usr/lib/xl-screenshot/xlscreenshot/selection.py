@@ -6,7 +6,7 @@ from .capture import capture_region
 from xlshared.i18n import _
 # The look is shared with xl-Annotate's Crop. PANEL_PAD: how far the panel
 # behind Cancel / Capture Selection reaches past the buttons
-from xlshared.ui import (PANEL_PAD, SELECTION_DIM, SELECTION_HANDLE, theme_colors,
+from xlshared.ui import (PANEL_PAD, SELECTION_HANDLE, theme_colors, rubberband_colors,
                          draw_panel, place_panel, draw_selection_box)
 
 
@@ -83,6 +83,8 @@ class SelectionOverlay(Gtk.Window):
 
         # The theme's accent color (the outline), and the panel's colors
         self.theme_color, self.panel_color, self.panel_border = theme_colors(self)
+        # Tinted like Cinnamon's own window picker and area selection
+        self.mask_color, self.theme_color = rubberband_colors(self)
 
         if self.still_mode:
             self.bg_pixbuf = still
@@ -209,7 +211,7 @@ class SelectionOverlay(Gtk.Window):
     def on_draw(self, widget, cr):
         # Dimmed screenshot everywhere...
         self._paint_screen(cr)
-        cr.set_source_rgba(0, 0, 0, SELECTION_DIM)
+        cr.set_source_rgba(*self.mask_color)
         cr.paint()
 
         if self.rect_w > 0 and self.rect_h > 0:

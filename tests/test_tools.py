@@ -178,7 +178,7 @@ click(cv, 460, 260); settle(0.3)
 gw = win.get_window(); Gdk.pixbuf_get_from_window(gw, 0, 0, gw.get_width(), gw.get_height()).savev(os.path.join(SP, "tools_all.png"), "png", [], [])
 
 # ---- Crop: its controls in a popover by the Crop button (xlcheese/xl-screenshot#2) ----
-from xlshared.ui import theme_colors
+from xlshared.ui import rubberband_colors
 def popover_in_place(name):
     """Showing, pointing at the Crop button's left edge, centred on the line
     between the header bar and the tool bar."""
@@ -241,13 +241,15 @@ win.crop_w_spin.grab_focus(); settle(0.2)
 key(win, Gdk.KEY_Return); settle(0.2)
 check("Enter in a size box doesn't crop", cv.base.get_width() == 600 and cv.crop is not None)
 cv.grab_focus(); settle(0.2)
-# drawn like xl-Screenshot's Selection: white square handles edged in the theme's accent color
-accent = tuple(round(c * 255) for c in theme_colors(cv)[0][:3])
+# drawn like xl-Screenshot's Selection: white square handles edged in the theme's selection color
+accent = tuple(round(c * 255) for c in rubberband_colors(cv)[1][:3])
 shot = Gdk.pixbuf_get_from_window(cv.get_window(), 0, 0, cv.get_allocated_width(), cv.get_allocated_height())
 hx, hy = (round(v) for v in cv.to_widget(cv.crop.x + cv.crop.w, cv.crop.y + cv.crop.h))
 close = lambda a, b: all(abs(x - y) <= 40 for x, y in zip(a, b))
 check("crop handles are white squares", pix(shot, hx - 4, hy - 4) == (255, 255, 255))
-check(f"…edged in the theme's accent color {accent}", close(pix(shot, hx + 8, hy + 2), accent) or close(pix(shot, hx + 7, hy + 2), accent))
+across = [pix(shot, hx + d, hy + 2) for d in range(4, 12)]      # across the handle's right edge
+# (the 1.5 px line falls across two pixels, so it blends a little with the white handle)
+check(f"…edged in the theme's selection color {accent}", any(all(abs(a - b) <= 60 for a, b in zip(p, accent)) for p in across))
 check("crop popover's buttons are actually on screen", win.crop_apply_btn.get_mapped() and win.crop_apply_btn.get_allocated_width() > 20)
 gw = win.get_window(); Gdk.pixbuf_get_from_window(gw, 0, 0, gw.get_width(), gw.get_height()).savev(os.path.join(SP, "tools_crop.png"), "png", [], [])
 key(win, Gdk.KEY_Return); settle(0.8)
