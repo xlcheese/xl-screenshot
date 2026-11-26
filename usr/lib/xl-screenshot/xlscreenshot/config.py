@@ -32,6 +32,7 @@ DEFAULT_CONFIG = {
     "delay_sec": 0,
     "include_pointer": False,
     "show_tray": False,
+    "include_shadow": False,   # Window captures with the window's shadow (Cinnamon's service)
     "tray_offered": False,     # the one-time "keep it in the tray?" question was asked
 }
 

@@ -15,6 +15,7 @@ from .capture import capture_region, window_capture_rect
 from .escape_grab import EscapeKeyGrab
 from .selection import SelectionOverlay
 from .tray import HAS_XAPP
+from .cinnamon_service import CinnamonScreenshot, session_is_wayland
 
 # Largest default thumbnail. The width also sets the window's minimum width.
 THUMB_DEFAULT_MAX_W = 408
@@ -41,6 +42,12 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         self.last_save_dir = self.config["last_save_dir"]
         self.delay_sec = self.config["delay_sec"]
         self.include_pointer = self.config["include_pointer"]
+        self.include_shadow = self.config["include_shadow"]
+        # How to capture (xlcheese/xl-screenshot#10): Cinnamon's own screenshot
+        # service when it's there (X11 and Wayland alike), otherwise X11 tools.
+        # On Wayland without the service there's no way yet: say so, never hang.
+        self.wayland = session_is_wayland()
+        self.cinnamon = CinnamonScreenshot.find()
         self.active_pixbuf = None   # what the thumbnail shows, and what Save/Copy use
         # The capture without annotations, and the still-editable marks on it
         self.base_pixbuf = None
@@ -90,6 +97,14 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         self.menu_pointer.set_active(self.include_pointer)
         self.menu_pointer.connect("toggled", self.on_menu_toggled)
         menu.append(self.menu_pointer)
+
+        self.menu_shadow = Gtk.CheckMenuItem(label=_("Include Window Shadow"))
+        self.menu_shadow.set_active(self.include_shadow and self.cinnamon is not None)
+        self.menu_shadow.connect("toggled", self.on_shadow_toggled)
+        if self.cinnamon is None:
+            self.menu_shadow.set_sensitive(False)
+            self.menu_shadow.set_tooltip_text(_("Needs Cinnamon's screenshot service (a newer Cinnamon)"))
+        menu.append(self.menu_shadow)
 
         self.menu_tray = Gtk.CheckMenuItem(label=_("Show in System Tray"))
         self.menu_tray.set_active(self.config["show_tray"] and HAS_XAPP)
@@ -407,6 +422,11 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         else:
             self.start_selection()
 
+    def on_shadow_toggled(self, menu_item):
+        self.include_shadow = menu_item.get_active()
+        self.config["include_shadow"] = self.include_shadow
+        save_config(self.config)
+
     def on_menu_toggled(self, menu_item):
         self.include_pointer = self.menu_pointer.get_active()
         self.config["include_pointer"] = self.include_pointer
@@ -447,7 +467,7 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
 
         self._delay_source = GLib.timeout_add(delay_ms, fire)
         self._delay_on_cancel = on_cancel or self.restore_window
-        if self.delay_sec > 0:
+        if self.delay_sec > 0 and not self.wayland:
             self._escape_grab = EscapeKeyGrab(self.on_delay_escape)
 
     def on_delay_escape(self):
@@ -474,6 +494,11 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         self.start_delay(self.perform_full_screen_capture)
 
     def perform_full_screen_capture(self):
+        if self.cinnamon is not None:
+            self.cinnamon.screenshot(self.include_pointer, self._capture_done)
+            return False
+        if self.wayland:
+            return self._cannot_capture()
         root = Gdk.get_default_root_window()
         scale = root.get_scale_factor()
         pixbuf = capture_region(0, 0, root.get_width() * scale, root.get_height() * scale,
@@ -489,7 +514,24 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
 
     def on_window_capture_clicked(self, button):
         self._begin_capture()
-        GLib.timeout_add(250, self.prompt_window_selection)
+        if self.cinnamon is not None:
+            # Cinnamon's picker: the screen dims and the window under the pointer lifts
+            GLib.timeout_add(250, self._pick_window_with_cinnamon)
+        elif self.wayland:
+            self._cannot_capture()
+        else:
+            GLib.timeout_add(250, self.prompt_window_selection)
+
+    def _pick_window_with_cinnamon(self):
+        self.cinnamon.select_window(self._cinnamon_window_picked)
+        return False
+
+    def _cinnamon_window_picked(self, window_id):
+        if window_id is None:          # Esc, or a click on the desktop
+            self.restore_window()
+            return
+        self.start_delay(lambda: self.cinnamon.screenshot_window(
+            window_id, self.include_shadow, self.include_pointer, self._capture_done))
 
     def prompt_window_selection(self):
         """Let the user click a window. Runs xdotool in the background so
@@ -566,8 +608,36 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
         GLib.timeout_add(250, self.launch_selection_overlay)
 
     def launch_selection_overlay(self):
+        if self.wayland:
+            # Our overlay is built on X11; on Wayland, Cinnamon's own selection
+            if self.cinnamon is None:
+                return self._cannot_capture()
+            self.cinnamon.select_area(self._cinnamon_area_picked)
+            return False
         Gdk.Display.get_default().flush()
         SelectionOverlay(self)
+        return False
+
+    def _cinnamon_area_picked(self, area):
+        if area is None:
+            self.restore_window()
+            return
+        self.start_delay(lambda: self.cinnamon.screenshot_area(*area, self.include_pointer, self._capture_done))
+
+    # ---- Results from Cinnamon's service, and when there's no way to capture ----
+
+    def _capture_done(self, pixbuf):
+        if pixbuf is not None:
+            self.update_screenshot_buffer(pixbuf)
+        else:
+            self.restore_window()
+
+    def _cannot_capture(self):
+        self._show_error(_("xl-Screenshot can't capture on this desktop yet"),
+                         _("In a Wayland session, xl-Screenshot captures through Cinnamon's "
+                           "screenshot service, which this desktop doesn't have. "
+                           "Log in to an X11 session to use it here."))
+        self.restore_window()
         return False
 
     # ---- Preview ----

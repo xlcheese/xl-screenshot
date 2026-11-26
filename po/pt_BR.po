@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xl-Screenshot 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/xlcheese/xl-screenshot/issues\n"
-"POT-Creation-Date: 2026-11-24 22:01+0000\n"
+"POT-Creation-Date: 2026-11-26 01:18+0000\n"
 "PO-Revision-Date: 2026-11-06 14:48+0000\n"
 "Last-Translator: Draft by Claude (needs native review)\n"
 "Language-Team: Portuguese (Brazil)\n"
@@ -111,17 +111,17 @@ msgid ""
 "tidied into clean shapes (you can keep your drawing, or turn this off in the "
 "menu)."
 msgstr ""
-"Mão livre: desenhe com o mouse. Linhas, setas, círculos e caixas tortos "
-"viram formas limpas (você pode manter seu desenho ou desativar isso no menu)."
+"Mão livre: desenhe com o mouse. Linhas, setas, círculos e caixas tortos viram"
+" formas limpas (você pode manter seu desenho ou desativar isso no menu)."
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:43
 msgid ""
-"Ink pen: the line is thicker where you draw slowly and thinner where you "
-"draw quickly (with a drawing tablet, it follows the pen's pressure)"
+"Ink pen: the line is thicker where you draw slowly and thinner where you draw"
+" quickly (with a drawing tablet, it follows the pen's pressure)"
 msgstr ""
 "Caneta tinteiro: a linha fica mais grossa onde você desenha devagar e mais "
-"fina onde desenha rápido (com uma mesa digitalizadora, ela segue a pressão "
-"da caneta)"
+"fina onde desenha rápido (com uma mesa digitalizadora, ela segue a pressão da"
+" caneta)"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:46
 msgid "Rectangle (hold Shift for a square)"
@@ -242,7 +242,7 @@ msgstr ""
 "Transformar linhas, setas, círculos e caixas à mão livre em formas limpas"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:258
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:133
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:148
 msgid "About"
 msgstr "Sobre"
 
@@ -436,7 +436,7 @@ msgstr "Abrir imagem"
 #: usr/lib/xl-screenshot/xlannotate/window.py:1127
 #: usr/lib/xl-screenshot/xlannotate/window.py:1199
 #: usr/lib/xl-screenshot/xlannotate/window.py:1204
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:664
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:734
 #: usr/lib/xl-screenshot/xlshared/ui.py:83
 msgid "_Cancel"
 msgstr "_Cancelar"
@@ -455,7 +455,7 @@ msgid "Pasted Image"
 msgstr "Imagem colada"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:1101
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:707
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:777
 msgid "Could not save image"
 msgstr "Não foi possível salvar a imagem"
 
@@ -465,17 +465,19 @@ msgstr "Salvar imagem anotada como"
 
 #: usr/lib/xl-screenshot/xlannotate/window.py:1127
 #: usr/lib/xl-screenshot/xlannotate/window.py:1205
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:664
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:734
 msgid "_Save"
 msgstr "_Salvar"
 
-#. Translators: the suggested file name for a copy; {name} is the original's name
+#. Translators: the suggested file name for a copy; {name} is the original's
+#. name
 #: usr/lib/xl-screenshot/xlannotate/window.py:1137
 #, python-brace-format
 msgid "{name}-annotated"
 msgstr "{name}-anotada"
 
-#. Translators: the start of a new annotated image's file name (date and time follow)
+#. Translators: the start of a new annotated image's file name (date and time
+#. follow)
 #: usr/lib/xl-screenshot/xlannotate/window.py:1141
 msgid "Annotated"
 msgstr "Anotada"
@@ -541,17 +543,17 @@ msgid "Show {name}"
 msgstr "Mostrar o {name}"
 
 #: usr/lib/xl-screenshot/xlscreenshot/tray.py:99
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:167
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:182
 msgid "Screen"
 msgstr "Tela"
 
 #: usr/lib/xl-screenshot/xlscreenshot/tray.py:100
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:171
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:186
 msgid "Window"
 msgstr "Janela"
 
 #: usr/lib/xl-screenshot/xlscreenshot/tray.py:101
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:175
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:190
 msgid "Selection"
 msgstr "Seleção"
 
@@ -563,23 +565,31 @@ msgstr "Sair"
 msgid "Keep xl-Screenshot in the system tray"
 msgstr "Manter o xl-Screenshot na bandeja do sistema"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:76
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:83
 msgid "Save As…"
 msgstr "Salvar como…"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:83
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:90
 msgid "Copy to Clipboard"
 msgstr "Copiar para a área de transferência"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:89
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:96
 msgid "Include Pointer"
 msgstr "Incluir o ponteiro"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:94
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:101
+msgid "Include Window Shadow"
+msgstr "Incluir a sombra da janela"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:106
+msgid "Needs Cinnamon's screenshot service (a newer Cinnamon)"
+msgstr "Precisa do serviço de captura do Cinnamon (um Cinnamon mais recente)"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:109
 msgid "Show in System Tray"
 msgstr "Mostrar na bandeja do sistema"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:97
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:112
 msgid ""
 "Keep xl-Screenshot in the tray: click the icon for a Selection capture. "
 "Closing the window hides it, and it starts when you log in."
@@ -587,43 +597,43 @@ msgstr ""
 "Manter o xl-Screenshot na bandeja: clique no ícone para uma captura de "
 "seleção. Fechar a janela a esconde, e ele inicia quando você entra na sessão."
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:101
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:116
 msgid "Needs Mint's tray support: sudo apt install gir1.2-xapp-1.0"
 msgstr "Precisa do suporte à bandeja do Mint: sudo apt install gir1.2-xapp-1.0"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:107
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:122
 msgid "PNG (Lossless)"
 msgstr "PNG (sem perdas)"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:108
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:123
 msgid "JPEG (Compressed)"
 msgstr "JPEG (compactado)"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:109
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:124
 msgid "WebP (Compressed)"
 msgstr "WebP (compactado)"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:113
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:128
 msgid "WebP support not installed. Install 'webp-pixbuf-loader'."
 msgstr "O suporte a WebP não está instalado. Instale o “webp-pixbuf-loader”."
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:184
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:199
 msgid "Annotate"
 msgstr "Anotar"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:188
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:203
 msgid "Add arrows, boxes and text (or double-click the thumbnail)"
 msgstr "Adicionar setas, caixas e texto (ou clique duas vezes na miniatura)"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:195
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:210
 msgid "Delay in Seconds:"
 msgstr "Atraso em segundos:"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:354
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:369
 msgid "Keep xl-Screenshot in the system tray?"
 msgstr "Manter o xl-Screenshot na bandeja do sistema?"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:356
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:371
 msgid ""
 "Click the tray icon for a quick Selection capture. xl-Screenshot will also "
 "start when you log in. You can change this any time with Show in System Tray "
@@ -633,58 +643,73 @@ msgstr ""
 "Screenshot também vai iniciar quando você entrar na sessão. Você pode mudar "
 "isso a qualquer momento com “Mostrar na bandeja do sistema” no menu."
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:359
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:374
 msgid "_Not Now"
 msgstr "_Agora não"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:360
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:375
 msgid "_Show in Tray"
 msgstr "_Mostrar na bandeja"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:504
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:546
 msgid "Window capture needs xdotool"
 msgstr "A captura de janela precisa do xdotool"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:505
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:547
 msgid "Install it with: sudo apt install xdotool"
 msgstr "Instale com: sudo apt install xdotool"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:545
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:587
 msgid "Window capture needs xwininfo"
 msgstr "A captura de janela precisa do xwininfo"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:546
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:588
 msgid "Install it with: sudo apt install x11-utils"
 msgstr "Instale com: sudo apt install x11-utils"
 
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:636
+msgid "xl-Screenshot can't capture on this desktop yet"
+msgstr "O xl-Screenshot ainda não consegue capturar nesta área de trabalho"
+
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:637
+msgid ""
+"In a Wayland session, xl-Screenshot captures through Cinnamon's screenshot "
+"service, which this desktop doesn't have. Log in to an X11 session to use it "
+"here."
+msgstr ""
+"Em uma sessão Wayland, o xl-Screenshot captura pelo serviço de captura do "
+"Cinnamon, que esta área de trabalho não tem. Entre em uma sessão X11 para "
+"usá-lo aqui."
+
 #. Translators: shown as the xl-Annotate window title while it edits a capture
-#. Translators: the start of a saved screenshot's file name (the date and time follow)
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:629
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:674
+#. Translators: the start of a saved screenshot's file name (the date and time
+#. follow)
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:699
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:744
 msgid "Screenshot"
 msgstr "Captura de tela"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:661
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:731
 msgid "Save Screenshot As"
 msgstr "Salvar captura de tela como"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:679
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:749
 msgid "JPEG Images"
 msgstr "Imagens JPEG"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:682
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:752
 msgid "WebP Images"
 msgstr "Imagens WebP"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:685
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:755
 msgid "PNG Images"
 msgstr "Imagens PNG"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:690
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:760
 msgid "All Images"
 msgstr "Todas as imagens"
 
-#: usr/lib/xl-screenshot/xlscreenshot/window.py:730
+#: usr/lib/xl-screenshot/xlscreenshot/window.py:800
 msgid ""
 "A screenshot tool for Linux Mint and the Cinnamon desktop, with Screen, "
 "Window, and Selection capture modes."
@@ -726,7 +751,8 @@ msgstr "Ferramenta de captura de tela"
 msgid "Take a screenshot of the screen, a window or a selection"
 msgstr "Capturar a tela, uma janela ou uma seleção"
 
-#. Translators: search words for the menu, separated by semicolons (keep the last one)
+#. Translators: search words for the menu, separated by semicolons (keep the
+#. last one)
 #: data/io.github.xlcheese.XlScreenshot.desktop.in:13
 msgid "screenshot;capture;screen;snapshot;print screen;grab;"
 msgstr "captura;captura de tela;tela;screenshot;print screen;instantâneo;"
@@ -748,13 +774,13 @@ msgstr "Anotador de imagens"
 msgid "Add arrows, boxes, text, highlights and pixelation to images"
 msgstr "Adicionar setas, caixas, texto, destaques e pixelização a imagens"
 
-#. Translators: search words for the menu, separated by semicolons (keep the last one)
+#. Translators: search words for the menu, separated by semicolons (keep the
+#. last one)
 #: data/io.github.xlcheese.XlAnnotate.desktop.in:14
 msgid ""
 "annotate;markup;arrow;draw;highlight;pixelate;blur;crop;screenshot;edit;"
 msgstr ""
-"anotar;marcar;seta;desenhar;destacar;pixelizar;desfocar;recortar;captura;"
-"editar;"
+"anotar;marcar;seta;desenhar;destacar;pixelizar;desfocar;recortar;captura;editar;"
 
 #: data/xl-annotate.nemo_action.in:3
 msgid "Annotate Image…"
