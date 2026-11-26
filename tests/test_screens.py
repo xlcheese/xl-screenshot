@@ -75,6 +75,15 @@ check(f"icon: two side by side uses the button's width ({side[0]}x{side[1]}), as
       side[0] > 60 and side[0] <= SI.ICON_MAX_WIDTH and side[1] == SI.ICON_HEIGHT)
 check(f"…two stacked is narrower ({stacked[0]}x{stacked[1]})", stacked[0] < side[0] and stacked[1] == SI.ICON_HEIGHT)
 check(f"…three in a row stays within the button ({three[0]})", three[0] <= SI.ICON_MAX_WIDTH)
+def frame_shape(mons):
+    """Width / height of the first monitor as drawn."""
+    surf = SI.render(mons, col, scale=1); d, stp = surf.get_data(), surf.get_stride()
+    rows = [y for y in range(surf.get_height()) if any(d[y * stp + x * 4 + 3] >= 128 for x in range(4, 10))]
+    return (surf.get_width() / len(mons)) / (rows[-1] - rows[0] + 1) if rows else 0
+screen_shape = 512 / (404 - 55)
+side_shape = frame_shape([(0, 0, 1920, 1080), (1920, 0, 1920, 1080)])
+check(f"…side by side, each monitor is shaped like the Screen icon's ({side_shape:.2f} vs {screen_shape:.2f}), not flatter",
+      abs(side_shape - screen_shape) < 0.2)
 def bezel(surface, x_from, y):
     """Thickness of the first dark run from x_from, across a monitor's left edge."""
     d, st = surface.get_data(), surface.get_stride()

@@ -119,16 +119,28 @@ def render(monitors, color, scale=1, max_width=ICON_MAX_WIDTH, height=ICON_HEIGH
     bw = max(m[0] + m[2] for m in monitors) - x0
     bh = max(m[1] + m[3] for m in monitors) - y0
     # Monitors as big as fits: at most max_width across, `height` tall with the stands
-    k = min(max_width / bw, (height - stand_h) / bh)
+    room_k = (height - stand_h) / bh
+    k = min(max_width / bw, room_k)
+    # Our Screen drawing is a little taller than a real 16:9 monitor. When the
+    # width is what limits the icon (side by side, three in a row), stretch it
+    # upwards toward the Screen drawing's shape, as far as the height allows,
+    # so the monitors look like the Screen icon; stacked and 2x2 layouts,
+    # limited by the height, keep their real shape
+    ky = k
+    if max_width / bw < room_k:
+        landscape = sorted(m[2] / m[3] for m in monitors if m[2] >= m[3]) or [16 / 9]
+        typical = landscape[len(landscape) // 2]
+        ky = min(k * typical / (_FRAME[2] / _FRAME[3]), room_k)
+        ky = max(ky, k)
     width = math.ceil(bw * k)
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, math.ceil(width * scale), math.ceil(height * scale))
     surface.set_device_scale(scale, scale)
     cr = cairo.Context(surface)
-    oy = (height - stand_h - bh * k) / 2      # centred, stands included
+    oy = (height - stand_h - bh * ky) / 2     # centred, stands included
     for m in monitors:
         x = (m[0] - x0) * k + GAP / 2
-        y = oy + (m[1] - y0) * k + GAP / 2
-        w, h = m[2] * k - GAP, m[3] * k - GAP
+        y = oy + (m[1] - y0) * ky + GAP / 2
+        w, h = m[2] * k - GAP, m[3] * ky - GAP
         _monitor(cr, _frame_art, x, y, w, h, f, color, scale)
         if not _has_below(m, monitors):        # stands only under the bottom row
             sw = min(_STAND[2] * f, w * 0.6)
