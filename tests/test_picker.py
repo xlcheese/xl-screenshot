@@ -84,6 +84,11 @@ m = (pb.get_width() - wa["rect"][2]) // 2 if got else 0
 check(f"…with a shadow: room round the window ({m} px each side)", got and m > 10 and pb.get_height() == wa["rect"][3] + 2 * m)
 check("…soft and darker just below the window, clear far out",
       got and 0 < alpha(pb, pb.get_width() // 2, m + wa["rect"][3] + 4) < 255 and alpha(pb, 1, 1) < alpha(pb, pb.get_width() // 2, m + wa["rect"][3] + 4))
+# the bottom corners fade like a blur: no darker spot where the bottom and side shadows meet
+def a_at(x, y): return alpha(pb, x, y) if got else 0
+d = 6; ww, wh = wa["rect"][2], wa["rect"][3]
+below, beside, corner = a_at(m + ww // 2, m + wh + d), a_at(m - d, m + wh // 2), a_at(m + ww + d, m + wh + d)
+check(f"…its bottom corners fade, no heavier spot (corner {corner}, below {below}, beside {beside})", corner <= max(below, beside))
 app.menu_shadow.set_active(False)
 
 # Esc, and a click on the desktop

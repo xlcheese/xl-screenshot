@@ -58,14 +58,22 @@ def corner_radius_for(window):
     return DEFAULT_RADIUS if radius is None else radius
 
 
-def _top_rounded(cr, x, y, w, h, r):
+def _top_rounded(cr, x, y, w, h, r, bottom=0):
+    """A rectangle with its top corners rounded by r, and its bottom corners
+    by `bottom` (square, unless given)."""
     cr.new_path()
-    cr.move_to(x, y + h)
+    cr.move_to(x, y + h - bottom)
     cr.line_to(x, y + r)
     cr.arc(x + r, y + r, r, math.pi, 1.5 * math.pi)
     cr.line_to(x + w - r, y)
     cr.arc(x + w - r, y + r, r, 1.5 * math.pi, 2 * math.pi)
-    cr.line_to(x + w, y + h)
+    cr.line_to(x + w, y + h - bottom)
+    if bottom:
+        cr.arc(x + w - bottom, y + h - bottom, bottom, 0, 0.5 * math.pi)
+        cr.arc(x + bottom, y + h - bottom, bottom, 0.5 * math.pi, math.pi)
+    else:
+        cr.line_to(x + w, y + h)
+        cr.line_to(x, y + h)
     cr.close_path()
 
 
@@ -92,7 +100,10 @@ def finish_window(pixbuf, scale=1, shadow=False, rounded=True, radius=None):
         for i in range(steps, 0, -1):
             t = i / steps
             spread = reach * t
-            _top_rounded(cr, m - spread, m - spread + drop, w + 2 * spread, h + 2 * spread, r + spread)
+            # Every corner rounds by as much as the copy has spread, the
+            # square bottom ones too: a blurred corner fades like the sides
+            _top_rounded(cr, m - spread, m - spread + drop, w + 2 * spread, h + 2 * spread,
+                         r + spread, bottom=spread)
             cr.set_source_rgba(0, 0, 0, 0.034 * (1 - t) ** 2 + 0.005)
             cr.fill()
         # A hairline right round the window, as Mint-Y draws

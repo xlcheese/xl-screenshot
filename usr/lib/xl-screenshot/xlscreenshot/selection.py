@@ -419,14 +419,15 @@ class SelectionOverlay(Gtk.Window):
 
     def _capture_from_still(self):
         """Wayland: cut the selection out of the picture we're showing, so you
-        get exactly what you saw. With a delay, a fresh picture of that area
-        is taken once it's over instead (as on X11)."""
+        get exactly what you saw. With a delay, or with Include Pointer (the
+        picture has no pointer), a fresh picture of that area is taken
+        instead, once the overlay is gone (as on X11)."""
         x, y = self.rect_x + self.origin_x, self.rect_y + self.origin_y
         w, h = self.rect_w, self.rect_h
         tool = self.parent_tool
         for overlay in list(self.group):
             overlay.hide()
-        if tool.delay_sec > 0 and tool.cinnamon is not None:
+        if (tool.delay_sec > 0 or tool.include_pointer) and tool.cinnamon is not None:
             def done(pixbuf):
                 self.captured = pixbuf is not None
                 if pixbuf is not None:

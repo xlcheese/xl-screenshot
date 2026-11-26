@@ -102,10 +102,12 @@ for wayland in (False, True):
             def __init__(self, x, y): self.x, self.y, self.x_root, self.y_root, self.button, self.state = x, y, x, y, 1, 0
         def overlays():
             return [t for t in Gtk.Window.list_toplevels() if isinstance(t, SelectionOverlay) and t.get_visible()]
+        w.include_pointer = False
         w.start_selection()
         got = wait_for(lambda: overlays())
         check("Wayland Selection: our own overlay, over a picture of the desktop from Cinnamon",
               got and [c[0] for c in calls()] == ["Screenshot"] and overlays()[0].still_mode)
+        check("…taken without the pointer (no frozen pointer next to the real one)", calls()[0][1][0] is False)
         ov = overlays()[0]
         ov.on_button_press(None, Ev(100, 100)); ov.on_motion_notify(None, Ev(400, 300)); ov.on_button_release(None, Ev(400, 300)); settle(0.3)
         check(f"…with our size label ({ov.size_label.get_text()}) and Cancel / Capture Selection",
@@ -124,6 +126,16 @@ for wayland in (False, True):
         check("…with a delay, a fresh capture of that area afterwards",
               got and [c[0] for c in calls()] == ["Screenshot", "ScreenshotArea"] and calls()[1][1][:4] == [50, 60, 300, 150])
         w.delay_sec = 0
+        # Include Pointer: the picture has none, so a fresh capture with the pointer
+        open(LOG, "w").close(); w.active_pixbuf = None; w.include_pointer = True
+        w.start_selection(); wait_for(lambda: overlays()); ov = overlays()[0]
+        ov.on_button_press(None, Ev(50, 60)); ov.on_motion_notify(None, Ev(350, 210)); ov.on_button_release(None, Ev(350, 210)); settle(0.2)
+        ov.on_capture_confirmed(None)
+        got = wait_for(lambda: w.active_pixbuf is not None, 6)
+        check("…with Include Pointer: the overlay's picture without it, then a fresh capture of the area with it",
+              got and [c[0] for c in calls()] == ["Screenshot", "ScreenshotArea"]
+              and calls()[0][1][0] is False and calls()[1][1][4] is True)
+        w.include_pointer = False
         # Esc closes it and brings the window back
         open(LOG, "w").close(); w.active_pixbuf = None
         w.start_selection(); wait_for(lambda: overlays()); ov = overlays()[0]
