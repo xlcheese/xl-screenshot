@@ -3,7 +3,7 @@ import helpers  # paths, a temporary home folder, English
 (xlcheese/xl-screenshot#10), against a stand-in for the service."""
 import json, os, subprocess, sys, time
 subprocess.Popen(["openbox"], stderr=subprocess.DEVNULL); time.sleep(1)
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, Gdk, GLib
 from xlscreenshot import cinnamon_service as CS
 from xlscreenshot.window import ScreenshotWindow
 fails = []
@@ -90,12 +90,47 @@ for wayland in (False, True):
     # Selection
     open(LOG, "w").close(); w.active_pixbuf = None
     if wayland:
+        from xlscreenshot.selection import SelectionOverlay
+        class Ev:
+            def __init__(self, x, y): self.x, self.y, self.x_root, self.y_root, self.button, self.state = x, y, x, y, 1, 0
+        def overlays():
+            return [t for t in Gtk.Window.list_toplevels() if isinstance(t, SelectionOverlay) and t.get_visible()]
+        w.start_selection()
+        got = wait_for(lambda: overlays())
+        check("Wayland Selection: our own overlay, over a picture of the desktop from Cinnamon",
+              got and [c[0] for c in calls()] == ["Screenshot"] and overlays()[0].still_mode)
+        ov = overlays()[0]
+        ov.on_button_press(None, Ev(100, 100)); ov.on_motion_notify(None, Ev(400, 300)); ov.on_button_release(None, Ev(400, 300)); settle(0.3)
+        check(f"…with our size label ({ov.size_label.get_text()}) and Cancel / Capture Selection",
+              ov.size_label.get_text() == "300 × 200" and ov.capture_btn.get_visible())
+        ov.on_capture_confirmed(None)
+        got = wait_for(lambda: w.active_pixbuf is not None)
+        check("…Capture cuts exactly that area out of the picture (300x200), no second capture",
+              got and (w.active_pixbuf.get_width(), w.active_pixbuf.get_height()) == (300, 200)
+              and [c[0] for c in calls()] == ["Screenshot"] and not overlays())
+        # with a delay: a fresh picture of that area once it's over (as on X11)
+        open(LOG, "w").close(); w.active_pixbuf = None; w.delay_sec = 1
+        w.start_selection(); wait_for(lambda: overlays()); ov = overlays()[0]
+        ov.on_button_press(None, Ev(50, 60)); ov.on_motion_notify(None, Ev(350, 210)); ov.on_button_release(None, Ev(350, 210)); settle(0.2)
+        ov.on_capture_confirmed(None)
+        got = wait_for(lambda: w.active_pixbuf is not None, 6)
+        check("…with a delay, a fresh capture of that area afterwards",
+              got and [c[0] for c in calls()] == ["Screenshot", "ScreenshotArea"] and calls()[1][1][:4] == [50, 60, 300, 150])
+        w.delay_sec = 0
+        # Esc closes it and brings the window back
+        open(LOG, "w").close(); w.active_pixbuf = None
+        w.start_selection(); wait_for(lambda: overlays()); ov = overlays()[0]
+        ov.on_key_press(None, type("K", (), {"keyval": Gdk.KEY_Escape})())
+        check("…Esc closes the overlay and the window comes back", wait_for(lambda: not overlays() and w.get_visible()) and w.active_pixbuf is None)
+        # Cinnamon's own selection is still there, for comparing
+        os.environ["XL_SCREENSHOT_CINNAMON_SELECTION"] = "1"
+        open(LOG, "w").close()
         w.start_selection()
         got = wait_for(lambda: w.active_pixbuf is not None)
-        names = [c[0] for c in calls()]
-        check("Wayland Selection: Cinnamon's selection, then that area (300x150)",
-              got and names == ["SelectArea", "ScreenshotArea"] and calls()[1][1][:4] == [10, 20, 300, 150]
+        check("XL_SCREENSHOT_CINNAMON_SELECTION=1: Cinnamon's own selection instead (300x150)",
+              got and [c[0] for c in calls()] == ["SelectArea", "ScreenshotArea"]
               and (w.active_pixbuf.get_width(), w.active_pixbuf.get_height()) == (300, 150))
+        del os.environ["XL_SCREENSHOT_CINNAMON_SELECTION"]
     else:
         opened = []
         import xlscreenshot.window as W
@@ -108,15 +143,56 @@ for wayland in (False, True):
     check(f"{where}: no temporary picture files left behind", leftovers() == [])
     w.destroy()
 
+# ---- two monitors on Wayland: an overlay on each; one selection at a time ----
+# (the test screen is one monitor, so GTK is told there are two, side by side)
+class FakeMonitor:
+    def __init__(self, x): self.x = x
+    def get_geometry(self):
+        r = Gdk.Rectangle(); r.x, r.y, r.width, r.height = self.x, 0, 640, 800; return r
+real_n, real_get = Gdk.Display.get_n_monitors, Gdk.Display.get_monitor
+Gdk.Display.get_n_monitors = lambda self: 2
+Gdk.Display.get_monitor = lambda self, i: FakeMonitor(640 * i)
+real_fullscreen = Gtk.Window.fullscreen_on_monitor
+Gtk.Window.fullscreen_on_monitor = lambda self, screen, i: None
+try:
+    from xlscreenshot.selection import SelectionOverlay
+    class Ev:
+        def __init__(self, x, y): self.x, self.y, self.x_root, self.y_root, self.button, self.state = x, y, x, y, 1, 0
+    visible = lambda: [t for t in Gtk.Window.list_toplevels() if isinstance(t, SelectionOverlay) and t.get_visible()]
+    w = window(wayland=True); w.start_selection()
+    wait_for(lambda: len(visible()) == 2)
+    ovs = sorted(visible(), key=lambda o: o.origin_x)
+    check("two monitors: an overlay on each", len(ovs) == 2 and [o.origin_x for o in ovs] == [0, 640])
+    left, right = ovs
+    left.on_button_press(None, Ev(50, 50)); left.on_motion_notify(None, Ev(150, 150)); left.on_button_release(None, Ev(150, 150)); settle(0.2)
+    right.on_button_press(None, Ev(100, 100)); right.on_motion_notify(None, Ev(300, 200)); right.on_button_release(None, Ev(300, 200)); settle(0.2)
+    check("…drawing on the second clears the first", left.rect_w == 0 and right.rect_w == 200)
+    right.on_capture_confirmed(None)
+    got = wait_for(lambda: w.active_pixbuf is not None)
+    px = tuple(w.active_pixbuf.get_pixels()[:3]) if got else None
+    check(f"…capturing on the second monitor cuts from its part of the picture (blue: {px})",
+          got and (w.active_pixbuf.get_width(), w.active_pixbuf.get_height()) == (200, 100) and px == (0, 0, 255))
+    check("…and both overlays close", wait_for(lambda: not visible()))
+    w.destroy()
+    w = window(wayland=True); w.start_selection(); wait_for(lambda: len(visible()) == 2)
+    visible()[0].on_key_press(None, type("K", (), {"keyval": Gdk.KEY_Escape})())
+    check("…Esc on either closes both, and the window comes back once", wait_for(lambda: not visible() and w.get_visible()))
+    w.destroy()
+finally:
+    Gdk.Display.get_n_monitors, Gdk.Display.get_monitor = real_n, real_get
+    Gtk.Window.fullscreen_on_monitor = real_fullscreen
+
 # ---- Esc / clicking the desktop in Cinnamon's picker ----
 start_service("cancel")
 w = window(wayland=True)
 w.on_window_capture_clicked(None)
 check("Window picker cancelled: no capture, the window comes back",
       wait_for(lambda: w.get_visible() and not w._capturing) and w.active_pixbuf is None)
+os.environ["XL_SCREENSHOT_CINNAMON_SELECTION"] = "1"
 w.start_selection()
-check("Selection cancelled: no capture, the window comes back",
+check("Cinnamon's selection cancelled: no capture, the window comes back",
       wait_for(lambda: w.get_visible() and not w._capturing) and w.active_pixbuf is None)
+del os.environ["XL_SCREENSHOT_CINNAMON_SELECTION"]
 # a delay on Wayland: no X11 key grab (it would hang there)
 w.delay_sec = 1
 w.start_delay(lambda: None)

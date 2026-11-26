@@ -20,9 +20,17 @@ class SelectionOverlay(Gtk.Window):
     Such windows don't get keyboard focus by themselves, so the overlay grabs
     the mouse and keyboard while it's up (that's what keeps Esc working)."""
 
-    def __init__(self, parent_tool):
-        super().__init__(type=Gtk.WindowType.POPUP)
+    def __init__(self, parent_tool, still=None, monitor=None, group=None):
+        """On X11: one overlay over every monitor, showing a picture grabbed
+        here. On Wayland (still given): a picture Cinnamon took of the whole
+        desktop, shown by one full-screen overlay per monitor (`monitor` is
+        its index; `group` lists the overlays, which close together)."""
+        self.still_mode = still is not None
+        super().__init__(type=Gtk.WindowType.TOPLEVEL if self.still_mode else Gtk.WindowType.POPUP)
         self.parent_tool = parent_tool
+        self.group = group if group is not None else [self]
+        if self not in self.group:
+            self.group.append(self)
         # Never shown on screen, but names the overlay in window lists
         self.set_title("xl-Screenshot Selection")
         self.captured = False
@@ -33,19 +41,31 @@ class SelectionOverlay(Gtk.Window):
         self.set_accept_focus(True)
         self.set_can_focus(True)
 
-        root = Gdk.get_default_root_window()
-        screen_w = root.get_width()
-        screen_h = root.get_height()
-        # Cover the whole desktop (every monitor)
-        self.set_default_size(screen_w, screen_h)
-        self.resize(screen_w, screen_h)
-        self.move(0, 0)
+        if self.still_mode:
+            # Wayland: apps can't place windows, so one full-screen window per
+            # monitor, each showing its part of the desktop picture
+            display = Gdk.Display.get_default()
+            geo = display.get_monitor(monitor).get_geometry()
+            self.monitor_geo = (geo.x, geo.y, geo.width, geo.height)
+            self.set_default_size(geo.width, geo.height)
+            self.fullscreen_on_monitor(self.get_screen(), monitor)
+        else:
+            self.monitor_geo = None
+            root = Gdk.get_default_root_window()
+            screen_w = root.get_width()
+            screen_h = root.get_height()
+            # Cover the whole desktop (every monitor)
+            self.set_default_size(screen_w, screen_h)
+            self.resize(screen_w, screen_h)
+            self.move(0, 0)
         self._grab_tries = 0
         self._grabbed = False
         # Where the overlay's top-left corner really is on the desktop
         # (normally 0, 0); drawing, button placement and the captured area
         # all allow for it, in case a window manager puts it elsewhere.
         self.origin_x = self.origin_y = 0
+        if self.still_mode:
+            self.origin_x, self.origin_y = self.monitor_geo[:2]
 
         self.start_x = -1
         self.start_y = -1
@@ -64,7 +84,15 @@ class SelectionOverlay(Gtk.Window):
         # The theme's accent color (the outline), and the panel's colors
         self.theme_color, self.panel_color, self.panel_border = theme_colors(self)
 
-        self.bg_pixbuf = Gdk.pixbuf_get_from_window(root, 0, 0, screen_w, screen_h)
+        if self.still_mode:
+            self.bg_pixbuf = still
+            # The picture is in real pixels; the desktop is in units
+            desktop_w = max(g.x + g.width for g in (
+                Gdk.Display.get_default().get_monitor(i).get_geometry()
+                for i in range(Gdk.Display.get_default().get_n_monitors())))
+            self.still_scale = still.get_width() / max(1, desktop_w)
+        else:
+            self.bg_pixbuf = Gdk.pixbuf_get_from_window(root, 0, 0, screen_w, screen_h)
 
         self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
                         Gdk.EventMask.BUTTON_RELEASE_MASK |
@@ -113,7 +141,10 @@ class SelectionOverlay(Gtk.Window):
     def _grab_input(self):
         """Take the mouse and keyboard, so Esc and clicks reach us. Another
         program can briefly hold a grab (e.g. just after a click), so retry
-        a few times."""
+        a few times. (On Wayland, our full-screen window simply has the
+        focus: no grab.)"""
+        if self.still_mode:
+            return False
         seat = Gdk.Display.get_default().get_default_seat()
         status = seat.grab(self.get_window(), Gdk.SeatCapabilities.ALL, True, None, None, None, None)
         self._grabbed = status == Gdk.GrabStatus.SUCCESS
@@ -129,6 +160,8 @@ class SelectionOverlay(Gtk.Window):
         return False
 
     def on_configure(self, widget, event):
+        if self.still_mode:
+            return False       # Wayland windows don't know where they are: the monitor says
         _ok, ox, oy = self.get_window().get_origin()
         if (ox, oy) != (self.origin_x, self.origin_y):
             self.origin_x, self.origin_y = ox, oy
@@ -163,7 +196,7 @@ class SelectionOverlay(Gtk.Window):
     def _paint_screen(self, cr, rect=None):
         """Paint the still picture of the desktop (or just rect of it). On a
         HiDPI desktop it has more pixels than we have units: draw it at 1/scale."""
-        scale = self.get_scale_factor()
+        scale = self.still_scale if self.still_mode else self.get_scale_factor()
         cr.save()
         if rect:
             cr.rectangle(*rect)
@@ -193,11 +226,18 @@ class SelectionOverlay(Gtk.Window):
                        a.height + 2 * PANEL_PAD, self.panel_color, self.panel_border)
 
     def position_control_box(self):
-        scale = self.get_scale_factor()
+        scale = self.still_scale if self.still_mode else self.get_scale_factor()
         self.size_label.set_text(f"{round(self.rect_w * scale)} × {round(self.rect_h * scale)}")
         _min, natural = self.control_box.get_preferred_size()
         btn_w, btn_h = natural.width, natural.height
 
+        if self.still_mode:
+            pad = PANEL_PAD
+            px, py = place_panel((self.rect_x, self.rect_y, self.rect_w, self.rect_h),
+                                 btn_w + 2 * pad, btn_h + 2 * pad,
+                                 (0, 0, self.monitor_geo[2], self.monitor_geo[3]))
+            self.fixed.move(self.control_box, px + pad, py + pad)
+            return
         # Keep the buttons on the monitor that holds the selection
         display = Gdk.Display.get_default()
         monitor = display.get_monitor_at_point(
@@ -247,7 +287,16 @@ class SelectionOverlay(Gtk.Window):
             self._current_cursor = cursor_type
             self.set_cursor(cursor_type)
 
+    def _clear_others(self):
+        """Drawing on one monitor clears a selection on the others."""
+        for other in self.group:
+            if other is not self and other.rect_w:
+                other.rect_w = other.rect_h = 0
+                other.control_box.hide()
+                other.queue_draw()
+
     def on_button_press(self, widget, event):
+        self._clear_others()
         if event.button == 1:
             if self.rect_w > 0 and self.rect_h > 0:
                 handle = self._handle_at(event.x, event.y)
@@ -330,6 +379,12 @@ class SelectionOverlay(Gtk.Window):
 
     def on_destroy(self, widget):
         self._release_input()
+        # The overlays on the other monitors close too (just one brings the window back)
+        others = [o for o in self.group if o is not self]
+        self.group.clear()
+        for other in others:
+            other.captured = True
+            other.destroy()
         # Always bring the main window back, whether we captured or cancelled
         if self.parent_tool and not self.captured:
             self.parent_tool.restore_window()
@@ -338,6 +393,8 @@ class SelectionOverlay(Gtk.Window):
         self.destroy()
 
     def on_capture_confirmed(self, button):
+        if self.still_mode and self.rect_w > 5 and self.rect_h > 5:
+            return self._capture_from_still()
         if self.rect_w > 5 and self.rect_h > 5:
             self.hide()
             # The selection is in overlay units; capture in desktop pixels
@@ -357,3 +414,30 @@ class SelectionOverlay(Gtk.Window):
             self.parent_tool.start_delay(do_capture, on_cancel=self.destroy)
         else:
             self.destroy()
+
+    def _capture_from_still(self):
+        """Wayland: cut the selection out of the picture we're showing, so you
+        get exactly what you saw. With a delay, a fresh picture of that area
+        is taken once it's over instead (as on X11)."""
+        x, y = self.rect_x + self.origin_x, self.rect_y + self.origin_y
+        w, h = self.rect_w, self.rect_h
+        tool = self.parent_tool
+        for overlay in list(self.group):
+            overlay.hide()
+        if tool.delay_sec > 0 and tool.cinnamon is not None:
+            def done(pixbuf):
+                self.captured = pixbuf is not None
+                if pixbuf is not None:
+                    tool.update_screenshot_buffer(pixbuf)
+                self.destroy()
+            tool.start_delay(lambda: tool.cinnamon.screenshot_area(
+                round(x), round(y), round(w), round(h), tool.include_pointer, done), on_cancel=self.destroy)
+            return
+        k = self.still_scale
+        px, py = max(0, round(x * k)), max(0, round(y * k))
+        pw = min(round(w * k), self.bg_pixbuf.get_width() - px)
+        ph = min(round(h * k), self.bg_pixbuf.get_height() - py)
+        if pw > 0 and ph > 0:
+            self.captured = True
+            tool.update_screenshot_buffer(self.bg_pixbuf.new_subpixbuf(px, py, pw, ph).copy())
+        self.destroy()

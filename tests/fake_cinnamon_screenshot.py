@@ -3,7 +3,7 @@ for the tests: same methods, answers with test pictures, and logs each call.
 
     python3 fake_cinnamon_screenshot.py LOGFILE [ok|cancel|old]
 
-ok      every call succeeds: Screenshot 1280x800, a window 300x200 (340x240
+ok      every call succeeds: Screenshot 1280x800 (left half red, right blue), a window 300x200 (340x240
         with its shadow), SelectWindow picks window 77, SelectArea 10,20 300x150
 cancel  SelectWindow and SelectArea are cancelled, as when Esc is pressed
 old     an older Cinnamon: no SelectWindow or ScreenshotWindowById
@@ -40,7 +40,10 @@ def handle(conn, sender, path, iface, method, params, inv):
     log(method, args)
     cancel = lambda: inv.return_dbus_error("org.freedesktop.DBus.Error.Failed", "Operation was cancelled")
     if method == "Screenshot":
-        picture(args[1], 1280, 800); inv.return_value(GLib.Variant("(bs)", (True, args[1])))
+        # the left half red, the right half blue: shows which part was cut out
+        p = GdkPixbuf.Pixbuf.new(GdkPixbuf.Colorspace.RGB, True, 8, 1280, 800); p.fill(0x0000ffff)
+        p.new_subpixbuf(0, 0, 640, 800).fill(0xff0000ff); p.savev(args[1], "png", [], [])
+        inv.return_value(GLib.Variant("(bs)", (True, args[1])))
     elif method == "ScreenshotArea":
         x, y, w, h = args[:4]; picture(args[5], w, h); inv.return_value(GLib.Variant("(bs)", (True, args[5])))
     elif method == "ScreenshotWindowById":

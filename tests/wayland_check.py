@@ -19,8 +19,7 @@ check("running on a real Wayland display", type(Gdk.Display.get_default()).__nam
 w = ScreenshotWindow(); w.delay_sec = 0; w.show_all(); settle(1)
 check("xl-Screenshot sees Wayland, and Cinnamon's service", w.wayland and w.cinnamon is not None)
 for name, go, size in (("Screen", lambda: w.on_screen_capture_clicked(None), (1280, 800)),
-                       ("Window", lambda: w.on_window_capture_clicked(None), (300, 200)),
-                       ("Selection", lambda: w.start_selection(), (300, 150))):
+                       ("Window", lambda: w.on_window_capture_clicked(None), (300, 200))):
     w.active_pixbuf = None
     t0 = time.time(); go()
     while time.time() - t0 < 8 and (w.active_pixbuf is None or w._capturing):
@@ -28,6 +27,28 @@ for name, go, size in (("Screen", lambda: w.on_screen_capture_clicked(None), (12
     p = w.active_pixbuf
     check(f"Wayland {name}: captured ({p.get_width()}x{p.get_height()}) and the window came back" if p else f"Wayland {name}: captured",
           p is not None and (p.get_width(), p.get_height()) == size and w.get_visible() and not w._capturing)
+# Selection: our own overlay, as a real full-screen Wayland window
+from xlscreenshot.selection import SelectionOverlay
+class Ev:
+    def __init__(self, x, y): self.x, self.y, self.x_root, self.y_root, self.button, self.state = x, y, x, y, 1, 0
+w.active_pixbuf = None; w.start_selection()
+t0 = time.time()
+while time.time() - t0 < 6 and not [t for t in Gtk.Window.list_toplevels() if isinstance(t, SelectionOverlay) and t.get_mapped()]:
+    settle(0.1)
+ovs = [t for t in Gtk.Window.list_toplevels() if isinstance(t, SelectionOverlay) and t.get_mapped()]
+check(f"Wayland Selection: our overlay shows full screen ({ovs[0].get_allocated_width()}x{ovs[0].get_allocated_height()})" if ovs else "Wayland Selection: our overlay shows",
+      len(ovs) == 1 and (ovs[0].get_allocated_width(), ovs[0].get_allocated_height()) == (1280, 800))
+if ovs:
+    ov = ovs[0]
+    ov.on_button_press(None, Ev(100, 100)); ov.on_motion_notify(None, Ev(400, 250)); ov.on_button_release(None, Ev(400, 250)); settle(0.5)
+    check(f"…with the size label ({ov.size_label.get_text()}) and Capture Selection on screen",
+          ov.size_label.get_text() == "300 × 150" and ov.capture_btn.get_mapped())
+    ov.on_capture_confirmed(None)
+    t0 = time.time()
+    while time.time() - t0 < 6 and w.active_pixbuf is None: settle(0.1)
+    p = w.active_pixbuf
+    check("…and captures that area (300x150); the window comes back",
+          p is not None and (p.get_width(), p.get_height()) == (300, 150) and w.get_visible())
 w.delay_sec = 1; w.active_pixbuf = None; t0 = time.time(); w.on_screen_capture_clicked(None)
 while time.time() - t0 < 6 and w.active_pixbuf is None: settle(0.1)
 check("Wayland: a delay works, with no X11 key grab", w.active_pixbuf is not None and w._escape_grab is None)

@@ -609,14 +609,27 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
 
     def launch_selection_overlay(self):
         if self.wayland:
-            # Our overlay is built on X11; on Wayland, Cinnamon's own selection
             if self.cinnamon is None:
                 return self._cannot_capture()
-            self.cinnamon.select_area(self._cinnamon_area_picked)
+            if os.environ.get("XL_SCREENSHOT_CINNAMON_SELECTION"):
+                # Cinnamon's own selection instead of ours (for comparing)
+                self.cinnamon.select_area(self._cinnamon_area_picked)
+            else:
+                # Our overlay, over a picture of the whole desktop from Cinnamon
+                self.cinnamon.screenshot(self.include_pointer, self._show_still_overlays)
             return False
         Gdk.Display.get_default().flush()
         SelectionOverlay(self)
         return False
+
+    def _show_still_overlays(self, still):
+        """Wayland: our Selection overlay on each monitor, over Cinnamon's picture."""
+        if still is None:
+            self.restore_window()
+            return
+        group = []
+        for monitor in range(Gdk.Display.get_default().get_n_monitors()):
+            SelectionOverlay(self, still=still, monitor=monitor, group=group)
 
     def _cinnamon_area_picked(self, area):
         if area is None:
