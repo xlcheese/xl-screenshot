@@ -39,6 +39,61 @@ check("--help lists the capture options", rc == 0 and b"--area" in out and b"--s
 rc, out, err = run("--version")
 check(f"--version ({out.decode().strip()})", rc == 0 and out.startswith(b"xl-Screenshot "))
 
+# --list-screens: the big numbers too, but only when a person reads it in a terminal
+import pty
+numbers = lambda: subprocess.run(["pgrep", "-f", "show-screen-numbers"], capture_output=True).stdout.split()
+def number_windows():
+    tree = subprocess.run(["xwininfo", "-root", "-tree"], capture_output=True, text=True).stdout
+    return tree.count("xl-Screenshot screen number")
+def in_terminal(*args):
+    """Run with its output going to a terminal (a pseudo-terminal), as typed by a person."""
+    master, slave = pty.openpty()
+    p = subprocess.run([sys.executable, LAUNCHER, *args], stdout=slave, stderr=subprocess.PIPE, env=env, timeout=30)
+    os.close(slave)
+    out = b""
+    try:
+        while True:
+            chunk = os.read(master, 4096)
+            if not chunk: break
+            out += chunk
+            if len(chunk) < 4096: break
+    except OSError:
+        pass
+    os.close(master)
+    return p.returncode, out.decode()
+def screen_pixel(x, y):
+    pb = Gdk.pixbuf_get_from_window(Gdk.get_default_root_window(), x, y, 1, 1)
+    return tuple(pb.get_pixels()[:3])
+before = screen_pixel(640, 400)
+t0 = time.time()
+rc, out = in_terminal("--list-screens")
+took = time.time() - t0
+check(f"in a terminal: the list prints and the prompt comes back at once ({took:.1f} s)",
+      rc == 0 and "1: 1280x800+0+0" in out and took < 2.5)
+shown = False
+for _ in range(30):
+    if number_windows(): shown = True; break
+    time.sleep(0.1)
+settle(0.5)
+check("…and the screen shows its big number", shown and number_windows() == 1)
+check("…drawn in the middle of the screen", screen_pixel(640, 400) != before)
+end = time.time() + 6
+while time.time() < end and numbers(): time.sleep(0.2)
+check("…for a few seconds, then it's gone", not numbers() and number_windows() == 0)
+rc, out, err = run("--list-screens")
+time.sleep(1.5)
+check("read by a script (not a terminal): no numbers", rc == 0 and not numbers())
+rc, out = in_terminal("--list-screens", "--no-identify")
+time.sleep(1.5)
+check("--no-identify: no numbers, even in a terminal", rc == 0 and "1: 1280x800" in out and not numbers())
+rc, out, err = run("--identify")
+shown = False
+for _ in range(30):
+    if number_windows(): shown = True; break
+    time.sleep(0.1)
+check("--identify: the list, and the numbers even from a script", rc == 0 and b"1: 1280x800" in out and shown)
+subprocess.run(["pkill", "-f", "show-screen-numbers"]); time.sleep(0.5)
+
 # X11, without the service
 rc, out, err = run("--list-screens")
 check(f"--list-screens: '{out.decode().strip()}'", rc == 0 and out.decode().strip() == "1: 1280x800+0+0  (primary)")

@@ -182,7 +182,8 @@ xl-screenshot -a 0,0,800,600 - | magick - -resize 50% small.png
 | `--clipboard` | copy the image (saved too only if a file is given) |
 | `--annotate` | open it in xl-Annotate |
 | `--delay SEC` (`-d`), `--pointer` (`-p`), `--shadow` | as in the app |
-| `--list-screens` | the screens' numbers, sizes and positions |
+| `--list-screens` | the screens' numbers, sizes and positions; in a terminal, each screen shows its number for a few seconds |
+| `--identify`, `--no-identify` | show the numbers even from a script; never show them |
 
 The saved file's path is printed. Exit status: 0 saved, 1 nothing captured
 (canceled or failed), 2 a mistake in the options.

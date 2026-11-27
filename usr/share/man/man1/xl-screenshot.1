@@ -113,7 +113,15 @@ Include the pointer.
 Window captures: include the window's shadow.
 .TP
 .B \-\-list\-screens
-List the screens, with their numbers, sizes and positions, and exit.
+List the screens, with their numbers, sizes and positions, and exit. When run in a terminal,
+each screen also shows its number in large type for a few seconds (a click hides it), so
+it's clear which is which. Not when a script reads the list.
+.TP
+.B \-\-identify
+List the screens and show their numbers, even when the output goes to a script.
+.TP
+.B \-\-no\-identify
+With \fB\-\-list\-screens\fR: never show the numbers on the screens.
 .SH EXAMPLES
 .TP
 .B xl-screenshot \-\-area 100,100,400,300 \-\-file ~/area.png

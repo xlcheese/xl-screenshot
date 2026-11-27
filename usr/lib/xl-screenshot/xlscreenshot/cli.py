@@ -145,7 +145,12 @@ def build_parser():
     opt.add_argument("--pointer", "-p", action="store_true", help=_("include the pointer"))
     opt.add_argument("--shadow", action="store_true", help=_("windows: include the shadow"))
     opt.add_argument("--list-screens", action="store_true",
-                     help=_("list the screens, with their numbers, and exit"))
+                     help=_("list the screens, with their numbers, and exit; in a terminal, "
+                            "each screen also shows its number for a few seconds"))
+    opt.add_argument("--identify", action="store_true",
+                     help=_("list the screens and show their numbers, even from a script"))
+    opt.add_argument("--no-identify", action="store_true",
+                     help=_("with --list-screens: never show the numbers on the screens"))
 
     app = p.add_argument_group(_("The app"))
     app.add_argument("--tray", "-t", action="store_true",
@@ -153,6 +158,7 @@ def build_parser():
     app.add_argument("--version", "-v", action="store_true", help=_("show the version and exit"))
     app.add_argument("--help", "-h", action="help", help=_("show this help and exit"))
     p.add_argument("--hold-clipboard", metavar="PNG", help=argparse.SUPPRESS)
+    p.add_argument("--show-screen-numbers", action="store_true", help=argparse.SUPPRESS)
     return p
 
 
@@ -450,8 +456,19 @@ def run(argv):
     if Gdk.Display.get_default() is None:
         _error(_("no desktop to capture (is DISPLAY or WAYLAND_DISPLAY set?)"))
         return EXIT_FAILED
-    if args.list_screens:
+    if args.show_screen_numbers:
+        from . import screen_numbers
+        return screen_numbers.show()
+    if args.list_screens or args.identify:
         list_screens()
+        sys.stdout.flush()
+        # The numbers on the screens too, when someone is reading this in a
+        # terminal (not when a script reads the list), in a process of their
+        # own so the prompt comes straight back
+        if args.identify or (sys.stdout.isatty() and not args.no_identify):
+            subprocess.Popen([sys.executable, os.path.realpath(LAUNCHER[0]), "--show-screen-numbers"],
+                             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                             stderr=subprocess.DEVNULL, start_new_session=True)
         return EXIT_OK
     add_icon_search_path()
 
