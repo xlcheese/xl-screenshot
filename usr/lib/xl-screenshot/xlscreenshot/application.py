@@ -113,4 +113,8 @@ class ScreenshotApp(Gtk.Application):
 def main():
     GLib.set_prgname(APP_COMMAND)
     GLib.set_application_name(APP_NAME)
+    from . import cli
+    if cli.wants_cli(sys.argv):
+        # A command-line capture (or --help): no window, no single-copy check
+        return cli.run(sys.argv)
     return ScreenshotApp().run(sys.argv)

@@ -85,3 +85,19 @@ def window_at(windows, x, y):
         if wx <= x < wx + ww and wy <= y < wy + wh:
             return win
     return None
+
+
+def active_window_id():
+    """The X window id of the window that has the focus, or None."""
+    try:
+        dpy = xdisplay.Display()
+    except Exception:
+        return None
+    try:
+        prop = dpy.screen().root.get_full_property(dpy.intern_atom("_NET_ACTIVE_WINDOW"), Xatom.WINDOW)
+        wid = prop.value[0] if prop and len(prop.value) else 0
+        return wid or None
+    except xerror.XError:
+        return None
+    finally:
+        dpy.close()

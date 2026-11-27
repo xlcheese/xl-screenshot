@@ -447,7 +447,9 @@ class SelectionOverlay(Gtk.Window):
         tool = self.parent_tool
         for overlay in list(self.group):
             overlay.hide()
-        if (tool.delay_sec > 0 or tool.include_pointer) and tool.cinnamon is not None:
+        # (and when Cinnamon is to copy the capture, as on the command line)
+        if (tool.delay_sec > 0 or tool.include_pointer or getattr(tool.cinnamon, "copy_captures", False)) \
+                and tool.cinnamon is not None:
             def done(pixbuf):
                 self.captured = pixbuf is not None
                 if pixbuf is not None:

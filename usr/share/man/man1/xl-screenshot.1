@@ -4,6 +4,9 @@ xl-screenshot \- take a screenshot of the screen, a window, or a selection
 .SH SYNOPSIS
 .B xl-screenshot
 [\-\-selection] [\-\-tray] [\-\-version]
+.br
+.B xl-screenshot
+[\fIWHAT TO CAPTURE\fR] [\fIOPTIONS\fR] [\fIFILE\fR]
 .SH DESCRIPTION
 .B xl-Screenshot
 captures the whole desktop, a single monitor (with more than one, the one the pointer is on),
@@ -33,6 +36,94 @@ Start with just the tray icon (what the login entry uses).
 .TP
 .BR \-v ", " \-\-version
 Show the version and quit.
+.TP
+.BR \-h ", " \-\-help
+Show all the options and quit.
+.SH COMMAND-LINE CAPTURES
+With any of the options below,
+.B xl-screenshot
+captures, saves and exits, with no window and no tray icon, whether or not the app is
+running. That suits scripts and keyboard shortcuts. Many options follow
+.BR scrot (1),
+and scrot's spellings work too. Positions and sizes are in real pixels, even on a HiDPI
+desktop. The path of the saved file is printed. The exit status is 0 when the image was
+saved, 1 when nothing was captured (canceled, or the capture failed), and 2 for a mistake
+in the options.
+.SS What to capture (one of)
+.TP
+.BR \-\-screens ", " \-m ", " \-\-multidisp
+Every screen, as the Screens button. The default.
+.TP
+.BR \-\-screen " [\fIN\fR], " \-M ", " \-\-monitor
+Screen \fIN\fR, numbered as \fB\-\-list\-screens\fR shows; without \fIN\fR, the one the
+pointer is on (X11 only: on Wayland, apps aren't told where the pointer is).
+.TP
+.BR \-\-area " \fIX,Y,W,H\fR, " \-a ", " \-\-autoselect
+A rectangle: its top-left corner at \fIX,Y\fR, \fIW\fR by \fIH\fR pixels.
+.TP
+.BR \-\-selection ", " \-s ", " \-\-select
+Draw the area, as with the Selection button (Accurate or Fast, as chosen in the app).
+.TP
+.B \-\-window
+Pick a window, as with the Window button.
+.TP
+.BR \-\-focused ", " \-u ", " \-\-focussed
+The window that has the focus.
+.TP
+.BR \-\-window\-id " \fIWID\fR, " \-w
+A window by its X11 id, as
+.BR xwininfo (1)
+shows it. X11 only.
+.SS Where it goes
+.TP
+.BR \-\-file " \fIFILE\fR, " \-F ", or just " \fIFILE\fR
+Save here. \fB\-\fR writes the image to standard output. The name can hold
+.BR strftime (3)
+codes such as %Y-%m-%d_%H-%M-%S, and $w and $h for the image's width and height ($$ for a $).
+Missing folders are made. Without a file, captures go to Pictures/xl-Screenshot.
+.TP
+.BR \-\-overwrite ", " \-o
+Replace a file that is already there. Otherwise _1, _2... is added to the name.
+.TP
+.BI \-\-format " FMT"
+png, jpeg (or jpg) or webp. Otherwise it comes from the file name's extension, or is PNG.
+.TP
+.BR \-\-quality " \fI1-100\fR, " \-q
+JPEG and WebP quality; 90 if not given.
+.TP
+.B \-\-clipboard
+Copy the image. It can still be pasted after xl-screenshot has exited. On its own, nothing is
+saved; with a file, both.
+.TP
+.B \-\-annotate
+Open the capture in
+.BR xl-annotate (1).
+.SS Options
+.TP
+.BR \-\-delay " \fISEC\fR, " \-d
+Wait this many seconds first. On X11, Esc cancels.
+.TP
+.BR \-\-pointer ", " \-p
+Include the pointer.
+.TP
+.B \-\-shadow
+Window captures: include the window's shadow.
+.TP
+.B \-\-list\-screens
+List the screens, with their numbers, sizes and positions, and exit.
+.SH EXAMPLES
+.TP
+.B xl-screenshot \-\-area 100,100,400,300 \-\-file ~/area.png
+A rectangle, saved as area.png.
+.TP
+.B xl-screenshot \-\-selection \-\-clipboard
+Draw an area and copy it: a handy keyboard shortcut.
+.TP
+.B xl-screenshot \-\-screen 2 \-d 3 'Screen-2_%H%M%S.jpg'
+Screen 2 after three seconds, as a JPEG named with the time.
+.TP
+.B xl-screenshot \-a 0,0,800,600 \- | magick \- \-resize 50% small.png
+Straight into ImageMagick.
 .SH FILES
 .TP
 .I ~/.config/xl-screenshot/config.json
@@ -44,4 +135,5 @@ Starts xl-Screenshot at login; present only while the tray icon is turned on.
 Wesley Hayslip.
 .SH SEE ALSO
 .BR xl-annotate (1),
+.BR scrot (1),
 https://github.com/xlcheese/xl-screenshot

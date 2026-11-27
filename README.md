@@ -148,6 +148,44 @@ Options:
   is already running, the running copy starts the capture instead.
 - `--tray` (`-t`): start with just the tray icon (what the login entry uses).
 - `--version` (`-v`): show the version and quit.
+- `--help` (`-h`): every option, including the command-line captures below.
+
+**Command-line captures (for scripts and keyboard shortcuts):** with any of
+these options, xl-Screenshot captures, saves and exits, with no window. Many
+follow scrot's, and scrot's spellings work too. Positions and sizes are in real
+pixels. It works on X11 and, through Cinnamon's screenshot service, on Wayland.
+
+```bash
+xl-screenshot --area 100,100,400,300 --file ~/area.png    # a rectangle
+xl-screenshot --screens                                    # every screen, into Pictures/xl-Screenshot
+xl-screenshot --screen 2 -d 3 'Screen-2_%H%M%S.jpg'        # screen 2, after 3 seconds
+xl-screenshot --selection --clipboard                      # draw an area, copy it
+xl-screenshot --focused --shadow                           # the focused window
+xl-screenshot -a 0,0,800,600 - | magick - -resize 50% small.png
+```
+
+| What to capture | |
+|---|---|
+| `--screens` (`-m`) | every screen (the default) |
+| `--screen [N]` (`-M`) | screen N (see `--list-screens`), or the one the pointer is on (X11) |
+| `--area X,Y,W,H` (`-a`) | a rectangle |
+| `--selection` (`-s`) | draw the area, as with the Selection button |
+| `--window` | pick a window, as with the Window button |
+| `--focused` (`-u`) | the window that has the focus |
+| `--window-id WID` (`-w`) | a window by its X11 id (X11 only) |
+
+| Options | |
+|---|---|
+| `--file FILE` (`-F`), or just `FILE` | where to save; `-` is standard output. `%Y-%m-%d`… (strftime), `$w`, `$h` |
+| `--overwrite` (`-o`) | replace an existing file (otherwise `_1`, `_2`… is added) |
+| `--format FMT`, `--quality N` (`-q`) | png, jpeg or webp; JPEG/WebP quality (90) |
+| `--clipboard` | copy the image (saved too only if a file is given) |
+| `--annotate` | open it in xl-Annotate |
+| `--delay SEC` (`-d`), `--pointer` (`-p`), `--shadow` | as in the app |
+| `--list-screens` | the screens' numbers, sizes and positions |
+
+The saved file's path is printed. Exit status: 0 saved, 1 nothing captured
+(canceled or failed), 2 a mistake in the options.
 
 **System tray (optional):** turn on *Show in System Tray* in xl-Screenshot's
 menu. Clicking the tray icon starts a Selection capture; right-clicking it
@@ -209,6 +247,7 @@ Inside `xlscreenshot/`:
 | `selection.py` | the full-screen overlay for drawing a selection, and the window picker |
 | `capture.py` | grabbing the screen, a region or a window (X11) |
 | `cinnamon_service.py` | capturing through Cinnamon's own screenshot service (X11 and Wayland) |
+| `cli.py` | command-line captures (`--area`, `--screens`, `--file`…), for scripts |
 | `x11_windows.py` | where the windows are, for the window picker (X11) |
 | `window_look.py` | rounded corners and a drawn shadow for X11 window captures |
 | `screens_icon.py` | the Screens button's icon, drawn from your monitors' layout |

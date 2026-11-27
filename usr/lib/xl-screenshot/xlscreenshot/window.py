@@ -720,7 +720,7 @@ class ScreenshotWindow(Gtk.ApplicationWindow):
                 # Our overlay, over a picture of the whole desktop from Cinnamon:
                 # always without the pointer, or a frozen one would sit there
                 # next to the real one while you draw
-                self.cinnamon.screenshot(False, self._show_still_overlays)
+                self.cinnamon.screenshot(False, self._show_still_overlays, copy=False)
             return False
         Gdk.Display.get_default().flush()
         SelectionOverlay(self)

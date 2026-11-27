@@ -4,7 +4,7 @@ for the tests: same methods, answers with test pictures, and logs each call.
     python3 fake_cinnamon_screenshot.py LOGFILE [ok|cancel|old]
 
 ok      every call succeeds: Screenshot 1280x800 (left half red, right blue), a window 300x200 (340x240
-        with its shadow), SelectWindow picks window 77, SelectArea 10,20 300x150
+        with its shadow; the focused one too), SelectWindow picks window 77, SelectArea 10,20 300x150
 cancel  SelectWindow and SelectArea are cancelled, as when Esc is pressed
 old     an older Cinnamon: no SelectWindow or ScreenshotWindowById
 """
@@ -49,6 +49,9 @@ def handle(conn, sender, path, iface, method, params, inv):
     elif method == "ScreenshotWindowById":
         shadow = args[1]; picture(args[3], 340 if shadow else 300, 240 if shadow else 200)
         inv.return_value(GLib.Variant("(bs)", (True, args[3])))
+    elif method == "ScreenshotWindow":          # the focused window
+        shadow = args[0]; picture(args[2], 340 if shadow else 300, 240 if shadow else 200)
+        inv.return_value(GLib.Variant("(bs)", (True, args[2])))
     elif method == "SelectWindow":
         cancel() if mode == "cancel" else inv.return_value(GLib.Variant("(t)", (77,)))
     elif method == "SelectArea":

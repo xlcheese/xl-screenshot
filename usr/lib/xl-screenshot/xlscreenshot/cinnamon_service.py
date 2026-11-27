@@ -37,6 +37,11 @@ class CinnamonScreenshot:
     def __init__(self, proxy, methods):
         self._proxy = proxy
         self.methods = methods
+        # Command-line captures: Cinnamon also puts each capture on the
+        # clipboard, where it stays after we exit (a windowless program
+        # can't own the clipboard on Wayland). copied: the last one was.
+        self.copy_captures = False
+        self.copied = False
 
     @classmethod
     def find(cls, bus=None, timeout_ms=1500):
@@ -78,14 +83,16 @@ class CinnamonScreenshot:
             on_reply(values)
         self._proxy.call(method, params, Gio.DBusCallFlags.NONE, timeout_ms, None, done)
 
-    def _capture(self, method, args, signature, on_done):
+    def _capture(self, method, args, signature, on_done, copy=None):
         """Calls a capture method that writes a PNG file, and hands back the picture."""
         path = self._tempfile()
-        params = GLib.Variant(signature, tuple(args) + (path, False))
+        copy = self.copy_captures if copy is None else copy
+        params = GLib.Variant(signature, tuple(args) + (path, copy))
 
         def reply(values):
             pixbuf = None
             if values and values[0]:
+                self.copied = copy
                 used = values[1] or path
                 try:
                     pixbuf = GdkPixbuf.Pixbuf.new_from_file(used)
@@ -99,9 +106,10 @@ class CinnamonScreenshot:
             on_done(pixbuf)
         self._call(method, params, CAPTURE_TIMEOUT_MS, reply)
 
-    def screenshot(self, include_pointer, on_done):
-        """The whole desktop."""
-        self._capture("Screenshot", (include_pointer,), "(bsb)", on_done)
+    def screenshot(self, include_pointer, on_done, copy=None):
+        """The whole desktop. copy=False: never to the clipboard (the still
+        picture Selection is drawn over)."""
+        self._capture("Screenshot", (include_pointer,), "(bsb)", on_done, copy)
 
     def screenshot_area(self, x, y, w, h, include_pointer, on_done):
         """A rectangle, in desktop units (as SelectArea gives them)."""
@@ -111,6 +119,13 @@ class CinnamonScreenshot:
         """One window's own picture: clean rounded corners, shadow if asked."""
         self._capture("ScreenshotWindowById", (window_id, include_shadow, include_pointer),
                       "(tbbsb)", on_done)
+
+    def screenshot_focused_window(self, include_shadow, include_pointer, on_done):
+        """The window that has the focus (older Cinnamon versions may lack it)."""
+        if "ScreenshotWindow" not in self.methods:
+            on_done(None)
+            return
+        self._capture("ScreenshotWindow", (include_shadow, include_pointer), "(bbsb)", on_done)
 
     def select_window(self, on_done):
         """Cinnamon's window picker. on_done(window_id), or None if cancelled."""

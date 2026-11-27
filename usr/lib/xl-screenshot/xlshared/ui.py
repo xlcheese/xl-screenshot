@@ -38,8 +38,9 @@ def pixbuf_has_format(name):
     return False
 
 
-def save_pixbuf(pixbuf, path, fmt):
-    """Save in the given GdkPixbuf format. Raises on failure."""
+def save_pixbuf(pixbuf, path, fmt, quality=90):
+    """Save in the given GdkPixbuf format (quality 1-100 for JPEG and
+    WebP). Raises on failure."""
     if fmt == "webp" and not pixbuf_has_format("webp"):
         raise RuntimeError(_("WebP support missing. Install 'webp-pixbuf-loader'."))
     if fmt in ("jpeg", "bmp") and pixbuf.get_has_alpha():
@@ -51,7 +52,7 @@ def save_pixbuf(pixbuf, path, fmt):
                          0, 0, 1, 1, GdkPixbuf.InterpType.NEAREST, 255)
         pixbuf = flat
     if fmt in ("jpeg", "webp"):
-        pixbuf.savev(path, fmt, ["quality"], ["90"])
+        pixbuf.savev(path, fmt, ["quality"], [str(quality)])
     else:
         pixbuf.savev(path, fmt, [], [])
 

@@ -77,4 +77,21 @@ a = AnnotateWindow(); p = GdkPixbuf.Pixbuf.new(GdkPixbuf.Colorspace.RGB, False, 
 a.load_pixbuf(p, name="wl.png"); a.show_all(); settle(0.8)
 a.tool_buttons["crop"].set_active(True); settle(0.6)
 check("xl-Annotate on Wayland: the crop popover opens", a.crop_popover.get_visible())
+# The command line on Wayland: through Cinnamon's service
+import json, os, subprocess, sys
+LAUNCHER = os.path.join(helpers.BIN, "xl-screenshot")
+def cli(*args):
+    p = subprocess.run([sys.executable, LAUNCHER, *args], capture_output=True, timeout=60)
+    return p.returncode, p.stdout.decode().strip(), p.stderr.decode()
+calls = lambda: [json.loads(l) for l in open(os.path.join(os.environ["XDG_RUNTIME_DIR"], "calls.txt"))]
+out_png = os.path.join(os.environ["HOME"], "wl-area.png")
+rc, out, err = cli("--area", "10,20,200,100", "-F", out_png)
+check("Wayland command line: --area through Cinnamon's ScreenshotArea",
+      rc == 0 and out == out_png and calls()[-1][0] == "ScreenshotArea" and calls()[-1][1][:4] == [10, 20, 200, 100])
+rc, out, err = cli("--screen", "1", "--clipboard")
+check("…--screen 1 --clipboard: Cinnamon copies it", rc == 0 and calls()[-1][1][-1] is True and not out)
+rc, out, err = cli("--screen")
+check("…--screen without a number explains that Wayland needs one", rc == 2 and "give the screen's number" in err)
+rc, out, err = cli("--window-id", "0x123")
+check("…--window-id says it's X11 only", rc == 2 and "X11 only" in err)
 print("FAILURES:", fails or "none")
