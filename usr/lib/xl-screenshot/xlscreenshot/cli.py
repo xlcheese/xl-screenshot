@@ -47,14 +47,26 @@ def wants_cli(argv):
 # ---- Options ----
 
 def _rect(text):
-    parts = text.replace("x", ",").replace("+", ",").split(",")
+    """X,Y,W,H (as scrot), or WxH+X+Y (as xrandr and --list-screens print)."""
+    geometry = re.fullmatch(r"\s*(\d+)x(\d+)\+(-?\d+)\+(-?\d+)\s*", text)
     try:
-        x, y, w, h = (int(p) for p in parts)
+        if geometry:
+            w, h, x, y = (int(g) for g in geometry.groups())
+        else:
+            x, y, w, h = (int(p) for p in text.split(","))
     except ValueError:
         raise argparse.ArgumentTypeError(_("expected X,Y,W,H, e.g. 100,100,400,300"))
     if w <= 0 or h <= 0:
         raise argparse.ArgumentTypeError(_("the width and height must be more than 0"))
     return x, y, w, h
+
+
+def _screen_number(text):
+    """A screen number, or (as in --screen shot.png) the file name that followed."""
+    try:
+        return int(text)
+    except ValueError:
+        return text
 
 
 def _window_id(text):
@@ -97,7 +109,7 @@ def build_parser():
     what = p.add_argument_group(_("What to capture (one of)")).add_mutually_exclusive_group()
     what.add_argument("--screens", "-m", "--multidisp", action="store_true",
                       help=_("every screen (the default)"))
-    what.add_argument("--screen", "-M", "--monitor", nargs="?", type=int, const=POINTER, metavar="N",
+    what.add_argument("--screen", "-M", "--monitor", nargs="?", type=_screen_number, const=POINTER, metavar="N",
                       help=_("screen N, or without N the one the pointer is on (X11)"))
     what.add_argument("--area", "-a", "--autoselect", type=_rect, metavar="X,Y,W,H",
                       help=_("a rectangle, e.g. 100,100,400,300"))
@@ -361,6 +373,10 @@ class Capture:
 
 def check(args):
     """Problems with the options that can be found before capturing."""
+    if isinstance(args.screen, str):           # --screen FILE: no number, then the file
+        if args.file:
+            return _("expected a screen number after --screen, not {text!r}").format(text=args.screen)
+        args.file, args.screen = args.screen, POINTER
     if args.file and args.file_opt:
         return _("give the file once: as --file FILE or as FILE")
     target = args.file_opt or args.file

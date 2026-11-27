@@ -59,7 +59,10 @@ Screen \fIN\fR, numbered as \fB\-\-list\-screens\fR shows; without \fIN\fR, the 
 pointer is on (X11 only: on Wayland, apps aren't told where the pointer is).
 .TP
 .BR \-\-area " \fIX,Y,W,H\fR, " \-a ", " \-\-autoselect
-A rectangle: its top-left corner at \fIX,Y\fR, \fIW\fR by \fIH\fR pixels.
+A rectangle: its top-left corner at \fIX,Y\fR, \fIW\fR by \fIH\fR pixels. The
+\fIW\fRx\fIH\fR+\fIX\fR+\fIY\fR form that \fB\-\-list\-screens\fR and
+.BR xrandr (1)
+print works too.
 .TP
 .BR \-\-selection ", " \-s ", " \-\-select
 Draw the area, as with the Selection button (Accurate or Fast, as chosen in the app).

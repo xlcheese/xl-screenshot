@@ -53,6 +53,8 @@ check("--overwrite replaces it", rc == 0 and path_of(out) == os.path.join(OUT, "
 rc, out, err = run("--area", "5,5,64,48", os.path.join(OUT, "shot_$wx$h_%Y.png"))
 check(f"a bare FILE, with $w, $h and %Y ({os.path.basename(path_of(out))})",
       rc == 0 and os.path.basename(path_of(out)) == f"shot_64x48_{time.strftime('%Y')}.png")
+rc, out, err = run("--area", "120x80+5+6", "-F", os.path.join(OUT, "geom.png"))
+check("--area also takes WxH+X+Y, as --list-screens prints it (120x80)", rc == 0 and size(path_of(out)) == (120, 80))
 rc, out, err = run("--screens")
 folder = os.path.join(os.environ["HOME"], "Pictures", "xl-Screenshot")
 check(f"--screens with no file: into Pictures/xl-Screenshot ({os.path.basename(path_of(out))})",
@@ -60,7 +62,7 @@ check(f"--screens with no file: into Pictures/xl-Screenshot ({os.path.basename(p
 rc, out, err = run("--screen", "1", "--format", "jpg", "-q", "50", "-F", os.path.join(OUT, "one"))
 check("--screen 1, --format jpg: saved as one.jpg", rc == 0 and path_of(out) == os.path.join(OUT, "one.jpg")
       and open(path_of(out), "rb").read(2) == b"\xff\xd8")
-rc, out, err = run("--screen", "-F", os.path.join(OUT, "pointer.png"))
+rc, out, err = run("--screen", os.path.join(OUT, "pointer.png"))
 check("--screen with no number: the pointer's screen", rc == 0 and size(path_of(out)) == (1280, 800))
 rc, out, err = run("-a", "0,0,50,40", "-F", "-")
 check("--file -: the PNG on standard output, nothing else", rc == 0 and out[:4] == b"\x89PNG")
