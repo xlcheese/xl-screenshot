@@ -19,7 +19,9 @@ those are marked **X11** or **Wayland**.
    **2** = a mistake in the options.
 
 Unless a test says otherwise, a successful command prints the saved file's
-full path and nothing else. Check the pictures by opening them (Pix, or
+full path and nothing else. A file name without a folder (`seam.png`) is saved
+in the folder you're in; with no file name at all, captures go to
+`~/Pictures/xl-Screenshot`. Check the pictures by opening them (Pix, or
 `xl-annotate FILE`).
 
 ## 1. Help and screens
@@ -100,7 +102,7 @@ full path and nothing else. Check the pictures by opening them (Pix, or
 
 | # | Command | Expected |
 |---|---|---|
-| 7.1 | `xl-screenshot -d 3 --screens` | Captured 3 seconds later (open a menu meanwhile: it's in the picture). |
+| 7.1 | `xl-screenshot -d 3 --screens` | Captured 3 seconds later (open a menu meanwhile: it's in the picture). No file name given, so it goes to Pictures/xl-Screenshot, like 2.1. |
 | 7.2 | **X11:** `xl-screenshot -d 5 --screens`, then Esc | Canceled: exit 1, nothing saved. |
 | 7.3 | `xl-screenshot -p -a 0,0,800,600 pointer.png`, with the pointer in that area | The pointer is in the picture. |
 | 7.4 | The same without `-p` | No pointer. |
