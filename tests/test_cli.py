@@ -110,6 +110,8 @@ check(f"a bare FILE, with $w, $h and %Y ({os.path.basename(path_of(out))})",
       rc == 0 and os.path.basename(path_of(out)) == f"shot_64x48_{time.strftime('%Y')}.png")
 rc, out, err = run("--area", "120x80+5+6", "-F", os.path.join(OUT, "geom.png"))
 check("--area also takes WxH+X+Y, as --list-screens prints it (120x80)", rc == 0 and size(path_of(out)) == (120, 80))
+rc, out, err = run("--area", "5, 6, 70, 40", "-F", os.path.join(OUT, "spaced.png"))
+check("--area in quotes may have spaces (70x40)", rc == 0 and size(path_of(out)) == (70, 40))
 rc, out, err = run("--screens")
 folder = os.path.join(os.environ["HOME"], "Pictures", "xl-Screenshot")
 check(f"--screens with no file: into Pictures/xl-Screenshot ({os.path.basename(path_of(out))})",
@@ -137,7 +139,7 @@ check("--annotate: saved, and xl-Annotate opens it", rc == 0 and size(path_of(ou
 subprocess.run(["pkill", "-f", "xl-annotate"])
 # Mistakes: a clear message and exit code 2
 for args, words in ((["--screen", "3"], "no screen 3"), (["--screen", "0"], "numbered from 1"),
-                    (["--area", "1,2,3"], "X,Y,W,H"), (["--area", "1,2,0,5"], "more than 0"),
+                    (["--area", "1,2,3"], "X,Y,W,H"), (["--area", "1800,", "400,", "5,", "5"], "no spaces"), (["--area", "1,2,0,5"], "more than 0"),
                     (["--screens", "--area", "1,1,5,5"], "not allowed with"),
                     (["-a", "1,1,5,5", "-F", "-", "--annotate"], "needs a file"),
                     (["-q", "200", "-a", "1,1,5,5"], "1 to 100")):

@@ -54,8 +54,10 @@ full path and nothing else. Check the pictures by opening them (Pix, or
 | 3.2 | `xl-screenshot --area 100,100,400,300 area.png` (again) | Saved as `area_1.png`: the first one isn't replaced. |
 | 3.3 | `xl-screenshot -o -a 100,100,400,300 area.png` | `area.png` replaced (`-o`, scrot's `-a`). |
 | 3.4 | `xl-screenshot --area 400x300+100+100 geom.png` | The same area as 3.1 (WxH+X+Y, as `--list-screens` prints). |
-| 3.5 | `xl-screenshot --area` with a rectangle across the seam between two monitors | Both halves, joined where the seam is. |
-| 3.6 | **HiDPI** (if you can set 200%): `xl-screenshot --area 0,0,400,300 hi.png` | 400 × 300 real pixels (a smaller part of the screen than at 100%). |
+| 3.5 | Across the seam: `xl-screenshot --area 1800,400,500,500 seam.png` (with a 1920-wide screen 1 on the left; adjust to yours) | 500 × 500: the right edge of screen 1 and the left of screen 2, joined where the seam is. |
+| 3.6 | `xl-screenshot --area 1800, 400, 500, 500 x.png` (spaces) | `expected X,Y,W,H with no spaces…`, exit 2 |
+| 3.7 | `xl-screenshot --area "1800, 400, 500, 500" quoted.png` | Works: in quotes, spaces are fine. |
+| 3.8 | **HiDPI** (if you can set 200%): `xl-screenshot --area 0,0,400,300 hi.png` | 400 × 300 real pixels (a smaller part of the screen than at 100%). |
 
 ## 4. Selection and windows
 

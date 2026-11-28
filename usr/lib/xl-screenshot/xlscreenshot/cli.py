@@ -55,6 +55,11 @@ def _rect(text):
         else:
             x, y, w, h = (int(p) for p in text.split(","))
     except ValueError:
+        if text.rstrip().endswith(","):
+            # "--area 1800, 400, 500, 500": the shell split it at the spaces
+            raise argparse.ArgumentTypeError(
+                _("expected X,Y,W,H with no spaces, e.g. 100,100,400,300 "
+                  "(or in quotes: \"100, 100, 400, 300\")"))
         raise argparse.ArgumentTypeError(_("expected X,Y,W,H, e.g. 100,100,400,300"))
     if w <= 0 or h <= 0:
         raise argparse.ArgumentTypeError(_("the width and height must be more than 0"))
