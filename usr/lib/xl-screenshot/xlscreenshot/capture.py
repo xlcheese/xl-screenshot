@@ -32,8 +32,64 @@ def get_pointer_position():
         return None
 
 
+def get_pointer_image():
+    """The pointer as it really looks right now, from X11's XFixes extension:
+    (cairo surface, left, top), its top-left corner in desktop pixels. The
+    theme's own pointer, at its own size. None if X11 can't tell us."""
+    try:
+        from array import array
+        from Xlib import display as xdisplay
+    except ImportError:
+        return None
+    try:
+        dpy = xdisplay.Display()
+    except Exception:
+        return None
+    try:
+        if not dpy.has_extension("XFIXES"):
+            return None
+        dpy.xfixes_query_version()
+        reply = dpy.xfixes_get_cursor_image(dpy.screen().root)
+        w, h = reply.width, reply.height
+        if w < 1 or h < 1 or len(reply.cursor_image) < w * h:
+            return None
+        # Premultiplied ARGB, one 32-bit number per pixel: cairo's ARGB32 exactly
+        pixels = array("I", (p & 0xFFFFFFFF for p in reply.cursor_image[:w * h]))
+        data = bytearray(pixels.tobytes())
+        borrowed = cairo.ImageSurface.create_for_data(data, cairo.FORMAT_ARGB32, w, h, w * 4)
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)   # a copy that owns its pixels
+        cr = cairo.Context(surface)
+        cr.set_source_surface(borrowed, 0, 0)
+        cr.paint()
+        surface.flush()
+        return surface, reply.x - reply.xhot, reply.y - reply.yhot
+    except Exception:
+        return None
+    finally:
+        dpy.close()
+
+
+def draw_pointer_image(pixbuf, origin_x, origin_y, pointer):
+    """Paint the real pointer (from get_pointer_image) onto pixbuf, whose
+    top-left corner is at origin_x, origin_y on the desktop."""
+    surface, left, top = pointer
+    x, y = left - origin_x, top - origin_y
+    w, h = pixbuf.get_width(), pixbuf.get_height()
+    if x >= w or y >= h or x + surface.get_width() <= 0 or y + surface.get_height() <= 0:
+        return pixbuf
+    out = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+    cr = cairo.Context(out)
+    Gdk.cairo_set_source_pixbuf(cr, pixbuf, 0, 0)
+    cr.paint()
+    cr.set_source_surface(surface, x, y)
+    cr.paint()
+    out.flush()
+    result = Gdk.pixbuf_get_from_surface(out, 0, 0, w, h)
+    return result or pixbuf
+
+
 def draw_cursor_on_pixbuf(pixbuf, origin_x, origin_y, pointer_pos, scale=1):
-    """Draw an arrow pointer onto pixbuf.
+    """Draw a stand-in arrow pointer onto pixbuf (when the real one can't be had).
 
     origin_x/origin_y are the desktop coordinates of the pixbuf's top-left
     corner, so the pointer lands in the right place on cropped captures.
@@ -82,6 +138,7 @@ def capture_region(x, y, w, h, include_pointer):
     edge are captured correctly. Returns a new pixbuf, or None on failure.
     """
     pointer_pos = get_pointer_position() if include_pointer else None
+    pointer = get_pointer_image() if include_pointer else None
 
     full = grab_screen()
     if full is None:
@@ -96,7 +153,9 @@ def capture_region(x, y, w, h, include_pointer):
         return None
 
     region = full.new_subpixbuf(x1, y1, x2 - x1, y2 - y1).copy()
-    if include_pointer:
+    if pointer is not None:
+        region = draw_pointer_image(region, x1, y1, pointer)
+    elif include_pointer:
         region = draw_cursor_on_pixbuf(region, x1, y1, pointer_pos, screen_scale())
     return region
 

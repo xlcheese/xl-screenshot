@@ -104,7 +104,7 @@ in the folder you're in; with no file name at all, captures go to
 |---|---|---|
 | 7.1 | `xl-screenshot -d 3 --screens` | Captured 3 seconds later (open a menu meanwhile: it's in the picture). No file name given, so it goes to Pictures/xl-Screenshot, like 2.1. |
 | 7.2 | **X11:** `xl-screenshot -d 5 --screens`, then Esc | Canceled: exit 1, nothing saved. |
-| 7.3 | `xl-screenshot -p -a 0,0,800,600 pointer.png`, with the pointer in that area | The pointer is in the picture. |
+| 7.3 | `xl-screenshot -p -a 0,0,800,600 pointer.png`, with the pointer in that area | Your own pointer, as your theme draws it and at its size, in the picture. |
 | 7.4 | The same without `-p` | No pointer. |
 
 ## 8. Mistakes (each: a message, exit 2, nothing saved)
