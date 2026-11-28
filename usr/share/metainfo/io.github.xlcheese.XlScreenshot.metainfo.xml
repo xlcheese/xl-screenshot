@@ -32,6 +32,18 @@
   </provides>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.4.0" date="2026-11-28">
+      <description>
+        <p>Command-line captures, for scripts and keyboard shortcuts:</p>
+        <ul>
+          <li>Capture every screen, one screen, an area, a selection, a picked or focused window, or a window by its X11 id, then save and exit with no window</li>
+          <li>Many options follow scrot's, and work on X11 and on Cinnamon's Wayland session</li>
+          <li>File names with the date, time and size; standard output for pipes; the clipboard; xl-Annotate</li>
+          <li>--list-screens shows each screen's number on the screen itself</li>
+        </ul>
+        <p>Include Pointer on X11 now shows your theme's own pointer, and a portrait monitor's stand in the Screens icon is no longer a stub.</p>
+      </description>
+    </release>
     <release version="0.3.0" date="2026-11-26">
       <description>
         <ul>

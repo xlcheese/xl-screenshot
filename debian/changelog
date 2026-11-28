@@ -1,3 +1,26 @@
+xl-screenshot (0.4.0) unstable; urgency=medium
+
+  * Command-line captures, for scripts and keyboard shortcuts
+    (linuxmint discussion #1765): xl-screenshot captures, saves and exits,
+    with no window, whether or not the app is running.
+    - What: --screens, --screen [N], --area X,Y,W,H (or WxH+X+Y),
+      --selection, --window, --focused, --window-id (X11).
+    - Where: --file (or a bare FILE) with strftime codes and $w/$h, - for
+      standard output, --overwrite, --format, --quality, --clipboard,
+      --annotate; without a file, Pictures/xl-Screenshot.
+    - Also --delay, --pointer, --shadow; scrot's spellings work too.
+    - Real pixels throughout; clear messages and exit codes (0, 1, 2).
+    - On Wayland through Cinnamon's service, which also keeps
+      --clipboard captures after we exit.
+  * --list-screens: in a terminal, each screen shows its number for a few
+    seconds (--identify, --no-identify).
+  * Include Pointer on X11 without Cinnamon's service: the real pointer,
+    as the theme draws it, instead of a stand-in arrow.
+  * Screens icon: a portrait monitor's stand keeps its height (#14).
+  * Translations of the new text: de, es, fr, pt_BR, ru (drafts).
+
+ -- Wesley Hayslip <xl_cheese@hotmail.com>  Sat, 28 Nov 2026 01:47:40 -0000
+
 xl-screenshot (0.3.0) unstable; urgency=medium
 
   * Wayland and Cinnamon's screenshot service (#10):

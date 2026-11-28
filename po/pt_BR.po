@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xl-Screenshot 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/xlcheese/xl-screenshot/issues\n"
-"POT-Creation-Date: 2026-11-28 00:21+0000\n"
+"POT-Creation-Date: 2026-11-28 01:45+0000\n"
 "PO-Revision-Date: 2026-11-06 14:48+0000\n"
 "Last-Translator: Draft by Claude (needs native review)\n"
 "Language-Team: Portuguese (Brazil)\n"
@@ -531,30 +531,32 @@ msgid ""
 "expected X,Y,W,H with no spaces, e.g. 100,100,400,300 (or in quotes: \"100, "
 "100, 400, 300\")"
 msgstr ""
+"esperado X,Y,L,A sem espaços, ex.: 100,100,400,300 (ou entre aspas: \"100, "
+"100, 400, 300\")"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:63
 msgid "expected X,Y,W,H, e.g. 100,100,400,300"
-msgstr ""
+msgstr "esperado X,Y,L,A, ex.: 100,100,400,300"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:65
 msgid "the width and height must be more than 0"
-msgstr ""
+msgstr "a largura e a altura devem ser maiores que 0"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:81
 msgid "expected a window id, e.g. 0x3a00007"
-msgstr ""
+msgstr "esperado um id de janela, ex.: 0x3a00007"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:90
 msgid "expected a number from 1 to 100"
-msgstr ""
+msgstr "esperado um número de 1 a 100"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:100
 msgid "expected a number of seconds"
-msgstr ""
+msgstr "esperado um número de segundos"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:107
 msgid "xl-screenshot [WHAT TO CAPTURE] [OPTIONS] [FILE]"
-msgstr ""
+msgstr "xl-screenshot [O QUE CAPTURAR] [OPÇÕES] [ARQUIVO]"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:108
 msgid ""
@@ -562,6 +564,9 @@ msgid ""
 "below (except --selection, --tray and --version on their own), it captures, "
 "saves and exits, with no window."
 msgstr ""
+"Sem opções, o xl-Screenshot abre a sua janela. Com qualquer uma das opções "
+"abaixo (exceto --selection, --tray e --version sozinhas), ele captura, salva "
+"e sai, sem janela."
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:111
 msgid ""
@@ -569,42 +574,45 @@ msgid ""
 "screens shows. Without a file name, captures go to Pictures/xl-Screenshot. "
 "The saved file's path is printed."
 msgstr ""
+"Posições e tamanhos são em pixels reais. As telas são numeradas como --list-"
+"screens mostra. Sem nome de arquivo, as capturas vão para Imagens/xl-"
+"Screenshot. O caminho do arquivo salvo é exibido."
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:114
 msgid "What to capture (one of)"
-msgstr ""
+msgstr "O que capturar (um destes)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:116
 msgid "every screen (the default)"
-msgstr ""
+msgstr "todas as telas (o padrão)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:118
 msgid "screen N, or without N the one the pointer is on (X11)"
-msgstr ""
+msgstr "a tela N, ou sem N a que está com o ponteiro (X11)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:120
 msgid "a rectangle, e.g. 100,100,400,300"
-msgstr ""
+msgstr "um retângulo, ex.: 100,100,400,300"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:122
 msgid "draw the area, as with the Selection button"
-msgstr ""
+msgstr "desenhar a área, como com o botão Seleção"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:124
 msgid "pick a window, as with the Window button"
-msgstr ""
+msgstr "escolher uma janela, como com o botão Janela"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:126
 msgid "the window that has the focus"
-msgstr ""
+msgstr "a janela que está em foco"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:128
 msgid "a window by its X11 id (see xwininfo); X11 only"
-msgstr ""
+msgstr "uma janela pelo seu id do X11 (veja xwininfo); só X11"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:130
 msgid "Where it goes"
-msgstr ""
+msgstr "Para onde vai"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:133
 #, python-format
@@ -613,100 +621,101 @@ msgid ""
 "%%M, %%S (see strftime), $w and $h (the image's width and height) and $$ (a "
 "$)"
 msgstr ""
+"salvar aqui; - escreve a imagem na saída padrão. Aceita %%Y, %%m, %%d, %%H, "
+"%%M, %%S (veja strftime), $w e $h (a largura e a altura da imagem) e $$ (um "
+"$)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:137
 msgid "replace a file that is already there (otherwise a number is added)"
-msgstr ""
+msgstr "substituir um arquivo que já existe (senão, um número é acrescentado)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:139
 msgid "png, jpeg or webp (otherwise from the file name, or png)"
-msgstr ""
+msgstr "png, jpeg ou webp (senão, pelo nome do arquivo, ou png)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:141
 msgid "JPEG and WebP quality (default 90)"
-msgstr ""
+msgstr "qualidade de JPEG e WebP (padrão 90)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:143
 msgid "copy the image (saved too only if a file is given)"
-msgstr ""
+msgstr "copiar a imagem (também salva só se um arquivo for indicado)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:145
 msgid "open the capture in xl-Annotate"
-msgstr ""
+msgstr "abrir a captura no xl-Annotate"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:147
 msgid "Options"
-msgstr ""
+msgstr "Opções"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:149
 msgid "wait this many seconds first (on X11, Esc cancels)"
-msgstr ""
+msgstr "esperar antes esta quantidade de segundos (no X11, Esc cancela)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:150
-#, fuzzy
 msgid "include the pointer"
-msgstr "Incluir o ponteiro"
+msgstr "incluir o ponteiro"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:151
 msgid "windows: include the shadow"
-msgstr ""
+msgstr "janelas: incluir a sombra"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:153
 msgid ""
 "list the screens, with their numbers, and exit; in a terminal, each screen "
 "also shows its number for a few seconds"
 msgstr ""
+"listar as telas, com os seus números, e sair; num terminal, cada tela também "
+"mostra o seu número por alguns segundos"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:156
 msgid "list the screens and show their numbers, even from a script"
-msgstr ""
+msgstr "listar as telas e mostrar os seus números, mesmo a partir de um script"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:158
 msgid "with --list-screens: never show the numbers on the screens"
-msgstr ""
+msgstr "com --list-screens: nunca mostrar os números nas telas"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:160
 msgid "The app"
-msgstr ""
+msgstr "O aplicativo"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:162
-#, fuzzy
 msgid "start with just the tray icon (used when logging in)"
-msgstr "Iniciar só com o ícone na bandeja (usado ao entrar na sessão)"
+msgstr "iniciar só com o ícone na bandeja (usado ao entrar na sessão)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:163
-#, fuzzy
 msgid "show the version and exit"
-msgstr "Mostrar a versão e sair"
+msgstr "mostrar a versão e sair"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:164
-#, fuzzy
 msgid "show this help and exit"
-msgstr "Mostrar a versão e sair"
+msgstr "mostrar esta ajuda e sair"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:374
 msgid "no window has the focus"
-msgstr ""
+msgstr "nenhuma janela está em foco"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:389
 msgid "expected a screen number after --screen, not {text!r}"
-msgstr ""
+msgstr "esperado um número de tela depois de --screen, não {text!r}"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:392
 msgid "give the file once: as --file FILE or as FILE"
-msgstr ""
+msgstr "indique o arquivo só uma vez: como --file ARQUIVO ou como ARQUIVO"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:395
 msgid "--annotate needs a file, not standard output (-)"
-msgstr ""
+msgstr "--annotate precisa de um arquivo, não da saída padrão (-)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:397
 msgid "--tray can't be used with capture options"
-msgstr ""
+msgstr "--tray não pode ser usado com opções de captura"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:399
 msgid "screens are numbered from 1 (see --list-screens)"
-msgstr ""
+msgstr "as telas são numeradas a partir de 1 (veja --list-screens)"
 
 #. Translators: the start of a saved screenshot's file name (the date and time follow)
 #. Translators: shown as the xl-Annotate window title while it edits a capture
@@ -719,46 +728,52 @@ msgstr "Captura de tela"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:441
 msgid "(primary)"
-msgstr ""
+msgstr "(principal)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:462
 msgid "no desktop to capture (is DISPLAY or WAYLAND_DISPLAY set?)"
 msgstr ""
+"nenhuma área de trabalho para capturar (DISPLAY ou WAYLAND_DISPLAY está "
+"definido?)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:482
 #, python-brace-format
 msgid "there is no screen {n}; this desktop has {count} (see --list-screens)"
 msgstr ""
+"não há tela {n}; esta área de trabalho tem {count} (veja --list-screens)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:488
 msgid ""
 "on Wayland, apps aren't told where the pointer is: give the screen's number, "
 "--screen N (see --list-screens)"
 msgstr ""
+"no Wayland, os aplicativos não sabem onde está o ponteiro: indique o número "
+"da tela, --screen N (veja --list-screens)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:492
 msgid "--window-id works on X11 only; on Wayland, use --window or --focused"
-msgstr ""
+msgstr "--window-id só funciona no X11; no Wayland, use --window ou --focused"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:499
 msgid "nothing was captured (canceled, or the capture failed)"
-msgstr ""
+msgstr "nada foi capturado (cancelado, ou a captura falhou)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:509
 msgid ""
 "the program the image was piped to stopped before reading it (see its own "
 "message above)"
 msgstr ""
+"o programa para o qual a imagem foi enviada parou antes de lê-la (veja a "
+"mensagem dele acima)"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:513
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "could not save the image: {error}"
-msgstr "Não foi possível salvar a imagem"
+msgstr "não foi possível salvar a imagem: {error}"
 
 #: usr/lib/xl-screenshot/xlscreenshot/cli.py:517
-#, fuzzy
 msgid "could not copy to the clipboard"
-msgstr "Copiar para a área de transferência"
+msgstr "não foi possível copiar para a área de transferência"
 
 #: usr/lib/xl-screenshot/xlscreenshot/selection.py:130
 msgid "Capture Selection"

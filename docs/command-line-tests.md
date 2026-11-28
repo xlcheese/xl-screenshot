@@ -29,7 +29,7 @@ in the folder you're in; with no file name at all, captures go to
 | # | Command | Expected |
 |---|---|---|
 | 1.1 | `xl-screenshot --help` | Every option, grouped: What to capture, Where it goes, Options, The app. No window opens. |
-| 1.2 | `xl-screenshot --version` | `xl-Screenshot 0.3.0` (the test build doesn't change the app's own version yet), exit 0 |
+| 1.2 | `xl-screenshot --version` | `xl-Screenshot 0.4.0` (or newer), exit 0 |
 | 1.3 | `xl-screenshot --list-screens` | One line per monitor, e.g. `1: 1920x1080+0+0  (primary)`. Sizes in real pixels. The prompt comes straight back, and each screen shows its number large, with its size, for about 3 seconds. |
 | 1.4 | The same, clicking a number | The numbers go at once. |
 | 1.5 | `xl-screenshot --list-screens \| cat` | The list only: no numbers (a script reading it). |
