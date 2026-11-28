@@ -161,7 +161,7 @@ xl-screenshot --screens                                    # every screen, into 
 xl-screenshot --screen 2 -d 3 'Screen-2_%H%M%S.jpg'        # screen 2, after 3 seconds
 xl-screenshot --selection --clipboard                      # draw an area, copy it
 xl-screenshot --focused --shadow                           # the focused window
-xl-screenshot -a 0,0,800,600 - | magick - -resize 50% small.png
+xl-screenshot -a 0,0,800,600 - | convert - -resize 50% small.png
 ```
 
 | What to capture | |

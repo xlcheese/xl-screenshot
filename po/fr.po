@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xl-Screenshot 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/xlcheese/xl-screenshot/issues\n"
-"POT-Creation-Date: 2026-11-28 00:01+0000\n"
+"POT-Creation-Date: 2026-11-28 00:21+0000\n"
 "PO-Revision-Date: 2026-11-06 14:48+0000\n"
 "Last-Translator: Draft by Claude (needs native review)\n"
 "Language-Team: French\n"
@@ -752,12 +752,18 @@ msgstr ""
 msgid "nothing was captured (canceled, or the capture failed)"
 msgstr ""
 
-#: usr/lib/xl-screenshot/xlscreenshot/cli.py:505
+#: usr/lib/xl-screenshot/xlscreenshot/cli.py:509
+msgid ""
+"the program the image was piped to stopped before reading it (see its own "
+"message above)"
+msgstr ""
+
+#: usr/lib/xl-screenshot/xlscreenshot/cli.py:513
 #, fuzzy, python-brace-format
 msgid "could not save the image: {error}"
 msgstr "Impossible d’enregistrer l’image"
 
-#: usr/lib/xl-screenshot/xlscreenshot/cli.py:509
+#: usr/lib/xl-screenshot/xlscreenshot/cli.py:517
 #, fuzzy
 msgid "could not copy to the clipboard"
 msgstr "Copier dans le presse-papiers"

@@ -125,6 +125,11 @@ rc, out, err = run("-a", "0,0,50,40", "-F", "-")
 check("--file -: the PNG on standard output, nothing else", rc == 0 and out[:4] == b"\x89PNG")
 loader = GdkPixbuf.PixbufLoader(); loader.write(out); loader.close()
 check("…and it's the right size", (loader.get_pixbuf().get_width(), loader.get_pixbuf().get_height()) == (50, 40))
+p = subprocess.run(f"'{sys.executable}' '{LAUNCHER}' -a 0,0,640,480 - | true", shell=True,
+                   capture_output=True, env=env, timeout=60)
+err = p.stderr.decode()
+check("piped to a program that doesn't read it: a plain message, no Python noise",
+      "piped to stopped" in err and "Traceback" not in err and "Exception ignored" not in err)
 rc, out, err = run("-a", "0,0,30,20", "--pointer", "-F", os.path.join(OUT, "ptr.png"))
 check("--pointer works", rc == 0 and size(path_of(out)) == (30, 20))
 

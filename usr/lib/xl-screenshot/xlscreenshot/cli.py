@@ -501,6 +501,14 @@ def run(argv):
 
     try:
         path = save(pixbuf, args)
+    except BrokenPipeError:
+        # "-" into a pipe, and the program on the other end had stopped (or
+        # was never found): it didn't get the image. Say so plainly, and
+        # don't let Python complain again about stdout on the way out.
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+        _error(_("the program the image was piped to stopped before reading it "
+                 "(see its own message above)"))
+        return EXIT_FAILED
     except Exception as e:                  # a folder we can't write to, a missing format...
         _error(_("could not save the image: {error}").format(error=e))
         return EXIT_FAILED

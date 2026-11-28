@@ -83,7 +83,8 @@ full path and nothing else. Check the pictures by opening them (Pix, or
 | 5.5 | `xl-screenshot -a 0,0,640,480 pic.webp` | A WebP (needs `webp-pixbuf-loader`; without it, `could not save the image: WebP support missing…`, exit 1). |
 | 5.6 | `xl-screenshot -a 0,0,640,480 sub/dir/deep.png` | The folders are made; `sub/dir/deep.png` saved. |
 | 5.7 | `xl-screenshot -a 0,0,640,480 -F - > piped.png` | Nothing printed; `piped.png` is a good 640 × 480 PNG. |
-| 5.8 | `xl-screenshot -a 0,0,640,480 - \| magick - -resize 50% half.png` | `half.png`, 320 × 240 (needs ImageMagick). |
+| 5.8 | `xl-screenshot -a 0,0,640,480 - \| convert - -resize 50% half.png` | `half.png`, 320 × 240 (needs ImageMagick; with ImageMagick 7, `magick` instead of `convert`). |
+| 5.9 | `xl-screenshot -a 0,0,640,480 - \| nosuchprogram` | The shell's "command not found", then `the program the image was piped to stopped before reading it…`, exit 1. |
 
 ## 6. Clipboard and xl-Annotate
 
